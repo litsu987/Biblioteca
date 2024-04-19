@@ -15,7 +15,7 @@ class TipusMaterialAdmin(admin.ModelAdmin):
 
 @admin.register(Usuari)
 class UsuariAdmin(admin.ModelAdmin):
-    list_display = ('user', 'data_naixement', 'centre', 'cicle', 'imatge')
+    list_display = ('user', 'data_naixement', 'centre', 'cicle', 'imatge','email','nom','cognoms')
 
 @admin.register(Catalog)
 class CatalogAdmin(admin.ModelAdmin):
