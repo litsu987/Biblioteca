@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'style.css' %}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
+      rel="stylesheet"
+    />
+
+    <title>Biblioteca IETI</title>
+    <style>
+      *,
+      body,
+      main {
+        padding: 0;
+        margin: 0;
+      }
+
+      #header {
+        display: flex;
+        flex-direction: row;
+        background-color: #e3ecee;
+      }
+      #header img {
+        width: auto;
+        height: 80px;
+        margin: auto 0 auto 20px;
+      }
+      h1 {
+        padding: 5vh 0;
+        color: #142c83;
+        font-family: Montserrat;
+        font-weight: bolder;
+        text-align: left;
+      }
+
+      h2 {
+        font-size: 2rem;
+        margin-bottom: 20px;
+      }
+      #main {
+        font-family: Nunito;
+        display: flex;
+        margin: auto;
+        padding: 2%;
+        justify-content: center;
+        text-align: center;
+        width: 80vw;
+        height: 50vh;
+        gap: 20%;
+        margin-top: 5vh;
+      }
+      #main div,
+      form {
+        background-color: #e3ecee;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 0 50px;
+        width: 40vw;
+        max-width: 500px;
+        border-radius: 15px;
+      }
+
+      #login label {
+        text-align: left;
+      }
+
+      #booksearcher {
+        display: flex;
+        flex-direction: column;
+        gap: 5%;
+      }
+      #booksearcher input[type="button"] {
+        width: fit-content;
+        padding: 5px 20px;
+        margin: 0 auto;
+        font-family: Nunito;
+        font-weight: bold;
+      }
+      input[type="search"] {
+        width: 90%;
+        height: 60px;
+        margin: 0 auto;
+        border-radius: 8px;
+      }
+      #user,
+      #pass {
+        width: 100%;
+        height: 25px;
+        margin: 0 auto;
+        border-radius: 8px;
+      }
+      #login a {
+        font-size: 0.7rem;
+        text-align: left;
+        text-decoration: none;
+      }
+      #login {
+        gap: 10px;
+      }
+      #login input[type="button"] {
+        width: fit-content;
+        padding: 0 15px;
+        margin-left: auto;
+        font-family: Nunito;
+        font-weight: bold;
+        background-color: #d9d9d9;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="header">
+      <img
+        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNz9mZq9dbJ77kWv65_SQ-v0Nn3pIx9QpigGCKNJSRWMsS9ixpPPdoILzUNIQqkPaBxco&usqp=CAU"
+        alt=""
+      />
+      <h1>BIBLIOTECA IETI</h1>
+    </div>
+    <div id="main">
+      {% if messages %} {% for message in messages %} {{ message }} {% endfor %}
+      {% endif %}
+      <div id="booksearcher">
+        <h2>Cerca al Catàleg</h2>
+        <input type="search" name="searcher" id="searcher" />
+        <input type="button" value="CERCA" />
+      </div>
+      <form action="" method="POST" id="login">
+        {% csrf_token %}
+        <h2>Iniciar Sesión</h2>
+        <label for="username">Adreça electrònica</label>
+        <input type="text" name="username" id="username" />
+        <label for="password">Contrasenya</label>
+        <input type="password" name="password" id="password" />
+        <a href="">Heu perdut la contrasenya?</a>
+        <input type="submit" value="ENTRA" onclick="iniciarSesion()" />
+      </form>
+    </div>
+
+  </body>
+</html>

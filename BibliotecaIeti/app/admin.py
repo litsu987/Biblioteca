@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Centre, Cicle, TipusMaterial, Usuari, Catalog, ElementCatalog, Exemplar, Reserva, Prestec, Peticio, Log, ImatgeCatalog
+from .models import Centre, Cicle, TipusMaterial, Usuari, ElementCatalog, Exemplar, Reserva, Prestec, Peticio, Log, ImatgeCatalog, Llibre, CD, BR,DVD, Dispositiu
 
 @admin.register(Centre)
 class CentreAdmin(admin.ModelAdmin):
@@ -15,15 +15,21 @@ class TipusMaterialAdmin(admin.ModelAdmin):
 
 @admin.register(Usuari)
 class UsuariAdmin(admin.ModelAdmin):
-    list_display = ('user', 'data_naixement', 'centre', 'cicle', 'imatge','email','nom','cognoms')
+    list_display = ('user','email','contrasenya_cifrada','cognoms', 'data_naixement', 'centre', 'cicle', 'imatge')
 
-@admin.register(Catalog)
-class CatalogAdmin(admin.ModelAdmin):
-    list_display = ('nom', 'descripcio')
 
 @admin.register(ElementCatalog)
 class ElementCatalogAdmin(admin.ModelAdmin):
-    list_display = ('catalog', 'tipus_material')
+    list_display = ('get_catalog_name', 'get_tipus_material_name')
+
+    def get_catalog_name(self, obj):
+        return obj.catalog.nom
+    get_catalog_name.short_description = 'Catalog'
+
+    def get_tipus_material_name(self, obj):
+        return obj.tipus_material.nom
+    get_tipus_material_name.short_description = 'Tipus Material'
+
 
 @admin.register(Exemplar)
 class ExemplarAdmin(admin.ModelAdmin):
@@ -31,20 +37,68 @@ class ExemplarAdmin(admin.ModelAdmin):
 
 @admin.register(Reserva)
 class ReservaAdmin(admin.ModelAdmin):
-    list_display = ('usuari', 'exemplar', 'data_reserva')
+    list_display = ('get_usuari_name', 'get_element_titulo', 'data_reserva')
+
+    def get_usuari_name(self, obj):
+        return obj.usuari.user.username
+    get_usuari_name.short_description = 'Usuari'
+
+    def get_element_titulo(self, obj):
+        return obj.exemplar.element_catalog.catalog.nom
+    get_element_titulo.short_description = 'Element Títol'
+
 
 @admin.register(Prestec)
 class PrestecAdmin(admin.ModelAdmin):
-    list_display = ('usuari', 'exemplar', 'data_prestec', 'data_retorn')
+    list_display = ('get_usuari_name', 'get_element_titulo', 'data_prestec', 'data_retorn')
+
+    def get_usuari_name(self, obj):
+        return obj.usuari.user.username
+    get_usuari_name.short_description = 'Usuari'
+
+    def get_element_titulo(self, obj):
+        return obj.exemplar.element_catalog.catalog.nom
+    get_element_titulo.short_description = 'Element Títol'
+
 
 @admin.register(Peticio)
 class PeticioAdmin(admin.ModelAdmin):
-    list_display = ('usuari', 'titol_peticio', 'descripcio', 'data_peticio')
+    list_display = ('get_usuari_name', 'titol_peticio', 'descripcio', 'data_peticio')
+
+    def get_usuari_name(self, obj):
+        return obj.usuari.user.username
+    get_usuari_name.short_description = 'Usuario'
+
 
 @admin.register(Log)
 class LogAdmin(admin.ModelAdmin):
-    list_display = ('usuari', 'accio', 'data_accio')
+    list_display = ('usuari', 'accio', 'data_accio', 'tipus')
 
 @admin.register(ImatgeCatalog)
 class ImatgeCatalogAdmin(admin.ModelAdmin):
-    list_display = ('catalog', 'imatge')
+    list_display = ('get_catalog_name', 'imatge')
+
+    def get_catalog_name(self, obj):
+        return obj.catalog.nom
+    get_catalog_name.short_description = 'Catálogo'
+
+
+@admin.register(Llibre)
+class LibroAdmin(admin.ModelAdmin):
+    list_display = ('nom', 'CDU', 'ISBN', 'editorial', 'collecio', 'pagines')
+
+@admin.register(CD)
+class CDAdmin(admin.ModelAdmin):
+    list_display = ('nom', 'discografica', 'estil', 'duracio')
+
+@admin.register(DVD)
+class DVDAdmin(admin.ModelAdmin):
+    list_display = ('nom', 'productora', 'duracio')
+
+@admin.register(BR)
+class BRAdmin(admin.ModelAdmin):
+    list_display = ('nom', 'productora','duracio')
+
+@admin.register(Dispositiu)
+class DPAdmin(admin.ModelAdmin):
+    list_display = ('nom', 'modelo','serie')
