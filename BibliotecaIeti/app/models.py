@@ -46,6 +46,9 @@ class Catalog(models.Model):
 class ElementCatalog(models.Model):
     catalog = models.ForeignKey(Catalog, on_delete=models.CASCADE)
     tipus_material = models.ForeignKey(TipusMaterial, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.catalog.nom
     
 
 class Llibre(Catalog):
@@ -99,7 +102,7 @@ class Peticio(models.Model):
 class Log(models.Model):
     # Definir las opciones para el tipo de log
     TIPO_LOG = (
-        ('INFO', 'Información'),
+        ('INFO', 'Informació'),
         ('WARNING', 'Advertencia'),
         ('ERROR', 'Error'),
         ('FATAL', 'Fatal'),
