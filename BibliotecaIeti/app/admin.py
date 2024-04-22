@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Centre, Cicle, TipusMaterial, Usuari, Catalog, ElementCatalog, Exemplar, Reserva, Prestec, Peticio, Log, ImatgeCatalog
+from .models import Centre, Cicle, TipusMaterial, Usuari, ElementCatalog, Exemplar, Reserva, Prestec, Peticio, Log, ImatgeCatalog, Llibre, CD, BR,DVD, Dispositiu
 
 @admin.register(Centre)
 class CentreAdmin(admin.ModelAdmin):
@@ -15,11 +15,8 @@ class TipusMaterialAdmin(admin.ModelAdmin):
 
 @admin.register(Usuari)
 class UsuariAdmin(admin.ModelAdmin):
-    list_display = ('user', 'data_naixement', 'centre', 'cicle', 'imatge')
+    list_display = ('user','email','contrasenya_cifrada','cognoms', 'data_naixement', 'centre', 'cicle', 'imatge')
 
-@admin.register(Catalog)
-class CatalogAdmin(admin.ModelAdmin):
-    list_display = ('nom', 'descripcio')
 
 @admin.register(ElementCatalog)
 class ElementCatalogAdmin(admin.ModelAdmin):
@@ -43,8 +40,28 @@ class PeticioAdmin(admin.ModelAdmin):
 
 @admin.register(Log)
 class LogAdmin(admin.ModelAdmin):
-    list_display = ('usuari', 'accio', 'data_accio')
+    list_display = ('usuari', 'accio', 'data_accio', 'tipus')
 
 @admin.register(ImatgeCatalog)
 class ImatgeCatalogAdmin(admin.ModelAdmin):
     list_display = ('catalog', 'imatge')
+
+@admin.register(Llibre)
+class LibroAdmin(admin.ModelAdmin):
+    list_display = ('nom', 'CDU', 'ISBN', 'editorial', 'collecio', 'pagines')
+
+@admin.register(CD)
+class CDAdmin(admin.ModelAdmin):
+    list_display = ('nom', 'discografica', 'estil', 'duracio')
+
+@admin.register(DVD)
+class DVDAdmin(admin.ModelAdmin):
+    list_display = ('nom', 'productora', 'duracio')
+
+@admin.register(BR)
+class BRAdmin(admin.ModelAdmin):
+    list_display = ('nom', 'productora','duracio')
+
+@admin.register(Dispositiu)
+class DPAdmin(admin.ModelAdmin):
+    list_display = ('nom', 'modelo','serie')
