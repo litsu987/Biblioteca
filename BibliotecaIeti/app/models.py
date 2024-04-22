@@ -1,67 +1,118 @@
-from django.contrib import admin
-from .models import Centre, Cicle, TipusMaterial, Usuari, ElementCatalog, Exemplar, Reserva, Prestec, Peticio, Log, ImatgeCatalog, Llibre, CD, BR,DVD, Dispositiu
+from django.db import models
+from django.contrib.auth.models import User
+from django.utils.timezone import now
+from django.contrib.auth.hashers import make_password
 
-@admin.register(Centre)
-class CentreAdmin(admin.ModelAdmin):
-    list_display = ('nom',)
+TIPOS_MATERIAL_CHOICES = [
+    ('llibre', 'Llibre'),
+    ('CD', 'CD'),
+    ('DVD', 'DVD'),
+    ('BR', 'Blu-ray'),
+    ('dispositiu', 'Dispositiu'),
+]
 
-@admin.register(Cicle)
-class CicleAdmin(admin.ModelAdmin):
-    list_display = ('nom',)
+class Centre(models.Model):
+    nom = models.CharField(max_length=100)
+   
 
-@admin.register(TipusMaterial)
-class TipusMaterialAdmin(admin.ModelAdmin):
-    list_display = ('nom',)
+class Cicle(models.Model):
+    nom = models.CharField(max_length=100)
+   
 
-@admin.register(Usuari)
-class UsuariAdmin(admin.ModelAdmin):
-    list_display = ('user','email','contrasenya_cifrada','cognoms', 'data_naixement', 'centre', 'cicle', 'imatge')
+class TipusMaterial(models.Model):
+    nom = models.CharField(max_length=50, choices=TIPOS_MATERIAL_CHOICES)
+
+class Usuari(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    email = models.EmailField(default="") 
+    nom = models.CharField(max_length=50, default="") 
+    cognoms = models.CharField(max_length=100, default="") 
+    data_naixement = models.DateField()
+    centre = models.ForeignKey(Centre, on_delete=models.SET_NULL, null=True)
+    cicle = models.ForeignKey(Cicle, on_delete=models.SET_NULL, null=True)
+    imatge = models.ImageField(upload_to='imatges/', null=True, blank=True) 
+    contrasenya_cifrada = models.CharField(max_length=128,default="")  # Longitud suficiente para almacenar la contraseña cifrada
+
+    def set_password(self, raw_password):
+        self.contrasenya_cifrada = make_password(raw_password)
+
+class Catalog(models.Model):
+    id = models.AutoField(primary_key=True)
+    nom = models.CharField(max_length=100)
+    descripcio = models.TextField()
+    imatge = models.ImageField(upload_to='imatges/', null=True, blank=True)
+    
+
+class ElementCatalog(models.Model):
+    catalog = models.ForeignKey(Catalog, on_delete=models.CASCADE)
+    tipus_material = models.ForeignKey(TipusMaterial, on_delete=models.CASCADE)
+    
+
+class Llibre(Catalog):
+    CDU = models.CharField(max_length=100)
+    ISBN = models.CharField(max_length=13)
+    editorial = models.CharField(max_length=100)
+    collecio = models.CharField(max_length=100)
+    autor = models.CharField(max_length=200, default="")
+    pagines = models.IntegerField()
+
+class CD(Catalog):
+    discografica = models.CharField(max_length=100)
+    estil = models.CharField(max_length=100)
+    duracio = models.IntegerField()
+
+class DVD(Catalog):
+    productora = models.CharField(max_length=100)
+    duracio = models.IntegerField()
+
+class BR(Catalog):
+    productora = models.CharField(max_length=100)
+    duracio = models.IntegerField()
 
 
-@admin.register(ElementCatalog)
-class ElementCatalogAdmin(admin.ModelAdmin):
-    list_display = ('catalog', 'tipus_material')
+class Dispositiu(Catalog):
+    modelo = models.CharField(max_length=100, default="")
+    serie = models.CharField(max_length=100, default="")
 
-@admin.register(Exemplar)
-class ExemplarAdmin(admin.ModelAdmin):
-    list_display = ('element_catalog', 'estat')
 
-@admin.register(Reserva)
-class ReservaAdmin(admin.ModelAdmin):
-    list_display = ('usuari', 'exemplar', 'data_reserva')
+class Exemplar(models.Model):
+    element_catalog = models.ForeignKey(ElementCatalog, on_delete=models.CASCADE)
+    estat = models.CharField(max_length=50)
 
-@admin.register(Prestec)
-class PrestecAdmin(admin.ModelAdmin):
-    list_display = ('usuari', 'exemplar', 'data_prestec', 'data_retorn')
+class Reserva(models.Model):
+    usuari = models.ForeignKey(Usuari, on_delete=models.CASCADE)
+    exemplar = models.ForeignKey(Exemplar, on_delete=models.CASCADE)
+    data_reserva = models.DateField(auto_now_add=True)
 
-@admin.register(Peticio)
-class PeticioAdmin(admin.ModelAdmin):
-    list_display = ('usuari', 'titol_peticio', 'descripcio', 'data_peticio')
+class Prestec(models.Model):
+    usuari = models.ForeignKey(Usuari, on_delete=models.CASCADE)
+    exemplar = models.ForeignKey(Exemplar, on_delete=models.CASCADE)
+    data_prestec = models.DateField(auto_now_add=True)
+    data_retorn = models.DateField(null=True, blank=True)
 
-@admin.register(Log)
-class LogAdmin(admin.ModelAdmin):
-    list_display = ('usuari', 'accio', 'data_accio', 'tipus')
+class Peticio(models.Model):
+    usuari = models.ForeignKey(Usuari, on_delete=models.CASCADE)
+    titol_peticio = models.CharField(max_length=100)
+    descripcio = models.TextField()
+    data_peticio = models.DateField(auto_now_add=True)
 
-@admin.register(ImatgeCatalog)
-class ImatgeCatalogAdmin(admin.ModelAdmin):
-    list_display = ('catalog', 'imatge')
+class Log(models.Model):
+    # Definir las opciones para el tipo de log
+    TIPO_LOG = (
+        ('INFO', 'Información'),
+        ('WARNING', 'Advertencia'),
+        ('ERROR', 'Error'),
+        ('FATAL', 'Fatal'),
+    )
+    
+    usuari = models.ForeignKey(Usuari, on_delete=models.CASCADE)
+    accio = models.CharField(max_length=100)
+    data_accio = models.DateTimeField(auto_now_add=True)
+    tipus = models.CharField(max_length=10, choices=TIPO_LOG, default="")
 
-@admin.register(Llibre)
-class LibroAdmin(admin.ModelAdmin):
-    list_display = ('nom', 'CDU', 'ISBN', 'editorial', 'collecio', 'pagines')
+    def __str__(self):
+        return f"{self.accio} - {self.tipus}"
 
-@admin.register(CD)
-class CDAdmin(admin.ModelAdmin):
-    list_display = ('nom', 'discografica', 'estil', 'duracio')
-
-@admin.register(DVD)
-class DVDAdmin(admin.ModelAdmin):
-    list_display = ('nom', 'productora', 'duracio')
-
-@admin.register(BR)
-class BRAdmin(admin.ModelAdmin):
-    list_display = ('nom', 'productora','duracio')
-
-@admin.register(Dispositiu)
-class DPAdmin(admin.ModelAdmin):
-    list_display = ('nom', 'modelo','serie')
+class ImatgeCatalog(models.Model):
+    catalog = models.ForeignKey(Catalog, on_delete=models.CASCADE)
+    imatge = models.ImageField(upload_to='imatges/')
