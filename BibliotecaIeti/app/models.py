@@ -99,22 +99,25 @@ class Peticio(models.Model):
     descripcio = models.TextField()
     data_peticio = models.DateField(auto_now_add=True)
 
+
 class Log(models.Model):
-    # Definir las opciones para el tipo de log
     TIPO_LOG = (
-        ('INFO', 'Informació'),
+        ('INFO', 'Información'),
         ('WARNING', 'Advertencia'),
         ('ERROR', 'Error'),
         ('FATAL', 'Fatal'),
     )
     
-    usuari = models.ForeignKey(Usuari, on_delete=models.CASCADE)
+    usuari = models.CharField(max_length=100, null=True, blank=True)
     accio = models.CharField(max_length=100)
     data_accio = models.DateTimeField(auto_now_add=True)
     tipus = models.CharField(max_length=10, choices=TIPO_LOG, default="")
 
     def __str__(self):
         return f"{self.accio} - {self.tipus}"
+
+
+
 
 class ImatgeCatalog(models.Model):
     catalog = models.ForeignKey(Catalog, on_delete=models.CASCADE)
