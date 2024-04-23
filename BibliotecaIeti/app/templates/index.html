@@ -112,6 +112,13 @@
         font-weight: bold;
         background-color: #d9d9d9;
       }
+      .message {
+      /* Estilos para el mensaje */
+      color: #ff0000; /* Cambia el color del texto a rojo */
+      font-style: italic; /* Aplica cursiva al texto */
+      /* Otros estilos que desees aplicar */
+    }
+     
     </style>
   </head>
   <body>
@@ -123,8 +130,7 @@
       <h1>BIBLIOTECA IETI</h1>
     </div>
     <div id="main">
-      {% if messages %} {% for message in messages %} {{ message }} {% endfor %}
-      {% endif %}
+
       <div id="booksearcher">
         <h2>Cerca al Catàleg</h2>
         <input type="search" name="searcher" id="searcher" />
@@ -139,6 +145,11 @@
         <input type="password" name="password" id="password" />
         <a href="">Heu perdut la contrasenya?</a>
         <input type="submit" value="ENTRA" onclick="iniciarSesion()" />
+        {% if messages %}
+          {% for message in messages %}
+            <p class="message">{{ message }}</p>
+          {% endfor %}
+        {% endif %}
       </form>
     </div>
 

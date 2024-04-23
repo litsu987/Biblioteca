@@ -113,9 +113,6 @@ class Log(models.Model):
     data_accio = models.DateTimeField(auto_now_add=True)
     tipus = models.CharField(max_length=10, choices=TIPO_LOG, default="")
 
-    def __str__(self):
-        return f"{self.accio} - {self.tipus}"
-
 
 
 

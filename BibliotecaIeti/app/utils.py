@@ -2,7 +2,7 @@ import logging
 from django.contrib.sessions.models import Session
 from django.utils import timezone
 from .models import Log, Usuari 
-from django.utils import timezone
+from django.db import transaction
 
 import logging
 
@@ -53,15 +53,22 @@ def subir_logs_a_bd(request):
     if request.user.is_authenticated:
         usuario = request.user.username
 
-    # Itera sobre cada log y los inserta en la base de datos
-    for log in logs:
-        tipo = log['tipo']
-        mensaje = log['mensaje']
-        # Inserta el log en la base de datos
-        Log.objects.create(accio=mensaje, data_accio=timezone.now(), tipus=tipo, usuari=usuario)
+    # Utilizar una transacción para garantizar la integridad de la base de datos
+    with transaction.atomic():
+        # Itera sobre cada log y los inserta en la base de datos
+        for log in logs:
+            tipo = log['tipo']
+            mensaje = log['mensaje']
+            # Inserta el log en la base de datos
+            log_obj = Log(accio=mensaje, data_accio=timezone.now(), tipus=tipo, usuari=usuario)
+            log_obj.save()
 
-    # Limpia la lista de logs de la sesión del usuario
-    request.session['logs'] = []
+        # Limpia la lista de logs de la sesión del usuario
+        request.session['logs'] = []
+
+        # Ejecuta las migraciones pendientes
+        from django.core.management import call_command
+        call_command('migrate')
 
     # Retorna un mensaje indicando que los logs han sido guardados en la base de datos
-    return "Todos los logs han sido guardados en la base de datos."
+    return "Todos los logs han sido guardados en la base de datos y las migraciones se han ejecutado correctamente."

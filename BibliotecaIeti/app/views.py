@@ -21,10 +21,20 @@ def index(request):
             generarLog(request, 'INFO', f"Inicio de sesión exitoso")
             return redirect('index')  # Redirigir a la página principal después de iniciar sesión correctamente
         else:
-            messages.error(request, "Correo electrónico o contraseña inválidos.")
-            subir_logs_a_bd(request)
-            # Generar un log de intento fallido de inicio de sesión
-            generarLog(request, 'ERROR', f"Intento de inicio de sesión fallido")
+            UserModel = get_user_model()
+            try:
+                user = UserModel.objects.get(email=email)
+            except UserModel.DoesNotExist:
+                messages.error(request, "Correo electrónico incorrecto.")
+
+                # Generar un log de intento fallido de inicio de sesión
+                generarLog(request, 'ERROR', f"Intento de inicio de sesión fallido - Correo electrónico incorrecto")
+                subir_logs_a_bd(request)
+            else:
+                messages.error(request, "Contraseña incorrecta.")
+                subir_logs_a_bd(request)
+                # Generar un log de intento fallido de inicio de sesión
+                generarLog(request, 'ERROR', f"Intento de inicio de sesión fallido - Contraseña incorrecta")
             return redirect('index')  # Redirigir de vuelta a la página de inicio de sesión en caso de fallo
     return render(request, 'index.html')
 

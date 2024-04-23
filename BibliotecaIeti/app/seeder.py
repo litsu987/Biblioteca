@@ -133,10 +133,12 @@ def crear_catalogo(num_catalogos):
         )
         if tipo_material[0] == 'llibre':
             nombre_libro = f"{random.choice(adjetivos)} {random.choice(sustantivos)} del {random.choice(tematicas)}"
+            # Generamos un ISBN de 13 caracteres
+            isbn13 = ''.join([str(random.randint(0, 9)) for _ in range(13)])
             Llibre.objects.create(
-                nom=nombre_libro,  # Cambiamos de fake.catch_phrase() a fake.word()
+                nom=nombre_libro,
                 CDU=fake.isbn13(),
-                ISBN=fake.isbn13(),
+                ISBN=isbn13,  # Usamos el ISBN generado
                 editorial=fake.company(),
                 collecio=fake.catch_phrase(),
                 autor=fake.name(),
@@ -171,8 +173,6 @@ def crear_catalogo(num_catalogos):
                 modelo=fake.word(),
                 serie=fake.uuid4(),
             )
-
-
 
 
 
