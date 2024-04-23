@@ -81,6 +81,7 @@ class PeticioAdmin(admin.ModelAdmin):
 @admin.register(Log)
 class LogAdmin(admin.ModelAdmin):
     list_display = ('usuari', 'accio', 'data_accio', 'tipus')
+    list_display = ('usuari', 'accio', 'data_accio', 'tipus')
 
 @admin.register(ImatgeCatalog)
 class ImatgeCatalogAdmin(admin.ModelAdmin):

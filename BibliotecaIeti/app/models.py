@@ -10,6 +10,16 @@ TIPOS_MATERIAL_CHOICES = [
     ('BR', 'Blu-ray'),
     ('dispositiu', 'Dispositiu'),
 ]
+from django.utils.timezone import now
+from django.contrib.auth.hashers import make_password
+
+TIPOS_MATERIAL_CHOICES = [
+    ('llibre', 'Llibre'),
+    ('CD', 'CD'),
+    ('DVD', 'DVD'),
+    ('BR', 'Blu-ray'),
+    ('dispositiu', 'Dispositiu'),
+]
 
 class Centre(models.Model):
     nom = models.CharField(max_length=100)
@@ -41,6 +51,7 @@ class Catalog(models.Model):
     nom = models.CharField(max_length=100)
     descripcio = models.TextField()
     imatge = models.ImageField(upload_to='imatges/', null=True, blank=True)
+    
     
 
 class ElementCatalog(models.Model):
