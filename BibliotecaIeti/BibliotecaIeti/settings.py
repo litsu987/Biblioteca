@@ -139,7 +139,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
-
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static')
+]
 # Add this line to specify the location where Django should collect static files
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 

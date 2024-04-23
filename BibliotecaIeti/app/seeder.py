@@ -1,10 +1,10 @@
 import random
-import os
 from django.contrib.auth.models import User
 from django.utils import timezone
 from faker import Faker
-from .models import Centre, Cicle, TipusMaterial, Usuari, Catalog, ElementCatalog, Llibre, CD, BR,DVD, Dispositiu, Exemplar, Reserva, Prestec, Peticio, Log, ImatgeCatalog
+from .models import Centre, Cicle, TipusMaterial, Usuari, Catalog, ElementCatalog, Llibre, CD, BR, DVD, Dispositiu, Exemplar, Reserva, Prestec, Peticio, Log, ImatgeCatalog
 from .models import TIPOS_MATERIAL_CHOICES
+
 fake = Faker()
 
 adjetivos = ["El secreto", "La última", "El misterioso", "El oscuro", "El perdido", "El legendario"]
@@ -65,41 +65,27 @@ br = [
 
 def limpiar_bd():
     # Eliminar todos los registros de todas las tablas
-    ImatgeCatalog.objects.all().delete()
-    Log.objects.all().delete()
-    Peticio.objects.all().delete()
-    Prestec.objects.all().delete()
-    Reserva.objects.all().delete()
-    Exemplar.objects.all().delete()
-    Dispositiu.objects.all().delete()
-    BR.objects.all().delete()
-    CD.objects.all().delete()
-    Llibre.objects.all().delete()
-    ElementCatalog.objects.all().delete()
-    Catalog.objects.all().delete()
-    Usuari.objects.all().delete()
-    TipusMaterial.objects.all().delete()
-    Cicle.objects.all().delete()
-    Centre.objects.all().delete()
+    for model in [
+        ImatgeCatalog, Log, Peticio, Prestec, Reserva, Exemplar, Dispositiu, BR, CD, Llibre,
+        ElementCatalog, Catalog, Usuari, TipusMaterial, Cicle, Centre
+    ]:
+        model.objects.all().delete()
     User.objects.exclude(username='root').delete()
 
 def crear_usuarios(num_usuarios):
     for _ in range(num_usuarios):
         user = User.objects.create(username=fake.user_name(), email=fake.email(), password="password123")
         usuari = Usuari.objects.create(
-            user=user,
             email=user.email,
             nom=fake.first_name(),
             cognoms=fake.last_name(),
             data_naixement=fake.date_of_birth(minimum_age=18, maximum_age=90),
-            imatge=fake.image_url(),  # Añadir imagen aleatoria
-            centre=Centre.objects.order_by('?').first(),  # Asignar un centro aleatorio
-            cicle=Cicle.objects.order_by('?').first()  # Asignar un ciclo aleatorio
+            imatge=fake.image_url(),
+            centre=Centre.objects.order_by('?').first(),
+            cicle=Cicle.objects.order_by('?').first()
         )
-        
         usuari.set_password("password123")
         usuari.save()
-
 
 def crear_centros(num_centros):
     for _ in range(num_centros):
@@ -110,7 +96,6 @@ def crear_ciclos():
     for ciclo in ciclos:
         Cicle.objects.create(nom=ciclo)
 
-
 def crear_tipos_material():
     for tipo in TIPOS_MATERIAL_CHOICES:
         TipusMaterial.objects.create(nom=tipo[0])
@@ -118,7 +103,7 @@ def crear_tipos_material():
 def crear_catalogo(num_catalogos):
     for _ in range(num_catalogos):
         catalog = Catalog.objects.create(
-            nom=fake.word(),  # Cambiamos de fake.catch_phrase() a fake.word()
+            nom=fake.word(),
             descripcio=fake.paragraph()
         )
         ImatgeCatalog.objects.create(
@@ -133,12 +118,11 @@ def crear_catalogo(num_catalogos):
         )
         if tipo_material[0] == 'llibre':
             nombre_libro = f"{random.choice(adjetivos)} {random.choice(sustantivos)} del {random.choice(tematicas)}"
-            # Generamos un ISBN de 13 caracteres
             isbn13 = ''.join([str(random.randint(0, 9)) for _ in range(13)])
             Llibre.objects.create(
                 nom=nombre_libro,
                 CDU=fake.isbn13(),
-                ISBN=isbn13,  # Usamos el ISBN generado
+                ISBN=isbn13,
                 editorial=fake.company(),
                 collecio=fake.catch_phrase(),
                 autor=fake.name(),
@@ -147,7 +131,7 @@ def crear_catalogo(num_catalogos):
         elif tipo_material[0] == 'CD':
             nombre_cd = f"{random.choice(cd)}"
             CD.objects.create(
-                nom=nombre_cd,  # Cambiamos de fake.catch_phrase() a fake.word()
+                nom=nombre_cd,
                 discografica=fake.company(),
                 estil=fake.word(),
                 duracio=random.randint(30, 120)
@@ -155,26 +139,24 @@ def crear_catalogo(num_catalogos):
         elif tipo_material[0] == 'DVD':
             nombre_dvd = f"{random.choice(dvd)}"
             DVD.objects.create(
-                nom=nombre_dvd,  # Cambiamos de fake.catch_phrase() a fake.word()
+                nom=nombre_dvd,
                 productora=fake.company(),
                 duracio=random.randint(60, 180)
             )
         elif tipo_material[0] == 'BR':
             nombre_br = f"{random.choice(br)}"
             BR.objects.create(
-                nom=nombre_br,  # Cambiamos de fake.catch_phrase() a fake.word()
+                nom=nombre_br,
                 productora=fake.company(),
                 duracio=random.randint(60, 180)
             )
         elif tipo_material[0] == 'dispositiu':
             nombre_disp = f"{random.choice(disp)}"
             Dispositiu.objects.create(
-                nom= nombre_disp ,  # Cambiamos de fake.catch_phrase() a fake.word()
+                nom=nombre_disp,
                 modelo=fake.word(),
                 serie=fake.uuid4(),
             )
-
-
 
 def crear_reservas_prestamos_peticiones(num_elementos):
     usuarios = Usuari.objects.all()
@@ -206,8 +188,6 @@ def crear_reservas_prestamos_peticiones(num_elementos):
             descripcio=fake.paragraph(),
             data_peticio=fake.date_time_this_year()
         )
-
-
 
 def seed_database(num_usuarios=10, num_centros=5, num_catalogos=20, num_elementos=50):
     limpiar_bd()
