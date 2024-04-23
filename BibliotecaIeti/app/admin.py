@@ -15,7 +15,15 @@ class TipusMaterialAdmin(admin.ModelAdmin):
 
 @admin.register(Usuari)
 class UsuariAdmin(admin.ModelAdmin):
-    list_display = ('user','email','contrasenya_cifrada','cognoms', 'data_naixement', 'centre', 'cicle', 'imatge')
+    list_display = ('user','email','contrasenya_cifrada','cognoms', 'data_naixement', 'mostrar_centro', 'mostrar_cicle', 'imatge')
+
+    def mostrar_centro(self, obj):
+        return obj.centre.nom if obj.centre else ""
+    mostrar_centro.short_description = 'Centre'
+
+    def mostrar_cicle(self, obj):
+        return obj.cicle.nom if obj.cicle else ""
+    mostrar_cicle.short_description = 'Cicle'
 
 
 @admin.register(ElementCatalog)
