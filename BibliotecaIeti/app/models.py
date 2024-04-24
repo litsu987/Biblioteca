@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.timezone import now
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth.models import AbstractUser
+from .managers import UserManager
 
 TIPOS_MATERIAL_CHOICES = [
     ('llibre', 'Llibre'),
@@ -22,20 +25,22 @@ class TipusMaterial(models.Model):
     def __str__(self):
         return self.nom
 
-class Usuari(models.Model):
-    email = models.EmailField(default="")
-    nom = models.CharField(max_length=50, default="")
-    cognoms = models.CharField(max_length=100, default="")
-    data_naixement = models.DateField()
+class Usuari(AbstractUser):
+    data_naixement = models.DateField(null=True, blank=True)
     centre = models.ForeignKey(Centre, on_delete=models.SET_NULL, null=True)
     cicle = models.ForeignKey(Cicle, on_delete=models.SET_NULL, null=True)
-    imatge = models.ImageField(upload_to='static/', null=True, blank=True)
-    contrasenya_cifrada = models.CharField(max_length=128,default="")
+    imatge = models.ImageField(upload_to='imatges/', null=True, blank=True) 
+    nom = models.CharField(max_length=30, blank=True)  
+    cognom = models.CharField(max_length=30, blank=True)  
+    groups = models.ManyToManyField('auth.Group', related_name="biblioteca_user_groups", blank=True)
+    user_permissions = models.ManyToManyField('auth.Permission', related_name="biblioteca_user_permissions", blank=True)
+    
+    email = models.EmailField(("email"), unique=True, db_index=True)    
+    USERNAME_FIELD = 'email' 
+    REQUIRED_FIELDS = []
+   
+    objects = UserManager()
 
-    def set_password(self, raw_password):
-        self.contrasenya_cifrada = make_password(raw_password)
-    def __str__(self):
-        return f"{self.nom} {self.cognoms}"  # Devuelve el nombre completo del usuario
 
 class Catalog(models.Model):
     nom = models.CharField(max_length=100)
