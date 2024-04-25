@@ -6,11 +6,14 @@ from faker import Faker
 from django.contrib.auth.models import User
 from .models import Centre, Cicle, TipusMaterial, Usuari, Catalog, ElementCatalog, Llibre, CD, BR, DVD, Dispositiu, Exemplar, Reserva, Prestec, Peticio, Log, ImatgeCatalog
 from .models import TIPOS_MATERIAL_CHOICES
+from faker.providers import BaseProvider
 fake = Faker()
 
-adjetivos = ["El secreto", "La última", "El misterioso", "El oscuro", "El perdido", "El legendario"]
-sustantivos = ["reino", "tesoro", "poder", "destino", "legado", "encantamiento"]
-tematicas = ["fantasía", "ciencia ficción", "misterio", "aventura", "romance", "terror"]
+
+
+adjetivos = ["El secreto", "La última", "El misterioso", "El oscuro", "El perdido", "El legendario", "El antiguo", "El majestuoso", "El intrépido", "El eterno", "El enigmático", "El dorado", "El fantástico", "El brillante", "El mágico", "El épico", "El inolvidable", "El infinito", "El inmortal", "El resplandeciente", "El prodigioso", "El celestial", "El etéreo", "El sagrado", "El inquietante", "El titánico", "El magnífico", "El cósmico", "El sublime", "El asombroso", "El deslumbrante", "El enérgico", "El intrépido", "El poderoso", "El enigmático", "El sorprendente", "El deslumbrante", "El imponente", "El arcano", "El maravilloso", "El incandescente", "El hipnótico", "El majestuoso", "El vibrante", "El impredecible", "El enigmático", "El exuberante", "El radiante"]
+sustantivos = ["reino", "tesoro", "poder", "destino", "legado", "encantamiento", "criatura", "reliquia", "secreto", "profecía", "maravilla", "abismo", "corazón", "leyenda", "destello", "rumor", "susurro", "ocaso", "sendero", "arcano", "amanecer", "eco", "abrazo", "velo", "destino", "laberinto", "fragmento", "sueño", "vigilia", "destino", "tesoro", "poder", "destino", "legado", "encantamiento", "criatura", "reliquia", "secreto", "profecía", "maravilla", "abismo", "corazón", "leyenda", "destello", "rumor", "susurro", "ocaso"]
+tematicas = ["fantasía", "ciencia ficción", "misterio", "aventura", "romance", "terror", "histórico", "distopía", "thriller", "comedia", "surrealismo", "post-apocalíptico", "steampunk", "mitología", "ciberpunk", "filosófico", "viaje en el tiempo", "magia oscura", "ciencia fantástica", "intriga política", "cyberthriller", "realismo mágico", "folclore urbano", "epopeya", "cuento de hadas", "guerra galáctica", "rebelión cósmica", "invasión extraterrestre", "odisea espacial", "legado ancestral", "magia", "sueño", "rebelión", "destino", "futuro", "esperanza", "oscuridad", "poder", "misterio", "encuentro", "renacimiento", "venganza", "pasión", "resistencia", "alma", "cambio", "sacrificio", "odio", "renovación"]
 
 cd = [
     "Melodías en la Oscuridad",
@@ -64,25 +67,10 @@ br = [
     "Luz y Sombra"
 ]
 
+
 def limpiar_bd():
-    # Eliminar todos los registros de todas las tablas
-    ImatgeCatalog.objects.all().delete()
-    Log.objects.all().delete()
-    Peticio.objects.all().delete()
-    Prestec.objects.all().delete()
-    Reserva.objects.all().delete()
-    Exemplar.objects.all().delete()
-    Dispositiu.objects.all().delete()
-    BR.objects.all().delete()
-    CD.objects.all().delete()
-    Llibre.objects.all().delete()
-    ElementCatalog.objects.all().delete()
-    Catalog.objects.all().delete()
-    Usuari.objects.all().delete()  # Usando el modelo personalizado
     TipusMaterial.objects.all().delete()
-    Cicle.objects.all().delete()
-    Centre.objects.all().delete()
-    Usuari.objects.exclude(email='root@gmail.com').delete()  # También usando el modelo personalizado
+    Llibre.objects.all().delete()
 
 def crear_usuarios(num_usuarios):
     for _ in range(num_usuarios):
@@ -124,7 +112,10 @@ def crear_ciclos():
 
 def crear_tipos_material():
     for tipo in TIPOS_MATERIAL_CHOICES:
-        TipusMaterial.objects.create(nom=tipo[0])
+        tipo_existente = TipusMaterial.objects.filter(nom=tipo[0]).exists()
+        if not tipo_existente:
+            TipusMaterial.objects.create(nom=tipo[0])
+
 
 def crear_catalogo(num_catalogos):
     for _ in range(num_catalogos):
@@ -143,7 +134,7 @@ def crear_catalogo(num_catalogos):
             tipus_material=tipo_material_obj
         )
         if tipo_material[0] == 'llibre':
-            nombre_libro = f"{random.choice(adjetivos)} {random.choice(sustantivos)} del {random.choice(tematicas)}"
+            nombre_libro = fake.catch_phrase()
             isbn13 = ''.join([str(random.randint(0, 9)) for _ in range(13)])
             Llibre.objects.create(
                 nom=nombre_libro,  # Cambiamos de fake.catch_phrase() a fake.word()
@@ -219,6 +210,22 @@ def crear_reservas_prestamos_peticiones(num_elementos):
             data_peticio=fake.date_time_this_year()
         )
 
+def crear_autores_y_libros(num_autores=100):
+    for _ in range(num_autores):
+        autor_nombre = fake.name()
+        num_libros = random.randint(1, 10)  # Número aleatorio de libros por autor
+        for _ in range(num_libros):
+            nombre_libro = f"{random.choice(adjetivos)} {random.choice(sustantivos)} del {random.choice(tematicas)}"
+            isbn13 = ''.join([str(random.randint(0, 9)) for _ in range(13)])
+            Llibre.objects.create(
+                nom=nombre_libro,
+                CDU=fake.isbn13(),
+                ISBN=isbn13,
+                editorial=fake.company(),
+                collecio=fake.catch_phrase(),
+                autor=autor_nombre,
+                pagines=random.randint(100, 1000)
+            )
 
 
 def seed_database(num_usuarios=10, num_centros=5, num_catalogos=20, num_elementos=50):
@@ -228,4 +235,5 @@ def seed_database(num_usuarios=10, num_centros=5, num_catalogos=20, num_elemento
     crear_ciclos()
     crear_usuarios(num_usuarios)
     crear_catalogo(num_catalogos)
+    crear_autores_y_libros()
     crear_reservas_prestamos_peticiones(num_elementos)

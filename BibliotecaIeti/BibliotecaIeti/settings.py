@@ -14,6 +14,10 @@ from pathlib import Path
 import os
 import environ
 
+FAKER_PROVIDERS = [
+    'app.providers.SpanishProvider',
+]
+
 env = environ.Env()
 environ.Env.read_env()
 
@@ -30,7 +34,7 @@ AUTH_USER_MODEL = 'app.Usuari'
 SECRET_KEY = 'django-insecure-n4z#h_kmd45)v8b(+l*pq5m067o%2%()^+-_@zvtk-u$%)aw71'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG=False
+DEBUG=True
 
 ALLOWED_HOSTS = ['*']
 
@@ -135,9 +139,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STATIC_URL = 'static/'
 
 # Rutas de directorios donde se encuentran los archivos estáticos de la aplicación
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
+#STATICFILES_DIRS = [
+#    os.path.join(BASE_DIR, 'static'),
+#]
 
 # Add this line to specify the location where Django should collect static files
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')

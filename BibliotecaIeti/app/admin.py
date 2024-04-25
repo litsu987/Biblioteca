@@ -86,7 +86,7 @@ class ImatgeCatalogAdmin(admin.ModelAdmin):
 
 @admin.register(Llibre)
 class LibroAdmin(admin.ModelAdmin):
-    list_display = ('nom', 'CDU', 'ISBN', 'editorial', 'collecio', 'pagines')
+    list_display = ('nom','autor', 'CDU', 'ISBN', 'editorial', 'collecio', 'pagines')
 
 @admin.register(CD)
 class CDAdmin(admin.ModelAdmin):
