@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Importar Usuarios desde CSV</title>
+</head>
+<body>
+    <h1>Importar Usuarios desde CSV</h1>
+    
+    <!-- Mostrar mensaje de éxito -->
+    {% if success_message %}
+    <div>{{ success_message }}</div>
+    {% endif %}
+    
+    <!-- Mostrar mensaje de error -->
+    {% if error_message %}
+    <div>{{ error_message }}</div>
+    {% endif %}
+    
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="archivo_csv">
+        <button type="submit">Subir archivo</button>
+    </form>
+</body>
+</html>

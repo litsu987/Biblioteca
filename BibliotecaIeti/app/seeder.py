@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from .models import Centre, Cicle, TipusMaterial, Usuari, Catalog, ElementCatalog, Llibre, CD, BR, DVD, Dispositiu, Exemplar, Reserva, Prestec, Peticio, Log, ImatgeCatalog
 from .models import TIPOS_MATERIAL_CHOICES
 from faker.providers import BaseProvider
-fake = Faker()
+fake = Faker('es_ES')
 
 
 
@@ -72,17 +72,39 @@ def limpiar_bd():
     TipusMaterial.objects.all().delete()
     Llibre.objects.all().delete()
 
+class CustomProvider(BaseProvider):
+    def phone_number(self):
+        return self.random_int(min=600000000, max=699999999)
+
+fake.add_provider(CustomProvider)
+
 def crear_usuarios(num_usuarios):
+    roles_disponibles = ['Admin', 'Bibliotecari']
+    # Contadores para los roles
+    num_admin = Usuari.objects.filter(rol='Admin').count()
+    num_bibliotecari = Usuari.objects.filter(rol='Bibliotecari').count()
+
     for _ in range(num_usuarios):
+        # Seleccionar un rol aleatorio si aún hay disponibles
+        if num_admin < 3:
+            rol = 'Admin'
+            num_admin += 1
+        elif num_bibliotecari < 3:
+            rol = 'Bibliotecari'
+            num_bibliotecari += 1
+        else:
+            rol = ''  # No se asignará un rol si ya se alcanzó el límite
+
         username = fake.user_name()
         email = fake.email()
-        password = "password123"
-        first_name = fake.first_name()
-        last_name = fake.last_name()
+        password = "pa"
         data_naixement = fake.date_of_birth(minimum_age=18, maximum_age=90)
         imatge = fake.image_url()
         centre = Centre.objects.order_by('?').first()
         cicle = Cicle.objects.order_by('?').first()
+        telefon = fake.phone_number()  # Añadir número de teléfono aleatorio
+        nom = fake.first_name()  # Añadir nombre aleatorio
+        cognom = fake.last_name()
 
         # Crear usuario
         usuari = Usuari.objects.create(
@@ -92,13 +114,17 @@ def crear_usuarios(num_usuarios):
             imatge=imatge,
             centre=centre,
             cicle=cicle,
-            first_name = first_name,
-            last_name = last_name
+            telefon=telefon,  # Añadir número de teléfono
+            nom=nom,
+            cognom=cognom, # Añadir nombre aleatorio
+            rol=rol  # Asignar el rol seleccionado
         )
-        
+
         # Configurar contraseña
         usuari.set_password(password)
         usuari.save()
+
+
 
 def crear_centros(num_centros):
     for _ in range(num_centros):
