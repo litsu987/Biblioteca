@@ -4,7 +4,7 @@ from django.template import loader
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.backends import ModelBackend
-from .models import Llibre, Usuari, CD, BR, DVD, Dispositiu
+from .models import Llibre, Usuari, CD, BR, DVD, Dispositiu, Centre
 from django.views.generic import ListView
 from django.db.models import Q
 from .utils import generarLog,subir_logs_a_bd  # Importa la función generarLog desde utils.py
@@ -14,6 +14,7 @@ from django.core.exceptions import ValidationError
 import csv
 from .models import Usuari
 from django.contrib.auth.hashers import make_password
+from datetime import datetime
 
 @login_required
 def dashboard(request):
@@ -128,30 +129,36 @@ def logout_user(request):
 def importar_Users(request):
     if request.method == 'POST' and request.FILES['archivo_csv']:
         archivo_csv = request.FILES['archivo_csv']
-        if archivo_csv.name.endswith('.csv'):
-            try:
-                decoded_file = archivo_csv.read().decode('utf-8').splitlines()
-                reader = csv.DictReader(decoded_file)
-                for row in reader:
-                    nuevo_usuario = Usuari(
-                        nombre=row['nombre'],
-                        apellido=row['apellido'],
-                        telefono=row['telefono'],
-                        centro=row['centro'],
-                        email=row['mail'],
-                        fecha_nacimiento=row['fecha_nacimiento'],
-                        contraseña=make_password('password123'),
-                        rol='Alumne'
-                    )
-                    nuevo_usuario.save()
-                
-                # Renderiza la misma página HTML después de procesar el archivo
-                return render(request, 'importar_Users.html', {'success_message': 'Usuarios importados correctamente.'})
-            except Exception as e:
-                # Llama a la función generarLog para registrar el error
-                generarLog(request, 'Error', f'Error al procesar el archivo CSV: {str(e)}')
-                return render(request, 'importar_Users.html', {'error_message': 'Error al procesar el archivo. Consulta los registros para más detalles.'})
-        else:
-            return render(request, 'importar_Users.html', {'error_message': 'Formato de archivo no válido. Se requiere un archivo CSV.'})
-    
+        decoded_file = archivo_csv.read().decode('utf-8').splitlines()
+        csv_reader = csv.DictReader(decoded_file)
+
+        for row in csv_reader:
+            # Obtener los datos de cada columna del CSV
+            nom = row['Nom']
+            cognom = row['Cognom']
+            telefon = row['Telefon']
+            centre_nom = row['Centre']
+            email = row['email']
+            data_naixement = datetime.strptime(row['data_naixement'], '%Y-%m-%d').date()
+
+            # Obtener o crear el centro
+            centre, created = Centre.objects.get_or_create(nom=centre_nom)
+
+            # Crear el usuario con los datos obtenidos
+            user = Usuari.objects.create(
+                nom=nom,
+                cognom=cognom,
+                telefon=telefon,
+                centre=centre,
+                email=email,
+
+                data_naixement=data_naixement,
+                password=make_password('P@ssw0rd987'),  # Establecer la contraseña como 'P@ssw0rd987'
+                rol='Alumne',  # Establecer el rol como 'Alumne'
+            )
+
+            # Puedes realizar más operaciones si es necesario, como asignar roles, etc.
+            # user.rol = '...'
+            # user.save()
+
     return render(request, 'importar_Users.html')

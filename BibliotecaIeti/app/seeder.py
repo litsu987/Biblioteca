@@ -71,6 +71,8 @@ br = [
 def limpiar_bd():
     TipusMaterial.objects.all().delete()
     Llibre.objects.all().delete()
+    Cicle.objects.all().delete()
+  
 
 class CustomProvider(BaseProvider):
     def phone_number(self):
@@ -79,21 +81,24 @@ class CustomProvider(BaseProvider):
 fake.add_provider(CustomProvider)
 
 def crear_usuarios(num_usuarios):
-    roles_disponibles = ['Admin', 'Bibliotecari']
+    roles_disponibles = ['Admin', 'Bibliotecari', 'Alumne']
     # Contadores para los roles
     num_admin = Usuari.objects.filter(rol='Admin').count()
     num_bibliotecari = Usuari.objects.filter(rol='Bibliotecari').count()
+    num_alumne = Usuari.objects.filter(rol='Alumne').count()
 
     for _ in range(num_usuarios):
         # Seleccionar un rol aleatorio si aún hay disponibles
-        if num_admin < 3:
-            rol = 'Admin'
-            num_admin += 1
-        elif num_bibliotecari < 3:
+        if num_bibliotecari < 3:
             rol = 'Bibliotecari'
             num_bibliotecari += 1
+        elif num_admin < 3:
+            rol = 'Admin'
+            num_admin += 1
         else:
-            rol = ''  # No se asignará un rol si ya se alcanzó el límite
+            # Si ya hay suficientes bibliotecarios y administradores,
+            # crear usuarios con el rol de "Alumne" exclusivamente
+            rol = 'Alumne'
 
         username = fake.user_name()
         email = fake.email()
@@ -103,7 +108,8 @@ def crear_usuarios(num_usuarios):
         centre = Centre.objects.order_by('?').first()
         cicle = Cicle.objects.order_by('?').first()
         telefon = fake.phone_number()  # Añadir número de teléfono aleatorio
-        nom = fake.first_name()  # Añadir nombre aleatorio
+        first_name = fake.first_name() 
+        last_name = fake.last_name() 
         cognom = fake.last_name()
 
         # Crear usuario
@@ -115,7 +121,8 @@ def crear_usuarios(num_usuarios):
             centre=centre,
             cicle=cicle,
             telefon=telefon,  # Añadir número de teléfono
-            nom=nom,
+            first_name=first_name,
+            last_name=last_name,
             cognom=cognom, # Añadir nombre aleatorio
             rol=rol  # Asignar el rol seleccionado
         )
@@ -123,6 +130,7 @@ def crear_usuarios(num_usuarios):
         # Configurar contraseña
         usuari.set_password(password)
         usuari.save()
+
 
 
 

@@ -42,7 +42,7 @@ class Usuari(AbstractUser):
     REQUIRED_FIELDS = []
 
     ROLES_CHOICES = [
-        ('', 'Alumne'),
+        ('Alumne', 'Alumne'),
         ('Admin', 'Admin'),
         ('Bibliotecari', 'Bibliotecari'),
     ]
