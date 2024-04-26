@@ -7,16 +7,62 @@
 </head>
 <body>
     <h1>Importar Usuarios desde CSV</h1>
-    <form action="" method="post" enctype="multipart/form-data">
+    <form id="myForm" action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        <input type="file" name="archivo_csv" accept=".csv">
-        <select name="centro">
+        <input type="file" name="archivo_csv" id="archivo_csv" accept=".csv" required>
+        <select name="centro" id="centro" required>
+            <option value="" selected>Seleccionar centro</option>
             {% for centro in centros %}
-                <option value="{{ centro.id }}">{{ centro.nom }}</option>
+                <option value="{{ centro.nom }}">{{ centro.nom }}</option>
             {% endfor %}
         </select>
-        <button type="submit">Subir CSV</button>
+        
+        <!-- Campo input oculto para enviar el nombre del centro seleccionado -->
+        <input type="hidden" name="nombre_centro_seleccionado" id="nombre_centro_seleccionado" value="">
+        <button id="submitButton" type="submit" disabled>Subir CSV</button>
     </form>
+    <script>
+        // JavaScript para actualizar el valor del campo input oculto cuando se selecciona un centro
+        document.querySelector('select[name="centro"]').addEventListener('change', function() {
+            document.getElementById('nombre_centro_seleccionado').value = this.value;
+        });
+        
+        // Validar que se haya seleccionado un archivo y un centro antes de habilitar el botón de enviar
+        document.getElementById('archivo_csv').addEventListener('change', function() {
+            validarFormulario();
+        });
+
+        document.getElementById('centro').addEventListener('change', function() {
+            validarFormulario();
+        });
+
+        function validarFormulario() {
+            var archivoSeleccionado = document.getElementById('archivo_csv').value;
+            var centroSeleccionado = document.getElementById('centro').value;
+            var submitButton = document.getElementById('submitButton');
+
+            if (archivoSeleccionado && centroSeleccionado) {
+                submitButton.disabled = false;
+            } else {
+                submitButton.disabled = true;
+            }
+        }
+    </script>
+
+    <!-- Mostrar mensaje de error si algo salió mal -->
+    <!-- Mostrar usuarios que no pudieron ser creados debido a que ya están dados de alta -->
+    {% if usuarios_no_introducidos %}
+    <p style="color: red;">Usuarios que no pudieron ser creados porque ya están dados de alta:</p>
+    <ul>
+        {% for usuario in usuarios_no_introducidos %}
+        <li style="color: red;">{{ usuario.first_name }} {{ usuario.last_name }} - {{ usuario.email }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if usuarios_agregados %}
+    <p style="color: green;">Se han agregado {{ usuarios_agregados }} usuarios correctamente.</p>
+    {% endif %}
+
 </body>
 </html>
-

@@ -127,8 +127,14 @@ def logout_user(request):
     return redirect('index')
 
 def importar_Users(request):
+    error_message = None  # Inicializar el mensaje de error
+    usuarios_no_introducidos = []  # Inicializar la lista de usuarios no introducidos
+    usuarios_agregados = 0  # Inicializar el contador de usuarios agregados exitosamente
+    
     if request.method == 'POST' and request.FILES.get('archivo_csv'):
         archivo_csv = request.FILES['archivo_csv']
+        nombre_centro_seleccionado = request.POST.get('nombre_centro_seleccionado')  # Obtener el nombre del centro seleccionado
+        
         try:
             decoded_file = archivo_csv.read().decode('utf-8').splitlines()
             csv_reader = csv.DictReader(decoded_file)
@@ -141,30 +147,53 @@ def importar_Users(request):
                 data_naixement = datetime.strptime(row.get('data_naixement'), '%Y-%m-%d').date()
                 cicle_nom = row.get('Cicle')
 
+                print("Leyendo fila del CSV:")
+                print(f"Nombre: {nom}, Apellido: {cognom}, Teléfono: {telefon}, Email: {email}, Fecha de nacimiento: {data_naixement}, Ciclo: {cicle_nom}")
+
                 try:
+                    # Obtener o crear el ciclo
                     cicle, created = Cicle.objects.get_or_create(nom=cicle_nom)  
 
-                    user = Usuari.objects.create(
-                        first_name=nom,
-                        last_name=cognom,
-                        telefon=telefon,
-                        cicle=cicle,
+                    # Obtener el centro seleccionado
+                    centro_seleccionado = Centre.objects.get(nom=nombre_centro_seleccionado)
+
+                    # Crear el usuario con los datos del CSV y el centro seleccionado
+                    user, created = Usuari.objects.get_or_create(
                         email=email,
-                        data_naixement=data_naixement,
-                        password=make_password('P@ssw0rd987'),
-                        rol='Alumne',
+                        defaults={
+                            'first_name': nom,
+                            'last_name': cognom,
+                            'username': email,
+                            'telefon': telefon,
+                            'cicle': cicle,
+                            'centre': centro_seleccionado,
+                            'data_naixement': data_naixement,
+                            'password': make_password('P@ssw0rd987'),
+                            'rol': 'Alumne',
+                        }
                     )
+                    
+                    if created:
+                        usuarios_agregados += 1  # Incrementar el contador de usuarios agregados
+                        print(f"Usuario '{nom} {cognom}' creado correctamente.")
+                    else:
+                        # Si el usuario ya existe, añadirlo a la lista de usuarios no introducidos
+                        usuarios_no_introducidos.append(user)
+                        print(f"El usuario '{nom} {cognom}' ya existe en la biblioteca.")
+                    
                 except Exception as e:
+                    # Manejar cualquier error que ocurra durante la creación del usuario
                     username = row.get('Nom')  # Obtener el nombre del usuario que causó el error
-                    generarLog(request, 'ERROR', f"No se pudo crear el usuario '{username}': {e}")
-                    error_message = f"No se pudo crear el usuario '{username}': {e}"
-                    print(error_message)
+                    error_message = f"No se pudo crear el usuario '{username}' debido a que ya está en la biblioteca"
+                    generarLog(request, 'ERROR', f"No se pudo crear el usuario '{username}' {e}")
 
         except Exception as e:
-            error_message = f"No se pudo leer el archivo CSV: {e}"
-            generarLog(request, 'ERROR', f"No se pudo leer el archivo CSV: {e}")
+            # Manejar cualquier error que ocurra durante la lectura del archivo CSV
+            error_message = f"No se pudo leer el archivo CSV"
             print(error_message)
+            generarLog(request, 'ERROR', f"No se pudo leer el archivo CSV: {e}")
             
+    # Obtener todos los centros para pasarlos a la plantilla
     centros = Centre.objects.all()
 
-    return render(request, 'importar_Users.html', {'centros': centros})
+    return render(request, 'importar_Users.html', {'centros': centros, 'error_message': error_message, 'usuarios_no_introducidos': usuarios_no_introducidos, 'usuarios_agregados': usuarios_agregados})
