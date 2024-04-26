@@ -20,265 +20,70 @@
       href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
       rel="stylesheet"
     />
-
-   <style>
-	*,
-body,
-main {
-  padding: 0;
-  margin: 0;
-}
-
-#header {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  background-color: #e3ecee;
-}
-
-#common {
-    display: flex;
-    flex-direction: row;
-}
-
-#header  img {
-  width: auto;
-  height: 80px;
-  margin: 20px 0 auto 20px;
-}
-
-h1 {
-  padding: 5vh 0;
-  color: #142c83;
-  font-family: Montserrat;
-  font-weight: bolder;
-  text-align: left;
-}
-
-h2 {
-  font-size: 2rem;
-  margin-bottom: 20px;
-}
-
-#main {
-  font-family: Nunito;
-  display: flex;
-  margin: auto;
-  padding: 2%;
-  justify-content: center;
-  text-align: center;
-  width: 80vw;
-  height: 50vh;
-  gap: 20%;
-  margin-top: 5vh;
-}
-
-#main div,
-form {
-  background-color: #e3ecee;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 0 50px;
-  width: 40vw;
-  max-width: 500px;
-  border-radius: 15px;
-}
-
-#login label {
-  text-align: left;
-}
-
-#booksearcher > form {
-  display: flex;
-  padding: 0;
-  flex-direction: column;
-  gap: 5%;
-}
-
-#booksearcher input[type="submit"] {
-  width: fit-content;
-  padding: 5px 20px;
-  margin: 0 auto;
-  font-family: Nunito;
-  font-weight: bold;
-}
-
-input[type="search"] {
-  width: 90%;
-  height: 40px;
-  font-size: 1.3rem;
-  margin: 0 auto;
-  border-radius: 8px;
-}
-
-#user,
-#pass {
-  width: 100%;
-  height: 25px;
-  margin: 0 auto;
-  border-radius: 8px;
-}
-
-#login a {
-  font-size: 0.7rem;
-  text-align: left;
-  text-decoration: none;
-}
-
-#login {
-  gap: 10px;
-}
-
-#login input[type="button"] {
-  width: fit-content;
-  padding: 0 15px;
-  margin-left: auto;
-  font-family: Nunito;
-  font-weight: bold;
-  background-color: #d9d9d9;
-}
-
-#infouser {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-
-#data {
-  align-self: center;
-  text-align: right;
-}
-
-#infouser img {
-  width: 50px;
-  height: 80px;
-  padding: 0 10px;
-  margin: auto 0;
-}
-
-h3 {
-  padding: 10px 20px;
-  background-color: #142c83;
-  width: fit-content;
-  font-size: 1rem;
-  color: white;
-  font-family: Rubik Mono One;
-}
-
-#divisor {
-  display: flex;
-  justify-content: space-around;
-}
-
-#divisor img {
-  width: 500px;
-  height: auto;
-  max-height: 500px;
-}
-
-#divisor form {
-  display: flex;
-  flex-direction: column;
-  background-color: #e3ecee;
-  justify-content: center;
-  height: 50vh;
-  padding: 0 50px;
-  gap: 15px;
-  width: 40vw;
-  max-width: 500px;
-  border-radius: 15px;
-}
-
-#divisor form input[type="text"] {
-  width: 100%;
-  height: 30px;
-  font-size: 1rem;
-  margin: 0 auto;
-  border-radius: 8px;
-}
-
-#sepa {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-
-#divisor form input[type="submit"] {
-  width: fit-content;
-  padding: 0 15px;
-  margin: 0 auto;
-  font-family: Nunito;
-  font-weight: bold;
-  background-color: #d9d9d9;
-}
-
-#nosepa {
-  display: flex;
-  flex-direction: column;
-}
-   
-</style>
   </head>
   <body>
     <div id="header">
-        <div id="common">
-          <a href="{% url 'index'%}">
-            <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNz9mZq9dbJ77kWv65_SQ-v0Nn3pIx9QpigGCKNJSRWMsS9ixpPPdoILzUNIQqkPaBxco&usqp=CAU"
-              alt=""
-            />
-          </a>
-          <h1>BIBLIOTECA MARICARMEN</h1>
-        </div>
-        <div id="infouser">
-          {% if user.is_authenticated %}
-          <div id="data">
-            <p>{{ user.first_name }}</p>
-            {% if user.is_staff %}
-            <p>Admin</p>
-            {% else %}
-            <p>Usuari</p>
-            {% endif %}
-            <a href="{% url 'logout' %}">Tancar Sessió</a>
-          </div>
-          <img src="{{ user.imatge }}" alt="" srcset="" />
-          {% endif %}
-        </div>
+      <div id="common">
+        <a href="{% url 'index'%}">
+          <img
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNz9mZq9dbJ77kWv65_SQ-v0Nn3pIx9QpigGCKNJSRWMsS9ixpPPdoILzUNIQqkPaBxco&usqp=CAU"
+            alt=""
+          />
+        </a>
+        <h1>BIBLIOTECA MARICARMEN</h1>
       </div>
+      <div id="infouser">
+        {% if user.is_authenticated %}
+        <div id="data">
+          <p>{{ user.first_name }}</p>
+          {% if user.is_staff %}
+          <p>Admin</p>
+          {% else %}
+          <p>Usuari</p>
+          {% endif %}
+          <a href="{% url 'logout' %}">Tancar Sessió</a>
+        </div>
+        <img src="{{ user.imatge }}" alt="" srcset="" />
+        {% endif %}
+      </div>
+    </div>
     <h3>PERFIL</h3>
     <div id="divisor">
       <img src="{{user.imatge}}" alt="" srcset="" />
       <form action="" method="post">
-        {% csrf_token %}
-      {% if messages %} {% for message in messages %} {{ message }} {% endfor %}
-      {% endif %}
-        <input type="hidden" name="id" value="{{ user.id }}" readonly>
+        {% csrf_token %} {% if messages %} {% for message in messages %} {{
+        message }} {% endfor %} {% endif %}
+        <input type="hidden" name="id" value="{{ user.id }}" readonly />
         <label for="nom">Nom d'usuari</label>
-        <input type="text" name="username" value="{{user.username}}"  />
+        <input type="text" name="username" value="{{user.username}}" />
         <label for="email">Email</label>
-        <input type="text" value="{{user.email}}"disabled readonly />
+        <input type="text" value="{{user.email}}" disabled readonly />
         <div id="sepa">
-            <div id="nosepa">
-                <label for="date">Data de naixament</label>
-                <input type="text" value="{{user.data_naixement}}" disabled readonly />
-            </div>
-            {% if user.is_staff %}
-            <div id="nosepa">
-                <label for=""> Cargo </label>
-                <input type="text" value="staff" readonly disabled/>
-            </div>
+          <div id="nosepa">
+            <label for="date">Data de naixament</label>
+            <input
+              type="text"
+              value="{{user.data_naixement}}"
+              disabled
+              readonly
+            />
+          </div>
+          {% if user.is_staff %}
+          <div id="nosepa">
+            <label for=""> Cargo </label>
+            <input type="text" value="staff" readonly disabled />
+          </div>
           {% else %}
           <div id="nosepa">
-              <label for=""> Cicle </label>
-              <input type="text" value="{{user.cicle.nom}}"readonly disabled />
-            </div>
+            <label for=""> Cicle </label>
+            <input type="text" value="{{user.cicle.nom}}" readonly disabled />
+          </div>
           {% endif %}
         </div>
-          <label>Centre</label>
-          <input type="text" value="{{user.centre.nom}}" readonly disabled/>
-          <input type="submit" value="Guardar Canvis" />
-        </form>
+        <label>Centre</label>
+        <input type="text" value="{{user.centre.nom}}" readonly disabled />
+        <input type="submit" value="Guardar Canvis" />
+      </form>
     </div>
   </body>
 </html>

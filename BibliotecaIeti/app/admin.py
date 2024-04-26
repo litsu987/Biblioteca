@@ -15,7 +15,7 @@ class TipusMaterialAdmin(admin.ModelAdmin):
 
 @admin.register(Usuari)
 class UsuariAdmin(admin.ModelAdmin):
-    list_display = ('email', 'nom', 'data_naixement', 'centre', 'cicle', 'imatge')
+    list_display = ('email','first_name','last_name', 'telefon', 'data_naixement', 'centre', 'cicle', 'imatge','rol')
 
     def mostrar_centro(self, obj):
         return obj.centre.nom if obj.centre else ""
@@ -86,7 +86,7 @@ class ImatgeCatalogAdmin(admin.ModelAdmin):
 
 @admin.register(Llibre)
 class LibroAdmin(admin.ModelAdmin):
-    list_display = ('nom', 'CDU', 'ISBN', 'editorial', 'collecio', 'pagines')
+    list_display = ('nom','autor', 'CDU', 'ISBN', 'editorial', 'collecio', 'pagines')
 
 @admin.register(CD)
 class CDAdmin(admin.ModelAdmin):

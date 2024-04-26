@@ -9,6 +9,11 @@ from django.views.generic import ListView
 from django.db.models import Q
 from .utils import generarLog,subir_logs_a_bd  # Importa la función generarLog desde utils.py
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import PasswordChangeView, PasswordChangeDoneView
+from django.urls import reverse_lazy
+from .decorators import check_user_able_to_see_page
+from .forms import UsuariRegistroForm
+
 
 @login_required
 def dashboard(request):
@@ -107,4 +112,26 @@ def logout_user(request):
     generarLog(request, 'INFO', f"LOGOUT.")
     subir_logs_a_bd(request)
     return redirect('index')
+
+@login_required
+@check_user_able_to_see_page("Bibliotecari", "Admin")
+def library_loan(request):
+    if request.method == 'POST':
+        form = UsuariRegistroForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('index')  # Cambiar 'ruta_de_redireccion' por la URL a la que quieras redirigir después del registro exitoso
+    else:
+        form = UsuariRegistroForm()
+    return render(request, 'library_loan.html', {'form': form})
+
+
+class ChangePass(PasswordChangeView):
+    template_name = "registration/resetpass.html"
+    success_url = reverse_lazy("reset_done")
+
+class ChangePassDone(PasswordChangeDoneView):
+    template_name = "registration/resetpassdone.html"
+
+
 
