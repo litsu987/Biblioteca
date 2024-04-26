@@ -16,8 +16,14 @@ TIPOS_MATERIAL_CHOICES = [
 class Centre(models.Model):
     nom = models.CharField(max_length=100)
 
+    def __str__(self):
+        return self.nom
+
 class Cicle(models.Model):
     nom = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.nom
 
 class TipusMaterial(models.Model):
     nom = models.CharField(max_length=50, choices=TIPOS_MATERIAL_CHOICES)

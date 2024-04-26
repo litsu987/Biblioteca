@@ -10,7 +10,13 @@
     <form action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <input type="file" name="archivo_csv" accept=".csv">
+        <select name="centro">
+            {% for centro in centros %}
+                <option value="{{ centro.id }}">{{ centro.nom }}</option>
+            {% endfor %}
+        </select>
         <button type="submit">Subir CSV</button>
     </form>
 </body>
 </html>
+

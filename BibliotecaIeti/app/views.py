@@ -4,7 +4,7 @@ from django.template import loader
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.backends import ModelBackend
-from .models import Llibre, Usuari, CD, BR, DVD, Dispositiu, Centre
+from .models import Llibre, Usuari, CD, BR, DVD, Dispositiu, Centre, Cicle
 from django.views.generic import ListView
 from django.db.models import Q
 from .utils import generarLog,subir_logs_a_bd  # Importa la función generarLog desde utils.py
@@ -127,38 +127,44 @@ def logout_user(request):
     return redirect('index')
 
 def importar_Users(request):
-    if request.method == 'POST' and request.FILES['archivo_csv']:
+    if request.method == 'POST' and request.FILES.get('archivo_csv'):
         archivo_csv = request.FILES['archivo_csv']
-        decoded_file = archivo_csv.read().decode('utf-8').splitlines()
-        csv_reader = csv.DictReader(decoded_file)
+        try:
+            decoded_file = archivo_csv.read().decode('utf-8').splitlines()
+            csv_reader = csv.DictReader(decoded_file)
 
-        for row in csv_reader:
-            # Obtener los datos de cada columna del CSV
-            nom = row['Nom']
-            cognom = row['Cognom']
-            telefon = row['Telefon']
-            centre_nom = row['Centre']
-            email = row['email']
-            data_naixement = datetime.strptime(row['data_naixement'], '%Y-%m-%d').date()
+            for row in csv_reader:
+                nom = row.get('Nom')
+                cognom = row.get('Cognom')
+                telefon = row.get('Telefon')
+                email = row.get('email')
+                data_naixement = datetime.strptime(row.get('data_naixement'), '%Y-%m-%d').date()
+                cicle_nom = row.get('Cicle')
 
-            # Obtener o crear el centro
-            centre, created = Centre.objects.get_or_create(nom=centre_nom)
+                try:
+                    cicle, created = Cicle.objects.get_or_create(nom=cicle_nom)  
 
-            # Crear el usuario con los datos obtenidos
-            user = Usuari.objects.create(
-                nom=nom,
-                cognom=cognom,
-                telefon=telefon,
-                centre=centre,
-                email=email,
+                    user = Usuari.objects.create(
+                        first_name=nom,
+                        last_name=cognom,
+                        telefon=telefon,
+                        cicle=cicle,
+                        email=email,
+                        data_naixement=data_naixement,
+                        password=make_password('P@ssw0rd987'),
+                        rol='Alumne',
+                    )
+                except Exception as e:
+                    username = row.get('Nom')  # Obtener el nombre del usuario que causó el error
+                    generarLog(request, 'ERROR', f"No se pudo crear el usuario '{username}': {e}")
+                    error_message = f"No se pudo crear el usuario '{username}': {e}"
+                    print(error_message)
 
-                data_naixement=data_naixement,
-                password=make_password('P@ssw0rd987'),  # Establecer la contraseña como 'P@ssw0rd987'
-                rol='Alumne',  # Establecer el rol como 'Alumne'
-            )
+        except Exception as e:
+            error_message = f"No se pudo leer el archivo CSV: {e}"
+            generarLog(request, 'ERROR', f"No se pudo leer el archivo CSV: {e}")
+            print(error_message)
+            
+    centros = Centre.objects.all()
 
-            # Puedes realizar más operaciones si es necesario, como asignar roles, etc.
-            # user.rol = '...'
-            # user.save()
-
-    return render(request, 'importar_Users.html')
+    return render(request, 'importar_Users.html', {'centros': centros})

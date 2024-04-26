@@ -71,7 +71,7 @@ br = [
 def limpiar_bd():
     TipusMaterial.objects.all().delete()
     Llibre.objects.all().delete()
-    Cicle.objects.all().delete()
+    Usuari.objects.all().delete()
   
 
 class CustomProvider(BaseProvider):
@@ -141,7 +141,9 @@ def crear_centros(num_centros):
 def crear_ciclos():
     ciclos = ["AWS", "AMS", "ASIX"]
     for ciclo in ciclos:
-        Cicle.objects.create(nom=ciclo)
+        if not Cicle.objects.filter(nom=ciclo).exists():
+            Cicle.objects.create(nom=ciclo)
+
 
 
 def crear_tipos_material():
