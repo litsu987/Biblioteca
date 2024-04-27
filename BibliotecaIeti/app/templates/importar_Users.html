@@ -4,6 +4,98 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Importar Usuarios desde CSV</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            max-width: 600px;
+            margin: 20px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        input[type="file"],
+        select {
+            margin-bottom: 10px;
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 5px;
+        }
+
+        li.error {
+            color: red;
+        }
+
+        li.success {
+            color: green;
+        }
+        .resultado-container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .resultado-container p {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .resultado-container ul {
+            text-align: center;
+        }
+
+        .resultado-container li {
+            color: red; /* Cambia el color de los usuarios no introducidos */
+            margin-bottom: 5px;
+        }
+
+        .resultado-container .success {
+            color: green; /* Cambia el color de los usuarios agregados correctamente */
+        }
+    </style>
 </head>
 <body>
     <h1>Importar Usuarios desde CSV</h1>
@@ -49,20 +141,20 @@
         }
     </script>
 
-    <!-- Mostrar mensaje de error si algo salió mal -->
-    <!-- Mostrar usuarios que no pudieron ser creados debido a que ya están dados de alta -->
+<div class="resultado-container">
     {% if usuarios_no_introducidos %}
-    <p style="color: red;">Usuarios que no pudieron ser creados porque ya están dados de alta:</p>
-    <ul>
-        {% for usuario in usuarios_no_introducidos %}
-        <li style="color: red;">{{ usuario.first_name }} {{ usuario.last_name }} - {{ usuario.email }}</li>
-        {% endfor %}
-    </ul>
+        <p style="color: red;">Usuarios que no pudieron ser creados porque ya están dados de alta:</p>
+        <ul>
+            {% for usuario in usuarios_no_introducidos %}
+                <li>{{ usuario.first_name }} {{ usuario.last_name }} - {{ usuario.email }}</li>
+            {% endfor %}
+        </ul>
     {% endif %}
 
     {% if usuarios_agregados %}
-    <p style="color: green;">Se han agregado {{ usuarios_agregados }} usuarios correctamente.</p>
+        <p style="color: green;">Se han agregado {{ usuarios_agregados }} usuarios correctamente.</p>
     {% endif %}
+</div>
 
 </body>
 </html>

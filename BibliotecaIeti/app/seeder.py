@@ -68,10 +68,10 @@ br = [
 ]
 
 
-def limpiar_bd():
-    TipusMaterial.objects.all().delete()
-    Llibre.objects.all().delete()
-    Usuari.objects.all().delete()
+#def limpiar_bd():
+ #   TipusMaterial.objects.all().delete()
+  #  Llibre.objects.all().delete()
+   # Usuari.objects.all().delete()
   
 
 class CustomProvider(BaseProvider):
@@ -265,7 +265,7 @@ def crear_autores_y_libros(num_autores=100):
 
 
 def seed_database(num_usuarios=10, num_centros=5, num_catalogos=20, num_elementos=50):
-    limpiar_bd()
+  #  limpiar_bd()
     crear_tipos_material()
     crear_centros(num_centros)
     crear_ciclos()
