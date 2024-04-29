@@ -4,7 +4,7 @@ from django.template import loader
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.backends import ModelBackend
-from .models import Llibre, Usuari, CD, BR, DVD, Dispositiu, Centre, Cicle
+from .models import Llibre, Usuari, CD, BR, DVD, Dispositiu, Centre, Cicle, Prestec,Catalog, Reserva
 from django.views.generic import ListView
 from django.db.models import Q
 from .utils import generarLog,subir_logs_a_bd  # Importa la función generarLog desde utils.py
@@ -14,7 +14,8 @@ from django.core.exceptions import ValidationError
 import csv
 from .models import Usuari
 from django.contrib.auth.hashers import make_password
-from datetime import datetime
+from datetime import datetime, timedelta
+from django.utils import timezone
 
 @login_required
 def dashboard(request):
@@ -24,14 +25,14 @@ def dashboard(request):
 
         if user_id:
             try:
-                usuario = Usuari.objects.get(pk=user_id)  # Cambio aquí
-                usuario.username = request.POST.get('username', usuario.username)  # También aquí
+                usuario = Usuari.objects.get(pk=user_id)  
+                usuario.username = request.POST.get('username', usuario.username)  
                 usuario.save()
                 messages.success(request, 'Datos actualizados correctamente')
                 generarLog(request, 'INFO', f"Datos actualizados correctamente")
                 subir_logs_a_bd(request)
                 return redirect('dashboard')
-            except Usuari.DoesNotExist:  # Cambio aquí
+            except Usuari.DoesNotExist:  
                 messages.error(request, 'El usuario no existe')
                 generarLog(request, 'ERROR', f"El usuario no existe")
                 subir_logs_a_bd(request)
@@ -42,8 +43,12 @@ def dashboard(request):
             subir_logs_a_bd(request)
 
             return redirect('dashboard')
-
-    return render(request, 'dashboard.html', {'users': users})
+    
+    # Verificar si el usuario tiene autentificacio en True
+    if request.user.autentificacio:  
+        return render(request, 'dashboard.html', {'users': users})
+    else:
+        return redirect('otra_pagina.html') 
 
 
 def index(request):
@@ -58,15 +63,15 @@ def index(request):
         email = request.POST.get("email")
         password = request.POST.get("password")
 
-        try:
+       # try:
             # Validar la contraseña
-            validate_password(password)
-        except ValidationError as error:
+           # validate_password(password)
+      #  except ValidationError as error:
             # Si la contraseña no cumple con los requisitos, mostrar un mensaje de error
-            messages.error(request, "{}".format(", ".join(error.messages)))
-            generarLog(request, 'ERROR', f"Contraseña inválida: {', '.join(error.messages)}")
-            subir_logs_a_bd(request)
-            return redirect('index')
+          #  messages.error(request, "{}".format(", ".join(error.messages)))
+           # generarLog(request, 'ERROR', f"Contraseña inválida: {', '.join(error.messages)}")
+            #subir_logs_a_bd(request)
+            #return redirect('index')
 
         user = authenticate(request, username=email, password=password)
         if user is not None:
@@ -197,3 +202,40 @@ def importar_Users(request):
     centros = Centre.objects.all()
 
     return render(request, 'importar_Users.html', {'centros': centros, 'error_message': error_message, 'usuarios_no_introducidos': usuarios_no_introducidos, 'usuarios_agregados': usuarios_agregados})
+
+def Prestecs(request):
+    # Obtener los usuarios que tienen un préstamo
+    usuarios_con_prestamo = Usuari.objects.filter(prestec__isnull=False).distinct()
+
+    # Pasar los usuarios a la plantilla
+    return render(request, 'Prestecs.html', {'usuarios_con_prestamo': usuarios_con_prestamo})
+
+
+def llistarprestecs(request):
+    if request.method == 'POST':
+        # Procesar los datos del formulario de préstamo
+        usuario_id = request.POST.get('usuari')
+        catalogo_id = request.POST.get('catalog')
+        
+        # Obtener la fecha actual
+        fecha_prestamo = datetime.now().date()
+        
+        # Calcular la fecha de retorno (un mes después de la fecha de préstamo)
+        fecha_retorno = fecha_prestamo + timedelta(days=30)
+
+        # Aquí puedes procesar los datos recibidos y crear el préstamo en la base de datos
+        usuario = Usuari.objects.get(id=usuario_id)
+        catalogo = Catalog.objects.get(id=catalogo_id)
+        prestamo = Prestec.objects.create(usuari=usuario, catalog=catalogo, data_prestec=fecha_prestamo, data_retorn=fecha_retorno)
+
+        # Redirigir a alguna página de éxito o a donde desees
+        return redirect('llistarPrestecs.html')
+
+    # Obtener los usuarios que tienen un préstamo
+    usuarios_con_prestamo = Usuari.objects.filter(prestec__isnull=False).distinct()
+    
+    # Obtener los catálogos disponibles
+    catalog_items = Catalog.objects.all()
+
+    # Pasar los usuarios y la fecha actual a la plantilla
+    return render(request, 'llistarPrestecs.html', {'usuarios_con_prestamo': usuarios_con_prestamo, 'catalog_items': catalog_items})

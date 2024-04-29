@@ -54,6 +54,7 @@ class Usuari(AbstractUser):
     ]
 
     rol = models.CharField(max_length=50, choices=ROLES_CHOICES, default='', blank=True)
+    autentificacio = models.BooleanField(default=False)  
     objects = UserManager()
 
 
@@ -111,9 +112,14 @@ class Reserva(models.Model):
 
 class Prestec(models.Model):
     usuari = models.ForeignKey(Usuari, on_delete=models.CASCADE)
-    exemplar = models.ForeignKey(Exemplar, on_delete=models.CASCADE)
+    catalog = models.ForeignKey(Catalog, on_delete=models.CASCADE, default=1)
+
     data_prestec = models.DateField(auto_now_add=True)
     data_retorn = models.DateField(null=True, blank=True)
+
+    def __str__(self):
+        return f"Prestec de {self.catalog} a {self.usuari} el {self.data_prestec}"
+
 
 class Peticio(models.Model):
     usuari = models.ForeignKey(Usuari, on_delete=models.CASCADE)

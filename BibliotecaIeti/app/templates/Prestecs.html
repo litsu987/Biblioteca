@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listado de Préstamos</title>
+</head>
+<body>
+    <h1>Listado de Préstamos</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Ciclo</th>
+                <th>Material Prestado</th>
+                <th>Fecha de Inicio</th>
+                <th>Fecha Final</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for usuario in usuarios_con_prestamo %}
+                {% for prestec in usuario.prestec_set.all %}
+                    <tr>
+                        <td>{{ usuario.first_name }} {{ usuario.last_name }}</td>
+                        <td>{{ usuario.cicle.nom }}</td>
+                        <td>{{ prestec.catalog }}</td>
+                        <td>{{ prestec.data_prestec }}</td>
+                        <td>{{ prestec.data_retorn }}</td>
+                    </tr>
+                {% endfor %}
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
