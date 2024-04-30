@@ -12,4 +12,6 @@ urlpatterns = [
     path("reset/", ResetPasswordView.as_view(), name="reset"),  
     path("reset/done/", views.ResetPassDone, name="reset_done"),  
     path("change/done/", ChangePassDone.as_view(), name="change_done"),  
+    path('perfil/', views.perfil, name='perfil'),
+    path('perfilEditable/', views.perfil_editable, name='perfil_editable'),
 ]

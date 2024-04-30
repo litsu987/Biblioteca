@@ -40,6 +40,7 @@ class Usuari(AbstractUser):
     groups = models.ManyToManyField('auth.Group', related_name="biblioteca_user_groups", blank=True)
     user_permissions = models.ManyToManyField('auth.Permission', related_name="biblioteca_user_permissions", blank=True)    
     email = models.EmailField(("email"), unique=True, db_index=True)    
+    telefon = models.CharField(max_length=15, blank=True)  # Agregar campo para el número de teléfono
     telefon = models.CharField(max_length=15, blank=True)
     USERNAME_FIELD = 'email' 
     REQUIRED_FIELDS = []

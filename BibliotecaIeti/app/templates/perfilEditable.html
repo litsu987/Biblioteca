@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body,
+        main {
+            padding: 0;
+            margin: 0;
+            font-family: Nunito;
+        }
+
+        #divisor {
+            display: flex;
+            justify-content: space-around;
+            height: 700px;  
+            margin-top: 50px;
+        }
+
+        #divisor form input[type="submit"] {
+            width: fit-content;
+            background: #142C83;
+            border: 1px solid #142C83;
+            border-radius: 6px;
+            box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
+            box-sizing: border-box;
+            color: #FFFFFF;
+            cursor: pointer;
+            display: inline-block;
+            font-family: nunito,roboto,proxima-nova,"proxima nova",sans-serif;
+            font-size: 16px;
+            font-weight: 800;
+            line-height: 16px;
+            min-height: 40px;
+            outline: 0;
+            margin: 0 auto;
+            margin-top: 15px;
+            padding: 12px 14px;
+            text-align: center;
+            text-rendering: geometricprecision;
+            text-transform: none;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            vertical-align: middle;
+        }
+
+        #divisor form input[type="submit"]:hover, 
+        #divisor form input[type="submit"]:active {
+            background-color: initial;
+            background-position: 0 0;
+            color: #142C83;
+        }
+
+        #divisor form input[type="submit"]:active {
+            opacity: .5;
+        }   
+
+        #divisor form {
+            display: flex;
+            padding: 0;
+            flex-direction: column;
+            gap: 10px;
+            box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+        }
+
+        #divisor input {
+            width: 90%;
+            height: 30px;
+            font-size: 1.3em;
+            padding: 10px;
+            margin: 0 auto;
+            border-radius: 8px;
+            border: 1px solid #5978e8;
+        }
+
+        #divisor img {
+            width: 500px;
+            height: auto;
+            max-height: 500px;
+        }
+
+        #divisor form {
+            background-color: #e3ecee;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 50px;
+            width: 40vw;
+            max-width: 500px;
+            height: 700px;
+            border-radius: 15px;
+        }
+
+        #sepa {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        #nosepa {
+            display: flex;
+            flex-direction: column;
+
+        }
+    </style>
+</head>
+<body>
+    {% include 'header.html' %}
+    
+    <div id="divisor">
+      <img src="{{user.imatge}}" alt="" srcset="" />
+      <form action="" method="post" >
+        {% csrf_token %}
+        {% if messages %} {% for message in messages %} {{ message }} {% endfor %}
+        {% endif %}
+        <input type="hidden" name="id" value="{{ user.id }}" readonly>
+        <label for="nom">Nom </label>
+        <input type="text" name="username" value="{{user.nom}}"  />
+        <label for="nom">Cognom</label>
+        <input type="text" name="username" value="{{user.cognom}}"  />
+        <label for="email">Email</label>
+        <input type="email" value="{{user.email}}"/>  
+        <label for="nom">Telèfon</label>
+        <input type="number" name="username" value="{{user.telefon}}"  />
+        <div id="sepa">
+            <div id="nosepa">
+                <label for="date">Data de naixament</label>
+                <input type="date" value="{{user.data_naixement}}"/>
+            </div>
+            {% if user.rol == 'Bibliotecari' or user.rol == 'Admin'%}
+            <div id="nosepa">
+                <label for=""> Cargo </label>
+                <input type="text" value="{{user.rol.nom}}" />
+            </div>
+          {% else %}
+          <div id="nosepa">
+              <label for=""> Cicle </label>
+              <input type="text" value="{{user.cicle.nom}}" />
+            </div>
+          {% endif %}
+        </div>
+          <label>Centre</label>
+          <input type="text" value="{{user.centre.nom}}" />
+          <input type="submit" value="Guardar Canvis" />
+        </form>
+    </div>
+</body>
+</html>

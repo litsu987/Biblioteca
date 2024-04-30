@@ -14,6 +14,9 @@ from django.db import connection
 adjetivos = ["El secreto", "La última", "El misterioso", "El oscuro", "El perdido", "El legendario", "El antiguo", "El majestuoso", "El intrépido", "El eterno", "El enigmático", "El dorado", "El fantástico", "El brillante", "El mágico", "El épico", "El inolvidable", "El infinito", "El inmortal", "El resplandeciente", "El prodigioso", "El celestial", "El etéreo", "El sagrado", "El inquietante", "El titánico", "El magnífico", "El cósmico", "El sublime", "El asombroso", "El deslumbrante", "El enérgico", "El intrépido", "El poderoso", "El enigmático", "El sorprendente", "El deslumbrante", "El imponente", "El arcano", "El maravilloso", "El incandescente", "El hipnótico", "El majestuoso", "El vibrante", "El impredecible", "El enigmático", "El exuberante", "El radiante"]
 sustantivos = ["reino", "tesoro", "poder", "destino", "legado", "encantamiento", "criatura", "reliquia", "secreto", "profecía", "maravilla", "abismo", "corazón", "leyenda", "destello", "rumor", "susurro", "ocaso", "sendero", "arcano", "amanecer", "eco", "abrazo", "velo", "destino", "laberinto", "fragmento", "sueño", "vigilia", "destino", "tesoro", "poder", "destino", "legado", "encantamiento", "criatura", "reliquia", "secreto", "profecía", "maravilla", "abismo", "corazón", "leyenda", "destello", "rumor", "susurro", "ocaso"]
 tematicas = ["fantasía", "ciencia ficción", "misterio", "aventura", "romance", "terror", "histórico", "distopía", "thriller", "comedia", "surrealismo", "post-apocalíptico", "steampunk", "mitología", "ciberpunk", "filosófico", "viaje en el tiempo", "magia oscura", "ciencia fantástica", "intriga política", "cyberthriller", "realismo mágico", "folclore urbano", "epopeya", "cuento de hadas", "guerra galáctica", "rebelión cósmica", "invasión extraterrestre", "odisea espacial", "legado ancestral", "magia", "sueño", "rebelión", "destino", "futuro", "esperanza", "oscuridad", "poder", "misterio", "encuentro", "renacimiento", "venganza", "pasión", "resistencia", "alma", "cambio", "sacrificio", "odio", "renovación"]
+adjetivos = ["El secreto", "La última", "El misterioso", "El oscuro", "El perdido", "El legendario", "El antiguo", "El majestuoso", "El intrépido", "El eterno", "El enigmático", "El dorado", "El fantástico", "El brillante", "El mágico", "El épico", "El inolvidable", "El infinito", "El inmortal", "El resplandeciente", "El prodigioso", "El celestial", "El etéreo", "El sagrado", "El inquietante", "El titánico", "El magnífico", "El cósmico", "El sublime", "El asombroso", "El deslumbrante", "El enérgico", "El intrépido", "El poderoso", "El enigmático", "El sorprendente", "El deslumbrante", "El imponente", "El arcano", "El maravilloso", "El incandescente", "El hipnótico", "El majestuoso", "El vibrante", "El impredecible", "El enigmático", "El exuberante", "El radiante"]
+sustantivos = ["reino", "tesoro", "poder", "destino", "legado", "encantamiento", "criatura", "reliquia", "secreto", "profecía", "maravilla", "abismo", "corazón", "leyenda", "destello", "rumor", "susurro", "ocaso", "sendero", "arcano", "amanecer", "eco", "abrazo", "velo", "destino", "laberinto", "fragmento", "sueño", "vigilia", "destino", "tesoro", "poder", "destino", "legado", "encantamiento", "criatura", "reliquia", "secreto", "profecía", "maravilla", "abismo", "corazón", "leyenda", "destello", "rumor", "susurro", "ocaso"]
+tematicas = ["fantasía", "ciencia ficción", "misterio", "aventura", "romance", "terror", "histórico", "distopía", "thriller", "comedia", "surrealismo", "post-apocalíptico", "steampunk", "mitología", "ciberpunk", "filosófico", "viaje en el tiempo", "magia oscura", "ciencia fantástica", "intriga política", "cyberthriller", "realismo mágico", "folclore urbano", "epopeya", "cuento de hadas", "guerra galáctica", "rebelión cósmica", "invasión extraterrestre", "odisea espacial", "legado ancestral", "magia", "sueño", "rebelión", "destino", "futuro", "esperanza", "oscuridad", "poder", "misterio", "encuentro", "renacimiento", "venganza", "pasión", "resistencia", "alma", "cambio", "sacrificio", "odio", "renovación"]
 
 cd = [
     "Melodías en la Oscuridad",
@@ -124,6 +127,7 @@ def crear_usuarios(num_usuarios):
         username = fake.user_name()
         email = fake.email()
         password = "pa"
+        password = "pa"
         data_naixement = fake.date_of_birth(minimum_age=18, maximum_age=90)
         imatge = fake.image_url()
         centre = Centre.objects.order_by('?').first()
@@ -149,6 +153,7 @@ def crear_usuarios(num_usuarios):
             autentificacio=autentificacio  # Establecer autenticación
         )
 
+
         # Configurar contraseña
         usuari.set_password(password)
         usuari.save()
@@ -173,6 +178,10 @@ def crear_tipos_material():
         tipo_existente = TipusMaterial.objects.filter(nom=tipo[0]).exists()
         if not tipo_existente:
             TipusMaterial.objects.create(nom=tipo[0])
+        tipo_existente = TipusMaterial.objects.filter(nom=tipo[0]).exists()
+        if not tipo_existente:
+            TipusMaterial.objects.create(nom=tipo[0])
+
 
 
 def crear_catalogo(num_catalogos):
@@ -192,6 +201,7 @@ def crear_catalogo(num_catalogos):
             tipus_material=tipo_material_obj
         )
         if tipo_material[0] == 'llibre':
+            nombre_libro = fake.catch_phrase()
             nombre_libro = fake.catch_phrase()
             isbn13 = ''.join([str(random.randint(0, 9)) for _ in range(13)])
             Llibre.objects.create(
@@ -266,6 +276,22 @@ def crear_reservas_prestamos_peticiones(num_elementos):
             data_peticio=fake.date_time_this_year()
         )
 
+def crear_autores_y_libros(num_autores=100):
+    for _ in range(num_autores):
+        autor_nombre = fake.name()
+        num_libros = random.randint(1, 10)  # Número aleatorio de libros por autor
+        for _ in range(num_libros):
+            nombre_libro = f"{random.choice(adjetivos)} {random.choice(sustantivos)} del {random.choice(tematicas)}"
+            isbn13 = ''.join([str(random.randint(0, 9)) for _ in range(13)])
+            Llibre.objects.create(
+                nom=nombre_libro,
+                CDU=fake.isbn13(),
+                ISBN=isbn13,
+                editorial=fake.company(),
+                collecio=fake.catch_phrase(),
+                autor=autor_nombre,
+                pagines=random.randint(100, 1000)
+            )
 def crear_autores_y_libros(num_autores=100):
     for _ in range(num_autores):
         autor_nombre = fake.name()
