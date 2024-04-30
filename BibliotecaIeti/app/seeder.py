@@ -81,7 +81,7 @@ def limpiar_bd():
    
     TipusMaterial.objects.all().delete()
     Llibre.objects.all().delete()
-   # Usuari.objects.all().delete()
+    Usuari.objects.all().delete()
     Centre.objects.all().delete()
     Cicle.objects.all().delete()
     Catalog.objects.all().delete()
@@ -222,7 +222,7 @@ def crear_catalogo(num_catalogos):
                 collecio=fake.catch_phrase(),
                 autor=fake.name(),
                 pagines=random.randint(100, 1000),
-                cantidad=30
+                cantidad=30  # Establecer cantidad en 30 siempre
             )
         elif tipo_material[0] == 'CD':
             nombre_cd = f"{random.choice(cd)}"
@@ -231,7 +231,7 @@ def crear_catalogo(num_catalogos):
                 discografica=fake.company(),
                 estil=fake.word(),
                 duracio=random.randint(30, 120),
-                cantidad=30
+                cantidad=30  # Establecer cantidad en 30 siempre
             )
         elif tipo_material[0] == 'DVD':
             nombre_dvd = f"{random.choice(dvd)}"
@@ -239,7 +239,7 @@ def crear_catalogo(num_catalogos):
                 nom=nombre_dvd,
                 productora=fake.company(),
                 duracio=random.randint(60, 180),
-                cantidad=30
+                cantidad=30  # Establecer cantidad en 30 siempre
             )
         elif tipo_material[0] == 'BR':
             nombre_br = f"{random.choice(br)}"
@@ -247,7 +247,7 @@ def crear_catalogo(num_catalogos):
                 nom=nombre_br,
                 productora=fake.company(),
                 duracio=random.randint(60, 180),
-                cantidad=30
+                cantidad=30  # Establecer cantidad en 30 siempre
             )
         elif tipo_material[0] == 'dispositiu':
             nombre_disp = f"{random.choice(disp)}"
@@ -255,8 +255,9 @@ def crear_catalogo(num_catalogos):
                 nom= nombre_disp,
                 modelo=fake.word(),
                 serie=fake.uuid4(),
-                cantidad=30
+                cantidad=30  # Establecer cantidad en 30 siempre
             )
+
 
 
 
