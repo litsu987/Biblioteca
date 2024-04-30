@@ -23,7 +23,7 @@ from django.contrib.auth.hashers import make_password
 from datetime import datetime, timedelta
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
-
+from django.db.models import F
 
 
 
@@ -248,27 +248,57 @@ def llistarprestecs(request):
         catalogo_id = request.POST.get('catalog')
         
         # Obtener la fecha actual
-        fecha_prestamo = datetime.now().date()
+        fecha_prestamo = timezone.now().date()
         
         # Calcular la fecha de retorno (un mes después de la fecha de préstamo)
         fecha_retorno = fecha_prestamo + timedelta(days=30)
 
-        # Aquí puedes procesar los datos recibidos y crear el préstamo en la base de datos
+        # Obtener el usuario y el catálogo
         usuario = Usuari.objects.get(id=usuario_id)
         catalogo = Catalog.objects.get(id=catalogo_id)
-        prestamo = Prestec.objects.create(usuari=usuario, catalog=catalogo, data_prestec=fecha_prestamo, data_retorn=fecha_retorno)
 
-        # Redirigir a alguna página de éxito o a donde desees
-        return redirect('llistarPrestecs.html')
+        # Verificar si hay suficientes elementos en el catálogo
+        if catalogo.cantidad > 0:
+            # Crear el préstamo
+            prestamo = Prestec.objects.create(usuari=usuario, catalog=catalogo, data_prestec=fecha_prestamo, data_retorn=fecha_retorno)
+            
+            # Actualizar la cantidad del objeto en el catálogo específico
+            if hasattr(catalogo, 'llibre'):
+                catalogo.llibre.cantidad -= 1
+                catalogo.llibre.save()
+            elif hasattr(catalogo, 'cd'):
+                catalogo.cd.cantidad -= 1
+                catalogo.cd.save()
+            elif hasattr(catalogo, 'dvd'):
+                catalogo.dvd.cantidad -= 1
+                catalogo.dvd.save()
+            elif hasattr(catalogo, 'br'):
+                catalogo.br.cantidad -= 1
+                catalogo.br.save()
+            elif hasattr(catalogo, 'dispositiu'):
+                catalogo.dispositiu.cantidad -= 1
+                catalogo.dispositiu.save()
+            
+            # Redirigir a alguna página de éxito o a donde desees
+            return redirect('llistarPrestecs.html')
+        else:
+            # Manejar el caso en el que no haya suficientes elementos en el catálogo
+            # Puedes mostrar un mensaje de error o redirigir a alguna página de error
+            pass
 
     # Obtener los usuarios que tienen un préstamo
     usuarios_con_prestamo = Usuari.objects.filter(prestec__isnull=False).distinct()
     
-    # Obtener los catálogos disponibles
-    catalog_items = Catalog.objects.all()
+    # Obtener los catálogos disponibles con cantidad mayor a 1
+    catalog_items = Catalog.objects.annotate(
+        available_count=F('cantidad')
+    ).filter(
+        available_count__gt=0
+    )
 
     # Pasar los usuarios y la fecha actual a la plantilla
     return render(request, 'llistarPrestecs.html', {'usuarios_con_prestamo': usuarios_con_prestamo, 'catalog_items': catalog_items})
+
 
 def listUsers(request):
     users = Usuari.objects.all()  # Obtiene todos los usuarios
