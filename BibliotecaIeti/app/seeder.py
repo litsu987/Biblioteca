@@ -171,9 +171,6 @@ def crear_usuarios(num_usuarios):
 
 
 
-
-
-
 def crear_centros(num_centros):
     for _ in range(num_centros):
         Centre.objects.create(nom=fake.company())
@@ -185,7 +182,6 @@ def crear_ciclos():
             Cicle.objects.create(nom=ciclo)
         if not Cicle.objects.filter(nom=ciclo).exists():
             Cicle.objects.create(nom=ciclo)
-
 
 
 def crear_tipos_material():

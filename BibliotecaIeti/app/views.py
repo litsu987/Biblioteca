@@ -24,7 +24,7 @@ from datetime import datetime, timedelta
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.db.models import F
-
+from django.db.models import Count
 
 
 def perfil(request):
@@ -241,6 +241,7 @@ def Prestecs(request):
     return render(request, 'Prestecs.html', {'usuarios_con_prestamo': usuarios_con_prestamo})
 
 
+
 def llistarprestecs(request):
     if request.method == 'POST':
         # Procesar los datos del formulario de préstamo
@@ -286,8 +287,8 @@ def llistarprestecs(request):
             # Puedes mostrar un mensaje de error o redirigir a alguna página de error
             pass
 
-    # Obtener los usuarios que tienen un préstamo
-    usuarios_con_prestamo = Usuari.objects.filter(prestec__isnull=False).distinct()
+    # Obtener los usuarios que tienen menos de 3 préstamos
+    usuarios_con_prestamo = Usuari.objects.annotate(num_prestamos=Count('prestec')).filter(num_prestamos__lt=3).distinct()
     
     # Obtener los catálogos disponibles con cantidad mayor a 1
     catalog_items = Catalog.objects.annotate(
