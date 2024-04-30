@@ -1,0 +1,33 @@
+{% block content %}
+<h2>Sign up</h2>
+<form method="post">
+  {% csrf_token %} 
+
+  <input type="text" name="first_name" placeholder="First name">
+  <input type="text" name="last_name" placeholder="Last name">
+  <input type="email" name="email" placeholder="Email">
+  <select name="id_centre">
+    {% for centre in centredata %}
+        <option value="{{ centre.id }}">{{ centre.nom }}</option>
+    {% endfor %}
+  </select>
+  <select name="id_cicle">
+    {% for cicle in cicledata %}
+        <option value="{{ cicle.id }}">{{ cicle.nom }}</option>
+    {% endfor %}
+  </select>
+  <label for="number">Telefono</label>
+  <input type="number" name="telefon">
+  <label for="birthdate">Data de Naixament</label>
+  <input type="date" name="birthdate" >
+  <select name="roles" id="id_rol">
+    {% for rol_value, rol_label in roles_data %}
+      <option value="{{ rol_value }}">{{ rol_label }}</option>
+    {% endfor %}
+  </select>
+
+  <input type="hidden" name="password1" value="Vitenka">
+  <input type="hidden" name="password2" value="Vitenka">
+  <button type="submit">Sign up</button>
+</form>
+{% endblock %}

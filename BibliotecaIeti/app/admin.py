@@ -15,7 +15,7 @@ class TipusMaterialAdmin(admin.ModelAdmin):
 
 @admin.register(Usuari)
 class UsuariAdmin(admin.ModelAdmin):
-    list_display = ('email','first_name','last_name', 'telefon', 'data_naixement', 'centre', 'cicle', 'imatge','rol')
+    list_display = ('email','first_name','last_name', 'telefon', 'data_naixement', 'centre', 'cicle', 'imatge','rol','autentificacio')
 
     def mostrar_centro(self, obj):
         return obj.centre.nom if obj.centre else ""
@@ -57,10 +57,8 @@ class ReservaAdmin(admin.ModelAdmin):
 class PrestecAdmin(admin.ModelAdmin):
     list_display = ('usuari', 'get_element_titulo', 'data_prestec', 'data_retorn')
 
- 
-
     def get_element_titulo(self, obj):
-        return obj.exemplar.element_catalog.catalog.nom
+        return obj.catalog.nom
     get_element_titulo.short_description = 'Element Títol'
 
 
