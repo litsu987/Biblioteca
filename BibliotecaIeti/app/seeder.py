@@ -157,18 +157,11 @@ def crear_usuarios(num_usuarios):
             imatge=imatge,
             centre=centre,
             cicle=cicle,
-            telefon=telefon,  # Añadir número de teléfono
             first_name=first_name,
             last_name=last_name,
-            cognom=cognom, # Añadir nombre aleatorio
             rol=rol,  # Asignar el rol seleccionado
-            autentificacio=autentificacio  # Establecer autenticación
+            autentificacio=autentificacio,  # Establecer autenticación
             telefon=telefon,  # Añadir número de teléfono
-            first_name=first_name,
-            last_name=last_name,
-            cognom=cognom, # Añadir nombre aleatorio
-            rol=rol,  # Asignar el rol seleccionado
-            autentificacio=autentificacio  # Establecer autenticación
         )
 
         # Configurar contraseña
@@ -206,7 +199,6 @@ def crear_catalogo(num_catalogos):
     for _ in range(num_catalogos):
         catalog = Catalog.objects.create(
             nom=fake.word(),
-            nom=fake.word(),
             descripcio=fake.paragraph()
         )
         ImatgeCatalog.objects.create(
@@ -216,7 +208,6 @@ def crear_catalogo(num_catalogos):
         tipo_material = random.choice(TIPOS_MATERIAL_CHOICES)
         tipo_material_obj = TipusMaterial.objects.get(nom=tipo_material[0])
         element_catalog = ElementCatalog.objects.create(
-        element_catalog = ElementCatalog.objects.create(
             catalog=catalog,
             tipus_material=tipo_material_obj
         )
@@ -224,7 +215,6 @@ def crear_catalogo(num_catalogos):
             nombre_libro = fake.catch_phrase()
             isbn13 = ''.join([str(random.randint(0, 9)) for _ in range(13)])
             Llibre.objects.create(
-                nom=nombre_libro,
                 nom=nombre_libro,
                 CDU=fake.isbn13(),
                 ISBN=isbn13,

@@ -11,6 +11,11 @@
             flex-direction: column;
         }
 
+        .table-container {
+            overflow-y: auto;
+            max-height: 600px;
+        }
+
         .tableUsers {
             display: flex;
             justify-content: center;
@@ -19,8 +24,7 @@
             margin: 0;
             margin-top: 100px;
             padding: 0;
-            overflow-y: auto;
-            max-height: 600px;
+            
             
         }
         
@@ -121,8 +125,9 @@
                 <tbody>
                     {% for usuario in usuarios %}
                     <tr>
-                        <td><input type="checkbox" class="checkbox" data-id="{{ usuario.id }}"></td>                    <td>{{ usuario.nom }}</td>
-                        <td>{{ usuario.cognom }}</td>
+                        <td><input type="checkbox" class="checkbox" data-id="{{ usuario.id }}"></td>     
+                        <td>{{ usuario.first_name }}</td>
+                        <td>{{ usuario.last_name }}</td>
                         <td>{{ usuario.email }}</td>
                         <td>{{ usuario.cicle }}</td>
                         <td>{{ usuario.rol }}</td>
