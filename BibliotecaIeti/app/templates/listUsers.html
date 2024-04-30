@@ -5,15 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Usuaris</title>
     <style>
+        body,
+        main {
+            margin: 0;
+            padding: 0;
+        }
         #listUser{
             display: flex;
             justify-content: center;
             flex-direction: column;
-        }
-
-        .table-container {
-            overflow-y: auto;
-            max-height: 600px;
         }
 
         .tableUsers {
@@ -24,7 +24,8 @@
             margin: 0;
             margin-top: 100px;
             padding: 0;
-            
+            overflow-y: auto;
+            max-height: 600px;           
             
         }
         
@@ -42,6 +43,9 @@
         th {
             background-color: #142c83;
             color: #fff;
+            position: sticky; /* Encabezado fijo */
+            top: 0; /* Asegura que el encabezado se pegue al inicio de la tabla */
+            z-index: 1; 
         }
         tr:nth-child(even) {
             background-color: #e3ecee;
@@ -52,6 +56,7 @@
         .tableUsers.titleH2{
             
             margin: 0 auto;
+            margin-top: 20px;
             margin-bottom: 15px;
             color: #142c83;
             font-family: Montserrat;
@@ -102,14 +107,21 @@
 
         #divEditar:active {
             opacity: .5;
-        }   
+        }
+
+        #listUser #botones{
+            display: flex;
+            justify-content: space-between;
+
+        }
     </style>
 </head>
 <body>
     {% include 'header.html' %}
     <main id="listUser">
+        <h2 class="titleH2">Llista d'usuaris</h2>
         <div class="tableUsers">
-            <h2 class="titleH2">Llista d'usuaris</h2>
+            
             <table>
                 <thead>
                     <tr>
@@ -137,8 +149,17 @@
                 </tbody>
             </table>
         </div>
-        <div id="divEditar">
-            <a href="{% url 'perfil_editable' %}" id="editar" class="editar" disabled>Editar Perfil</a>
+        <div id="botones">
+            <div id="divEditar">
+                <a href="{% url 'perfil_editable' %}" id="editar" class="editar" disabled>Editar Perfil</a>
+            </div>
+            {% include 'btnRedirect.html' %}
+            <script>
+                $(document).ready(function(){
+                    // Llamar a la función enlaceBtn con la URL y el texto deseados
+                    enlaceBtn("{% url 'dashboard' %}", 'Enrere');
+                });
+            </script>
         </div>
     </main>
     <script>
