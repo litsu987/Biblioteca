@@ -201,7 +201,8 @@ def crear_catalogo(num_catalogos):
                 editorial=fake.company(),
                 collecio=fake.catch_phrase(),
                 autor=fake.name(),
-                pagines=random.randint(100, 1000)
+                pagines=random.randint(100, 1000),
+                cantidad=30
             )
         elif tipo_material[0] == 'CD':
             nombre_cd = f"{random.choice(cd)}"
@@ -209,21 +210,24 @@ def crear_catalogo(num_catalogos):
                 nom=nombre_cd,
                 discografica=fake.company(),
                 estil=fake.word(),
-                duracio=random.randint(30, 120)
+                duracio=random.randint(30, 120),
+                cantidad=30
             )
         elif tipo_material[0] == 'DVD':
             nombre_dvd = f"{random.choice(dvd)}"
             DVD.objects.create(
                 nom=nombre_dvd,
                 productora=fake.company(),
-                duracio=random.randint(60, 180)
+                duracio=random.randint(60, 180),
+                cantidad=30
             )
         elif tipo_material[0] == 'BR':
             nombre_br = f"{random.choice(br)}"
             BR.objects.create(
                 nom=nombre_br,
                 productora=fake.company(),
-                duracio=random.randint(60, 180)
+                duracio=random.randint(60, 180),
+                cantidad=30
             )
         elif tipo_material[0] == 'dispositiu':
             nombre_disp = f"{random.choice(disp)}"
@@ -231,6 +235,7 @@ def crear_catalogo(num_catalogos):
                 nom= nombre_disp,
                 modelo=fake.word(),
                 serie=fake.uuid4(),
+                cantidad=30
             )
 
 
@@ -280,10 +285,17 @@ def crear_autores_y_libros(num_autores=100):
                 editorial=fake.company(),
                 collecio=fake.catch_phrase(),
                 autor=autor_nombre,
-                pagines=random.randint(100, 1000)
+                pagines=random.randint(100, 1000),
+                cantidad=30
             )
-
+    
 
 def seed_database(num_usuarios=10, num_centros=5, num_catalogos=20, num_elementos=50):
     limpiar_bd()
-    
+    crear_tipos_material()
+    crear_centros(num_centros)
+    crear_ciclos()
+    crear_usuarios(num_usuarios)
+    crear_catalogo(num_catalogos)
+    crear_autores_y_libros()
+    crear_reservas_prestamos_peticiones(num_elementos)

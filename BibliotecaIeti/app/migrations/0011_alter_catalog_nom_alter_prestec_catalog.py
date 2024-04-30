@@ -12,10 +12,10 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterField(
-            model_name='catalog',
-            name='nom',
-            field=models.CharField(max_length=100),
-        ),
+        model_name='catalog',
+        name='nom',
+        field=models.CharField(max_length=100, unique=True),  # Asegúrate de añadir o mantener unique=True si estaba presente antes
+    ),
         migrations.AlterField(
             model_name='prestec',
             name='catalog',

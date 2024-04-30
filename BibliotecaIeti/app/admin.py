@@ -84,20 +84,20 @@ class ImatgeCatalogAdmin(admin.ModelAdmin):
 
 @admin.register(Llibre)
 class LibroAdmin(admin.ModelAdmin):
-    list_display = ('nom','autor', 'CDU', 'ISBN', 'editorial', 'collecio', 'pagines')
+    list_display = ('nom','autor', 'CDU', 'ISBN', 'editorial', 'collecio', 'pagines','cantidad')
 
 @admin.register(CD)
 class CDAdmin(admin.ModelAdmin):
-    list_display = ('nom', 'discografica', 'estil', 'duracio')
+    list_display = ('nom', 'discografica', 'estil', 'duracio','cantidad')
 
 @admin.register(DVD)
 class DVDAdmin(admin.ModelAdmin):
-    list_display = ('nom', 'productora', 'duracio')
+    list_display = ('nom', 'productora', 'duracio','cantidad')
 
 @admin.register(BR)
 class BRAdmin(admin.ModelAdmin):
-    list_display = ('nom', 'productora','duracio')
+    list_display = ('nom', 'productora','duracio','cantidad')
 
 @admin.register(Dispositiu)
 class DPAdmin(admin.ModelAdmin):
-    list_display = ('nom', 'modelo','serie')
+    list_display = ('nom', 'modelo','serie','cantidad')
