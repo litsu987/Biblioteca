@@ -8,7 +8,7 @@ from .models import Llibre, Usuari, CD, BR, DVD, Dispositiu, Centre, Cicle, Pres
 from django.views.generic import ListView
 from django.db.models import Q
 from .utils import generarLog,subir_logs_a_bd  # Importa la función generarLog desde utils.py
-from .decorators import bibliotecari_required, alumne_required
+
 from django.contrib.auth.views import PasswordChangeView, PasswordChangeDoneView
 from django.urls import reverse_lazy
 from .decorators import check_user_able_to_see_page
@@ -16,6 +16,14 @@ from .forms import UserRegisterForm
 from django.urls import reverse_lazy
 from django.contrib.auth.views import PasswordResetView
 from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib.auth.hashers import make_password
+import csv
+from .models import Usuari
+from django.contrib.auth.hashers import make_password
+from datetime import datetime, timedelta
+from django.utils import timezone
+from django.contrib.auth.decorators import login_required
+
 
 
 
@@ -260,7 +268,9 @@ def llistarprestecs(request):
     catalog_items = Catalog.objects.all()
 
     # Pasar los usuarios y la fecha actual a la plantilla
-    return render(request, 'llistarPrestecs.html', {'usuarios_con_prestamo': usuarios_con_prestamo, 'catalog_items': catalog_items})def listUsers(request):
+    return render(request, 'llistarPrestecs.html', {'usuarios_con_prestamo': usuarios_con_prestamo, 'catalog_items': catalog_items})
+
+def listUsers(request):
     users = Usuari.objects.all()  # Obtiene todos los usuarios
     return render(request, 'listUsers.html', {'usuarios': users})
 
