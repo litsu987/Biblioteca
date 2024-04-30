@@ -10,6 +10,10 @@ from faker.providers import BaseProvider
 fake = Faker('es_ES')
 from django.db import connection
 
+from faker.providers import BaseProvider
+fake = Faker('es_ES')
+from django.db import connection
+
 
 adjetivos = ["El secreto", "La última", "El misterioso", "El oscuro", "El perdido", "El legendario", "El antiguo", "El majestuoso", "El intrépido", "El eterno", "El enigmático", "El dorado", "El fantástico", "El brillante", "El mágico", "El épico", "El inolvidable", "El infinito", "El inmortal", "El resplandeciente", "El prodigioso", "El celestial", "El etéreo", "El sagrado", "El inquietante", "El titánico", "El magnífico", "El cósmico", "El sublime", "El asombroso", "El deslumbrante", "El enérgico", "El intrépido", "El poderoso", "El enigmático", "El sorprendente", "El deslumbrante", "El imponente", "El arcano", "El maravilloso", "El incandescente", "El hipnótico", "El majestuoso", "El vibrante", "El impredecible", "El enigmático", "El exuberante", "El radiante"]
 sustantivos = ["reino", "tesoro", "poder", "destino", "legado", "encantamiento", "criatura", "reliquia", "secreto", "profecía", "maravilla", "abismo", "corazón", "leyenda", "destello", "rumor", "susurro", "ocaso", "sendero", "arcano", "amanecer", "eco", "abrazo", "velo", "destino", "laberinto", "fragmento", "sueño", "vigilia", "destino", "tesoro", "poder", "destino", "legado", "encantamiento", "criatura", "reliquia", "secreto", "profecía", "maravilla", "abismo", "corazón", "leyenda", "destello", "rumor", "susurro", "ocaso"]
@@ -74,6 +78,8 @@ br = [
 def limpiar_bd():
    
     TipusMaterial.objects.all().delete()
+   
+    TipusMaterial.objects.all().delete()
     Llibre.objects.all().delete()
    # Usuari.objects.all().delete()
     Centre.objects.all().delete()
@@ -99,6 +105,12 @@ class CustomProvider(BaseProvider):
 fake.add_provider(CustomProvider)
 
 def crear_usuarios(num_usuarios):
+    roles_disponibles = ['Admin', 'Bibliotecari', 'Alumne']
+    # Contadores para los roles
+    num_admin = Usuari.objects.filter(rol='Admin').count()
+    num_bibliotecari = Usuari.objects.filter(rol='Bibliotecari').count()
+    num_alumne = Usuari.objects.filter(rol='Alumne').count()
+
     roles_disponibles = ['Admin', 'Bibliotecari', 'Alumne']
     # Contadores para los roles
     num_admin = Usuari.objects.filter(rol='Admin').count()
@@ -132,6 +144,10 @@ def crear_usuarios(num_usuarios):
         first_name = fake.first_name() 
         last_name = fake.last_name() 
         cognom = fake.last_name()
+        telefon = fake.phone_number()  # Añadir número de teléfono aleatorio
+        first_name = fake.first_name() 
+        last_name = fake.last_name() 
+        cognom = fake.last_name()
 
         # Crear usuario
         usuari = Usuari.objects.create(
@@ -147,11 +163,20 @@ def crear_usuarios(num_usuarios):
             cognom=cognom, # Añadir nombre aleatorio
             rol=rol,  # Asignar el rol seleccionado
             autentificacio=autentificacio  # Establecer autenticación
+            telefon=telefon,  # Añadir número de teléfono
+            first_name=first_name,
+            last_name=last_name,
+            cognom=cognom, # Añadir nombre aleatorio
+            rol=rol,  # Asignar el rol seleccionado
+            autentificacio=autentificacio  # Establecer autenticación
         )
 
         # Configurar contraseña
         usuari.set_password(password)
         usuari.save()
+
+
+
 
 
 
@@ -163,6 +188,8 @@ def crear_centros(num_centros):
 def crear_ciclos():
     ciclos = ["AWS", "AMS", "ASIX"]
     for ciclo in ciclos:
+        if not Cicle.objects.filter(nom=ciclo).exists():
+            Cicle.objects.create(nom=ciclo)
         if not Cicle.objects.filter(nom=ciclo).exists():
             Cicle.objects.create(nom=ciclo)
 
@@ -179,6 +206,7 @@ def crear_catalogo(num_catalogos):
     for _ in range(num_catalogos):
         catalog = Catalog.objects.create(
             nom=fake.word(),
+            nom=fake.word(),
             descripcio=fake.paragraph()
         )
         ImatgeCatalog.objects.create(
@@ -188,6 +216,7 @@ def crear_catalogo(num_catalogos):
         tipo_material = random.choice(TIPOS_MATERIAL_CHOICES)
         tipo_material_obj = TipusMaterial.objects.get(nom=tipo_material[0])
         element_catalog = ElementCatalog.objects.create(
+        element_catalog = ElementCatalog.objects.create(
             catalog=catalog,
             tipus_material=tipo_material_obj
         )
@@ -195,6 +224,7 @@ def crear_catalogo(num_catalogos):
             nombre_libro = fake.catch_phrase()
             isbn13 = ''.join([str(random.randint(0, 9)) for _ in range(13)])
             Llibre.objects.create(
+                nom=nombre_libro,
                 nom=nombre_libro,
                 CDU=fake.isbn13(),
                 ISBN=isbn13,
@@ -291,7 +321,7 @@ def crear_autores_y_libros(num_autores=100):
     
 
 def seed_database(num_usuarios=10, num_centros=5, num_catalogos=20, num_elementos=50):
-    limpiar_bd()
+   # limpiar_bd()
     crear_tipos_material()
     crear_centros(num_centros)
     crear_ciclos()

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Canvi Contrasenya</title>
+    <style>
+      h1 {
+        text-align: center;
+      }
+      form {
+        display: flex;
+        flex-direction: column;
+        width: 30vw;
+        gap: 20px;
+        margin: 0 auto;
+        border: 1px solid black;
+        padding: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Canvi de Contrasenya</h1>
+    <form action="{% url 'change' %}" method="post">
+      {% csrf_token %}
+      <label for="">Contrasenya Actual</label>
+      <input type="password" name="old_password" id="oldpass" />
+      <label for="">Contrasenya Nova</label>
+      <input type="password" name="new_password1" id="newpass1" />
+      <label for="">Confirmar Contrasenya nova</label>
+      <input type="password" name="new_password2" id="newpass2" />
+      <input type="submit" />
+    </form>
+  </body>
+</html>

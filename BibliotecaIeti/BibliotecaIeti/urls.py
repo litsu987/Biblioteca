@@ -18,9 +18,15 @@ from django.contrib import admin
 from django.urls import include, path
 from django.conf.urls.static import static
 from django.conf import settings
+from django.contrib.auth import views as auth_views
+from app.views import listUsers
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("", include("app.urls")),
-    
+    path('usuaris/', listUsers, name='listUsers'),
+    path("", include("django.contrib.auth.urls")),
+    path('password-reset-confirm/<uidb64>/<token>/',
+        auth_views.PasswordResetConfirmView.as_view(template_name='registration/password_reset_confirm.html'),
+        name='password_reset_confirm'),
     ]

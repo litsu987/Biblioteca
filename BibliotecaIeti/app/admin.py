@@ -16,6 +16,7 @@ class TipusMaterialAdmin(admin.ModelAdmin):
 @admin.register(Usuari)
 class UsuariAdmin(admin.ModelAdmin):
     list_display = ('email','first_name','last_name', 'telefon', 'data_naixement', 'centre', 'cicle', 'imatge','rol','autentificacio')
+    list_display = ('email','first_name','last_name', 'telefon', 'data_naixement', 'centre', 'cicle', 'imatge','rol','autentificacio')
 
     def mostrar_centro(self, obj):
         return obj.centre.nom if obj.centre else ""

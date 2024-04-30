@@ -13,7 +13,7 @@
       rel="stylesheet"
       type="text/css"
     />
-    <link rel="stylesheet" href="{% static 'styles.css' %}" />
+    <!-- <link rel="stylesheet" href="{% static 'styles.css' %}" /> -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -30,48 +30,30 @@ main {
   margin: 0;
 }
 
-#header {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  background-color: #e3ecee;
-}
 
-#common {
-    display: flex;
-    flex-direction: row;
-}
-
-#header  img {
-  width: auto;
-  height: 80px;
-  margin: 20px 0 auto 20px;
-}
 
 h1 {
-  padding: 5vh 0;
+  padding: 0 0 0 20px;
+  margin: 0;
   color: #142c83;
-  font-family: Montserrat;
+  font-family: Georgia, 'Times New Roman', Times, serif Slab;
+  font-size: 3em;
   font-weight: bolder;
   text-align: left;
 }
 
-h2 {
-  font-size: 2rem;
-  margin-bottom: 20px;
-}
 
 #main {
   font-family: Nunito;
   display: flex;
   margin: auto;
   padding: 2%;
-  justify-content: center;
+  justify-content: space-evenly;
   text-align: center;
   width: 80vw;
   height: 50vh;
-  gap: 20%;
   margin-top: 5vh;
+
 }
 
 #main div,
@@ -82,12 +64,17 @@ form {
   justify-content: center;
   padding: 0 50px;
   width: 40vw;
-  max-width: 500px;
+  max-width: 350px;
   border-radius: 15px;
 }
 
 #login label {
   text-align: left;
+  font-size: 1.3em;
+  padding-left: 20px;
+}
+#booksearcher {
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
 
 #booksearcher > form {
@@ -99,18 +86,92 @@ form {
 
 #booksearcher input[type="submit"] {
   width: fit-content;
-  padding: 5px 20px;
+  background: #142C83;
+  border: 1px solid #142C83;
+  border-radius: 6px;
+  box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
+  box-sizing: border-box;
+  color: #FFFFFF;
+  cursor: pointer;
+  display: inline-block;
+  font-family: nunito,roboto,proxima-nova,"proxima nova",sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 16px;
+  min-height: 40px;
+  outline: 0;
   margin: 0 auto;
-  font-family: Nunito;
-  font-weight: bold;
+  margin-top: 15px;
+  padding: 12px 14px;
+  text-align: center;
+  text-rendering: geometricprecision;
+  text-transform: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: middle;
 }
 
-input[type="search"] {
+#booksearcher input[type="submit"]:hover, 
+#booksearcher input[type="submit"]:active {
+  background-color: initial;
+  background-position: 0 0;
+  color: #142C83;
+}
+
+#booksearcher input[type="submit"]:active {
+  opacity: .5;
+}
+
+input#searcher,
+input#email,
+input#password {
   width: 90%;
-  height: 40px;
-  font-size: 1.3rem;
+  height: 30px;
+  font-size: 1.3em;
+  padding: 10px;
   margin: 0 auto;
   border-radius: 8px;
+  border: 1px solid #5978e8;
+}
+
+#loginSubmit {
+  width: fit-content;
+  background: #142C83;
+  border: 1px solid #142C83;
+  border-radius: 6px;
+  box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
+  box-sizing: border-box;
+  color: #FFFFFF;
+  cursor: pointer;
+  display: inline-block;
+  font-family: nunito,roboto,proxima-nova,"proxima nova",sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 16px;
+  min-height: 40px;
+  outline: 0;
+  margin: 0 auto;
+  margin-top: 15px;
+  padding: 12px 14px;
+  text-align: center;
+  text-rendering: geometricprecision;
+  text-transform: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: middle;
+}
+
+#loginSubmit:hover, 
+#loginSubmit:active{
+  background-color: initial;
+  background-position: 0 0;
+  color: #142C83;
+}
+
+#loginSubmit:active {
+  opacity: .5;
 }
 
 #user,
@@ -129,6 +190,7 @@ input[type="search"] {
 
 #login {
   gap: 10px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
 
 #login input[type="button"] {
@@ -228,35 +290,11 @@ h3 {
 	</style>
   </head>
   <body>
-    <div id="header">
-      <div id="common">
-        <a href="{% url 'index'%}">
-          <img
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNz9mZq9dbJ77kWv65_SQ-v0Nn3pIx9QpigGCKNJSRWMsS9ixpPPdoILzUNIQqkPaBxco&usqp=CAU"
-            alt=""
-          />
-        </a>
-        <h1>BIBLIOTECA MARICARMEN</h1>
-      </div>
-      <div id="infouser">
-        {% if user.is_authenticated %}
-        <div id="data">
-          <p>{{ user.first_name }}</p>
-          {% if user.is_staff %}
-          <p>Admin</p>
-          {% else %}
-          <p>Usuari</p>
-          {% endif %}
-          <a href="{% url 'logout' %}">Tancar Sessió</a>
-        </div>
-        <img src="{{ user.imatge }}" alt="" srcset="" />
-        {% endif %}
-      </div>
-    </div>
+    {% include 'header.html' %}
     <div id="main">
       <div id="booksearcher">
         <form action="{% url 'search_results' %}" method="GET">
-          <h2>Cerca al Catàleg</h2>
+          <h2 class="titleH2">Cerca al Catàleg</h2>
           <input type="search" name="searcher" id="searcher" />
           <input type="submit" value="CERCA" />
         </form>
@@ -264,12 +302,12 @@ h3 {
       {% if not user.is_authenticated %}
       <form action="" method="POST" id="login">
         {% csrf_token %}
-        <h2>Iniciar Sessió</h2>
+        <h2 class="titleH2">Iniciar Sessió</h2>
         <label for="username">Adreça electrònica</label>
         <input type="text" name="email" id="email" />
         <label for="password">Contrasenya</label>
         <input type="password" name="password" id="password" />
-        <input type="submit" value="ENTRA" />
+        <input type="submit" id="loginSubmit" value="ENTRA" />
 
 	 {% if messages %}
           {% for message in messages %}

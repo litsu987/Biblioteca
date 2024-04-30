@@ -8,17 +8,18 @@ from .models import Llibre, Usuari, CD, BR, DVD, Dispositiu, Centre, Cicle, Pres
 from django.views.generic import ListView
 from django.db.models import Q
 from .utils import generarLog,subir_logs_a_bd  # Importa la función generarLog desde utils.py
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.password_validation import validate_password
-from django.core.exceptions import ValidationError
-import csv
-from .models import Usuari
-from django.contrib.auth.hashers import make_password
-from datetime import datetime, timedelta
-from django.utils import timezone
+from .decorators import bibliotecari_required, alumne_required
+from django.contrib.auth.views import PasswordChangeView, PasswordChangeDoneView
+from django.urls import reverse_lazy
+from .decorators import check_user_able_to_see_page
+from .forms import UserRegisterForm
+from django.urls import reverse_lazy
+from django.contrib.auth.views import PasswordResetView
+from django.contrib.messages.views import SuccessMessageMixin
 
-@login_required
-def dashboard(request):
+
+
+def perfil(request):
     users = Usuari.objects.all()
     if request.method == "POST":
         user_id = request.POST.get('id')
@@ -31,25 +32,46 @@ def dashboard(request):
                 messages.success(request, 'Datos actualizados correctamente')
                 generarLog(request, 'INFO', f"Datos actualizados correctamente")
                 subir_logs_a_bd(request)
-                return redirect('dashboard')
-            except Usuari.DoesNotExist:  
+                return redirect('perfil')
+            except Usuari.DoesNotExist:  # Cambio aquí
                 messages.error(request, 'El usuario no existe')
                 generarLog(request, 'ERROR', f"El usuario no existe")
                 subir_logs_a_bd(request)
-                return redirect('dashboard')
+                return redirect('perfil')
         else:
             messages.error(request, 'Falta el campo ID')
             generarLog(request, 'ERROR', f"Falta el campo ID")
             subir_logs_a_bd(request)
 
-            return redirect('dashboard')
-    
-    # Verificar si el usuario tiene autentificacio en True
-    if request.user.autentificacio:  
-        return render(request, 'dashboard.html', {'users': users})
-    else:
-        return redirect('otra_pagina.html') 
+            return redirect('perfil')
 
+    return render(request, 'perfil.html', {'users': users})
+
+def perfil_editable(request):
+    if request.method == "POST":
+        user_id = request.POST.get('id')
+
+        if user_id:
+            try:
+                usuario = Usuari.objects.get(pk=user_id)
+                # Aquí puedes agregar más campos que desees actualizar
+                usuario.nom = request.POST.get('nom', usuario.nom)
+                usuario.cognom = request.POST.get('cognom', usuario.cognom)
+                usuario.email = request.POST.get('email', usuario.email)
+                usuario.cicle = request.POST.get('cicle', usuario.cicle)
+                usuario.rol = request.POST.get('rol', usuario.rol)
+                usuario.save()
+                messages.success(request, 'Perfil actualizado correctamente')
+                # Aquí puedes agregar registros de logs si lo deseas
+                return redirect('perfilEditable')  # Redirecciona a la página de perfil
+            except Usuari.DoesNotExist:
+                messages.error(request, 'El usuario seleccionado no existe')
+                return redirect('perfilEditable')
+        else:
+            messages.error(request, 'Falta el campo ID del usuario')
+            return redirect('perfilEditable')
+
+    return render(request, 'perfilEditable.html', {}) 
 
 def index(request):
     books = Llibre.objects.all()
@@ -238,4 +260,61 @@ def llistarprestecs(request):
     catalog_items = Catalog.objects.all()
 
     # Pasar los usuarios y la fecha actual a la plantilla
-    return render(request, 'llistarPrestecs.html', {'usuarios_con_prestamo': usuarios_con_prestamo, 'catalog_items': catalog_items})
+    return render(request, 'llistarPrestecs.html', {'usuarios_con_prestamo': usuarios_con_prestamo, 'catalog_items': catalog_items})def listUsers(request):
+    users = Usuari.objects.all()  # Obtiene todos los usuarios
+    return render(request, 'listUsers.html', {'usuarios': users})
+
+def dashboard(request):
+    return render(request, 'dashboard.html')
+
+@login_required
+@check_user_able_to_see_page("Bibliotecari", "Admin")
+def register(request):
+    centredata = Centre.objects.all()
+    roles_data = Usuari.ROLES_CHOICES
+    cicledata = Cicle.objects.all()
+    if request.method == 'POST':
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        email = request.POST.get('email')
+        id_centre = request.POST.get('id_centre')
+        id_cicle = request.POST.get('id_cicle')
+        password1 = request.POST.get('password1')
+        password2 = request.POST.get('password2')
+        birthdate = request.POST.get('birthdate')
+        rol = request.POST.get('roles')
+        telefon = request.POST.get('telefon')
+        if password1 != password2:
+            return render(request, 'user_creation.html', {'centredata': centredata, 'cicledata': cicledata, 'error_message': 'Las contraseñas no coinciden'})
+
+        centre_instance = Centre.objects.get(pk=id_centre)
+        cicle_instance = Cicle.objects.get(pk=id_cicle)
+
+        user = Usuari.objects.create_user(username=email, email=email, password=password1, first_name=first_name, last_name=last_name, centre_id=id_centre, cicle=cicle_instance, telefon = telefon,data_naixement = birthdate, rol = rol )
+        user.save()
+
+        return redirect('index')
+
+    return render(request, 'user_creation.html', {'centredata': centredata, 'cicledata': cicledata, 'roles_data': roles_data})
+
+class ChangePass(PasswordChangeView):
+    template_name = "registration/change_pass.html"
+    success_url = reverse_lazy("change_done")
+
+class ChangePassDone(PasswordChangeDoneView):
+    template_name = "registration/change_pass_done.html"
+
+
+
+class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
+    template_name = 'registration/reset_pass.html'
+    email_template_name = 'registration/password_reset_email.html'
+    subject_template_name = 'registration/password_reset_subject'
+    success_message = "We've emailed you instructions for setting your password, " \
+                      "if an account exists with the email you entered. You should receive them shortly." \
+                      " If you don't receive an email, " \
+                      "please make sure you've entered the address you registered with, and check your spam folder."
+    success_url = reverse_lazy('index')
+
+def ResetPassDone(request):
+    return render (request, "registration/reset_pass_done.html")

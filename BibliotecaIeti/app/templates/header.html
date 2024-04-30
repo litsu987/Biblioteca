@@ -1,0 +1,90 @@
+<head>
+    <style>
+        #header {
+            height: 100px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            background-color: #e3ecee;
+            transition: background-color 0.3s ease;
+            box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
+        }
+
+            #header img:hover {
+            transform: scale(1.1);
+        }
+
+            #common {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+        }
+
+        #header  img {
+            width: auto;
+            height: 80px;
+            margin: 0px 0 auto 20px;
+        }
+
+            .headerH2{
+            padding: 0 0 0 25px;
+            margin: 0;
+            color: #142c83;
+            font-family: Montserrat;
+            font-weight: bolder;
+            text-align: left;
+        }
+
+            .titleH2{
+            
+            margin: 0 auto;
+            margin-bottom: 15px;
+            color: #142c83;
+            font-family: Montserrat;
+            font-weight: bolder;
+            text-align: left;
+        }
+
+        h1 {
+            padding: 0 0 0 20px;
+            margin: 0;
+            color: #142c83;
+            font-family: Georgia, 'Times New Roman', Times, serif Slab;
+            font-size: 3em;
+            font-weight: bolder;
+            text-align: left;
+        }
+    </style>
+</head>
+<header>
+    <div id="header">
+      <div id="common">
+        <a href="{% url 'index'%}">
+          <img class="logo"
+            src="../static/images/aNqCiRN7_400x400-removebg-preview.png"
+            alt=""
+          />
+        </a>
+        <div class="titleHeader">
+          <h2 class="headerH2">Biblioteca</h2>
+          <h1>MARICARMEN BRITO</h1>
+        </div>
+      </div>
+      <div id="infouser">
+        {% if user.is_authenticated %}
+        <div id="data">
+          <p>{{ user.first_name }}</p>
+          {% if user.rol == "Bibliotecari" %}
+          <p>Bibliotecari</p>
+          {% elif user.rol == "Alumne" %}
+          <p>Alumne</p>
+          {% elif user.rol == "Admin" %}
+          <p>Admin</p>
+          {% endif %}
+          <a href="{% url 'logout' %}">Tancar Sessió</a>
+        </div>
+        <img src="{{ user.imatge }}" alt="" srcset="" />
+        {% endif %}
+      </div>
+    </div>
+</header>
