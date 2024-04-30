@@ -16,7 +16,6 @@ class TipusMaterialAdmin(admin.ModelAdmin):
 @admin.register(Usuari)
 class UsuariAdmin(admin.ModelAdmin):
     list_display = ('email','first_name','last_name', 'telefon', 'data_naixement', 'centre', 'cicle', 'imatge','rol','autentificacio')
-    list_display = ('email','first_name','last_name', 'telefon', 'data_naixement', 'centre', 'cicle', 'imatge','rol','autentificacio')
 
     def mostrar_centro(self, obj):
         return obj.centre.nom if obj.centre else ""
@@ -85,20 +84,35 @@ class ImatgeCatalogAdmin(admin.ModelAdmin):
 
 @admin.register(Llibre)
 class LibroAdmin(admin.ModelAdmin):
-    list_display = ('nom','autor', 'CDU', 'ISBN', 'editorial', 'collecio', 'pagines','cantidad')
+    list_display = ('nom', 'autor', 'CDU', 'ISBN', 'editorial', 'collecio', 'pagines', 'cantidad')
+
+    def cantidad(self, obj):
+        return obj.cantidad
 
 @admin.register(CD)
 class CDAdmin(admin.ModelAdmin):
-    list_display = ('nom', 'discografica', 'estil', 'duracio','cantidad')
+    list_display = ('nom', 'discografica', 'estil', 'duracio', 'cantidad')
+
+    def cantidad(self, obj):
+        return obj.cantidad
 
 @admin.register(DVD)
 class DVDAdmin(admin.ModelAdmin):
-    list_display = ('nom', 'productora', 'duracio','cantidad')
+    list_display = ('nom', 'productora', 'duracio', 'cantidad')
+
+    def cantidad(self, obj):
+        return obj.cantidad
 
 @admin.register(BR)
 class BRAdmin(admin.ModelAdmin):
-    list_display = ('nom', 'productora','duracio','cantidad')
+    list_display = ('nom', 'productora', 'duracio', 'cantidad')
+
+    def cantidad(self, obj):
+        return obj.cantidad
 
 @admin.register(Dispositiu)
 class DPAdmin(admin.ModelAdmin):
-    list_display = ('nom', 'modelo','serie','cantidad')
+    list_display = ('nom', 'modelo', 'serie', 'cantidad')
+
+    def cantidad(self, obj):
+        return obj.cantidad
