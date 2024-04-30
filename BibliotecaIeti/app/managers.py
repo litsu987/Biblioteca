@@ -29,4 +29,3 @@ class UserManager(UM):
         extra_fields.setdefault("username", email)  # Set email as username
 
         return self._create_user(email, password, **extra_fields)
-

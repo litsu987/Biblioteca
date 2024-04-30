@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuaris</title>
+    <style>
+        #listUser{
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .tableUsers {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            margin-top: 100px;
+            padding: 0;
+            overflow-y: auto;
+            max-height: 600px;
+            
+        }
+        
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+        }
+        th {
+            background-color: #142c83;
+            color: #fff;
+        }
+        tr:nth-child(even) {
+            background-color: #e3ecee;
+        }
+        tr:hover {
+            background-color: #ddd;
+        }
+        .tableUsers.titleH2{
+            
+            margin: 0 auto;
+            margin-bottom: 15px;
+            color: #142c83;
+            font-family: Montserrat;
+            font-weight: bolder;
+            text-align: center;
+        }
+
+        #divEditar a {
+            text-decoration: none;
+            color: #FFFFFF;
+        }
+
+        #divEditar {
+            width: fit-content;
+            background: #142C83;
+            border: 1px solid #142C83;
+            border-radius: 6px;
+            box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
+            box-sizing: border-box;
+            color: #FFFFFF;
+            cursor: pointer;
+            display: inline-block;
+            font-family: nunito,roboto,proxima-nova,"proxima nova",sans-serif;
+            font-size: 16px;
+            font-weight: 800;
+            line-height: 16px;
+            min-height: 40px;
+            outline: 0;
+            margin: 0 auto;
+            margin-top: 15px;
+            padding: 12px 14px;
+            text-align: center;
+            text-rendering: geometricprecision;
+            text-transform: none;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            vertical-align: middle;
+        }
+
+        #divEditar:hover, 
+        #divEditar:active,
+        #divEditar a:hover {
+            background-color: initial;
+            background-position: 0 0;
+            color: #142C83;
+        }
+
+        #divEditar:active {
+            opacity: .5;
+        }   
+    </style>
+</head>
+<body>
+    {% include 'header.html' %}
+    <main id="listUser">
+        <div class="tableUsers">
+            <h2 class="titleH2">Llista d'usuaris</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th></th> <!-- Columna para el checkbox -->
+                        <th>Nom</th>
+                        <th>Cognom</th>
+                        <th>Email</th>
+                        <th>Cicle</th>
+                        <th>Rol</th>
+                        <!-- Agrega más columnas según la información que quieras mostrar -->
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for usuario in usuarios %}
+                    <tr>
+                        <td><input type="checkbox" class="checkbox" data-id="{{ usuario.id }}"></td>                    <td>{{ usuario.nom }}</td>
+                        <td>{{ usuario.cognom }}</td>
+                        <td>{{ usuario.email }}</td>
+                        <td>{{ usuario.cicle }}</td>
+                        <td>{{ usuario.rol }}</td>
+                        <!-- Agrega más columnas según la información que quieras mostrar -->
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div id="divEditar">
+            <a href="{% url 'perfil_editable' %}" id="editar" class="editar" disabled>Editar Perfil</a>
+        </div>
+    </main>
+    <script>
+        // JavaScript para limitar la selección a un solo checkbox
+        const checkboxes = document.querySelectorAll('.checkbox');
+        const editarButton = document.getElementById('editar');
+
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+                checkboxes.forEach(otherCheckbox => {
+                    if (otherCheckbox !== checkbox) {
+                        otherCheckbox.checked = false;
+                    }
+                });
+                const alMenosUnoSeleccionado = [...checkboxes].some(checkbox => checkbox.checked);
+                editarButton.disabled = !alMenosUnoSeleccionado;
+            });
+        });
+    </script>
+</body>
+</html>

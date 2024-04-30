@@ -8,10 +8,11 @@ from .models import Llibre, Usuari, CD, BR, DVD, Dispositiu
 from django.views.generic import ListView
 from django.db.models import Q
 from .utils import generarLog,subir_logs_a_bd  # Importa la función generarLog desde utils.py
-from django.contrib.auth.decorators import login_required
+from .decorators import bibliotecari_required, alumne_required
 
-@login_required
-def dashboard(request):
+
+
+def perfil(request):
     users = Usuari.objects.all()
     if request.method == "POST":
         user_id = request.POST.get('id')
@@ -24,21 +25,46 @@ def dashboard(request):
                 messages.success(request, 'Datos actualizados correctamente')
                 generarLog(request, 'INFO', f"Datos actualizados correctamente")
                 subir_logs_a_bd(request)
-                return redirect('dashboard')
+                return redirect('perfil')
             except Usuari.DoesNotExist:  # Cambio aquí
                 messages.error(request, 'El usuario no existe')
                 generarLog(request, 'ERROR', f"El usuario no existe")
                 subir_logs_a_bd(request)
-                return redirect('dashboard')
+                return redirect('perfil')
         else:
             messages.error(request, 'Falta el campo ID')
             generarLog(request, 'ERROR', f"Falta el campo ID")
             subir_logs_a_bd(request)
 
-            return redirect('dashboard')
+            return redirect('perfil')
 
-    return render(request, 'dashboard.html', {'users': users})
+    return render(request, 'perfil.html', {'users': users})
 
+def perfil_editable(request):
+    if request.method == "POST":
+        user_id = request.POST.get('id')
+
+        if user_id:
+            try:
+                usuario = Usuari.objects.get(pk=user_id)
+                # Aquí puedes agregar más campos que desees actualizar
+                usuario.nom = request.POST.get('nom', usuario.nom)
+                usuario.cognom = request.POST.get('cognom', usuario.cognom)
+                usuario.email = request.POST.get('email', usuario.email)
+                usuario.cicle = request.POST.get('cicle', usuario.cicle)
+                usuario.rol = request.POST.get('rol', usuario.rol)
+                usuario.save()
+                messages.success(request, 'Perfil actualizado correctamente')
+                # Aquí puedes agregar registros de logs si lo deseas
+                return redirect('perfilEditable')  # Redirecciona a la página de perfil
+            except Usuari.DoesNotExist:
+                messages.error(request, 'El usuario seleccionado no existe')
+                return redirect('perfilEditable')
+        else:
+            messages.error(request, 'Falta el campo ID del usuario')
+            return redirect('perfilEditable')
+
+    return render(request, 'perfilEditable.html', {}) 
 
 def index(request):
     books = Llibre.objects.all()
@@ -108,3 +134,9 @@ def logout_user(request):
     subir_logs_a_bd(request)
     return redirect('index')
 
+def listUsers(request):
+    users = Usuari.objects.all()  # Obtiene todos los usuarios
+    return render(request, 'listUsers.html', {'usuarios': users})
+
+def dashboard(request):
+    return render(request, 'dashboard.html')

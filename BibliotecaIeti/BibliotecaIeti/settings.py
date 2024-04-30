@@ -30,7 +30,7 @@ AUTH_USER_MODEL = 'app.Usuari'
 SECRET_KEY = 'django-insecure-n4z#h_kmd45)v8b(+l*pq5m067o%2%()^+-_@zvtk-u$%)aw71'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG=False
+DEBUG=True
 
 ALLOWED_HOSTS = ['*']
 
@@ -128,11 +128,11 @@ USE_TZ = True
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+print("BASE_DIR:", BASE_DIR)
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 # Rutas de directorios donde se encuentran los archivos estáticos de la aplicación
 STATICFILES_DIRS = [
