@@ -74,7 +74,7 @@ class Catalog(models.Model):
     nom = models.CharField(max_length=100)
     descripcio = models.TextField()
     imatge = models.ImageField(upload_to='static/', null=True, blank=True)
-
+    cantidad = models.IntegerField(default=0)  # Agregar campo de cantidad
     def __str__(self):
         return self.nom
 
@@ -93,28 +93,28 @@ class Llibre(Catalog):
     collecio = models.CharField(max_length=100)
     autor = models.CharField(max_length=200, default="")
     pagines = models.IntegerField()
-    cantidad = models.IntegerField(default=0)  # Agregar campo de cantidad
+    
    
 class CD(Catalog):
     discografica = models.CharField(max_length=100)
     estil = models.CharField(max_length=100)
     duracio = models.IntegerField()
-    cantidad = models.IntegerField(default=0)  # Agregar campo de cantidad
+    
 
 class DVD(Catalog):
     productora = models.CharField(max_length=100)
     duracio = models.IntegerField()
-    cantidad = models.IntegerField(default=0)  # Agregar campo de cantidad
+    
 
 class BR(Catalog):
     productora = models.CharField(max_length=100)
     duracio = models.IntegerField()
-    cantidad = models.IntegerField(default=0)  # Agregar campo de cantidad
+    
 
 class Dispositiu(Catalog):
     modelo = models.CharField(max_length=100, default="")
     serie = models.CharField(max_length=100, default="")
-    cantidad = models.IntegerField(default=0)  # Agregar campo de cantidad
+   
 
 class Exemplar(models.Model):
     element_catalog = models.ForeignKey(ElementCatalog, on_delete=models.CASCADE)
