@@ -75,7 +75,7 @@ def limpiar_bd():
    
     TipusMaterial.objects.all().delete()
     Llibre.objects.all().delete()
-    Usuari.objects.all().delete()
+   # Usuari.objects.all().delete()
     Centre.objects.all().delete()
     Cicle.objects.all().delete()
     Catalog.objects.all().delete()
@@ -285,11 +285,5 @@ def crear_autores_y_libros(num_autores=100):
 
 
 def seed_database(num_usuarios=10, num_centros=5, num_catalogos=20, num_elementos=50):
-   # limpiar_bd()
-    crear_tipos_material()
-    crear_centros(num_centros)
-    crear_ciclos()
-    crear_usuarios(num_usuarios)
-    crear_catalogo(num_catalogos)
-    crear_autores_y_libros()
-    crear_reservas_prestamos_peticiones(num_elementos)
+    limpiar_bd()
+    
