@@ -20,7 +20,7 @@
       href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
       rel="stylesheet"
     />
-
+    <title>Panell</title>
     <style>
       .button-container {
 
@@ -84,6 +84,12 @@
         margin-left: 10px; /* Ajusta el margen izquierdo de los tres primeros botones */
         margin-right: 10px; /* Ajusta el margen derecho de los tres primeros botones */
         }
+        #btnBackDash{
+            display: flex;
+            justify-content: space-between;
+
+        }
+
     </style>
   </head>
   <body>
@@ -91,17 +97,27 @@
     {% if user.rol == 'Bibliotecari' or user.rol == 'Admin' %}
       <div class="button-container">
         <a href="{% url 'perfil' %}" class="buttonDash" role="button">Perfil</a>
-        <a href="#" class="buttonDash" role="button">Crear Usuaris</a>
+        <a href="{% url 'register' %}" class="buttonDash" role="button">Crear Usuaris</a>
         <a href="{% url 'listUsers' %}" class="buttonDash" role="button">Usuaris</a>
-        <a href="#" class="buttonDash" role="button">Carregar CSV</a>
-        <a href="#" class="buttonDash" role="button">Prestecs</a>
+        <a href="{% url 'importar_Users' %}" class="buttonDash" role="button">Carregar CSV</a>
+        <a href="{% url 'Prestecs' %}" class="buttonDash" role="button">Prestecs</a>
       </div>
 
     {% else %}
       <div class="button-container">
-        <button class="buttonDash" role="button">Perfil</button>
+        <a href="{% url 'perfil' %}" class="buttonDash" role="button">Perfil</a>
       </div>
     
     {% endif %}
+      <div id="btnBackDash">
+        {% include 'btnRedirect.html' %}
+        <script>
+            $(document).ready(function(){
+                // Llamar a la función enlaceBtn con la URL y el texto deseados
+                enlaceBtn("{% url 'index' %}", 'Enrere');
+            });
+        </script>
+      </div>
+    
   </body>
 </html>

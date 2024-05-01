@@ -29,17 +29,40 @@ from django.db.models import F
 
 def perfil(request):
     users = Usuari.objects.all()
+    ciclos = Cicle.objects.all()
+    success_message = "hola"
+    
     if request.method == "POST":
         user_id = request.POST.get('id')
 
         if user_id:
             try:
+                
+                ciclos = Cicle.objects.all()
                 usuario = Usuari.objects.get(pk=user_id)  
-                usuario.username = request.POST.get('username', usuario.username)  
+                usuario.first_name = request.POST['first_name']
+                usuario.last_name = request.POST['last_name']
+                usuario.telefon = request.POST['telefon']
+                usuario.data_naixement = request.POST['data_naixement']
+                
+                if 'rol' in request.POST and usuario.rol != 'Alumne':
+                    usuario.rol = request.POST.get('rol')
+                
+                if 'email' in request.POST:
+                    usuario.email = request.POST['email']
+                    
+                cicle_id = request.POST.get('cicle')
+                if cicle_id:
+                    # Buscar la instancia del ciclo en la base de datos
+                    cicle = Cicle.objects.get(pk=cicle_id)
+                    # Asignar el ciclo al usuario
+                    usuario.cicle = cicle
                 usuario.save()
                 messages.success(request, 'Datos actualizados correctamente')
+                
                 generarLog(request, 'INFO', f"Datos actualizados correctamente")
                 subir_logs_a_bd(request)
+                
                 return redirect('perfil')
             except Usuari.DoesNotExist:  # Cambio aquí
                 messages.error(request, 'El usuario no existe')
@@ -53,33 +76,33 @@ def perfil(request):
 
             return redirect('perfil')
 
-    return render(request, 'perfil.html', {'users': users})
+    return render(request, 'perfil.html', {'users': users, 'ciclos': ciclos})
 
-def perfil_editable(request):
-    if request.method == "POST":
-        user_id = request.POST.get('id')
+def perfil_editable(request, usuario_id):
+    try:
+        usuario = Usuari.objects.get(pk=usuario_id)
+        ciclos = Cicle.objects.all()
+        if request.method == "POST":
+            usuario.first_name = request.POST.get('first_name', usuario.first_name)
+            usuario.last_name = request.POST.get('last_name', usuario.last_name)
+            usuario.email = request.POST.get('email', usuario.email)
+            usuario.telefon = request.POST.get('telefon', usuario.telefon)
+            usuario.data_naixement = request.POST.get('data_naixement', usuario.data_naixement)
+            usuario.rol = request.POST.get('rol', usuario.rol)
+            cicle_id = request.POST.get('cicle')
+            if cicle_id:
+                # Buscar la instancia del ciclo en la base de datos
+                cicle = Cicle.objects.get(pk=cicle_id)
+                # Asignar el ciclo al usuario
+                usuario.cicle = cicle
+            usuario.save()
+            messages.success(request, 'Perfil actualizado correctamente')
+            return redirect('perfil_editable', usuario_id=usuario_id)
+    except Usuari.DoesNotExist:
+        messages.error(request, 'El usuario seleccionado no existe')
+        return redirect('perfil_editable')
 
-        if user_id:
-            try:
-                usuario = Usuari.objects.get(pk=user_id)
-                # Aquí puedes agregar más campos que desees actualizar
-                usuario.nom = request.POST.get('nom', usuario.nom)
-                usuario.cognom = request.POST.get('cognom', usuario.cognom)
-                usuario.email = request.POST.get('email', usuario.email)
-                usuario.cicle = request.POST.get('cicle', usuario.cicle)
-                usuario.rol = request.POST.get('rol', usuario.rol)
-                usuario.save()
-                messages.success(request, 'Perfil actualizado correctamente')
-                # Aquí puedes agregar registros de logs si lo deseas
-                return redirect('perfilEditable')  # Redirecciona a la página de perfil
-            except Usuari.DoesNotExist:
-                messages.error(request, 'El usuario seleccionado no existe')
-                return redirect('perfilEditable')
-        else:
-            messages.error(request, 'Falta el campo ID del usuario')
-            return redirect('perfilEditable')
-
-    return render(request, 'perfilEditable.html', {}) 
+    return render(request, 'perfilEditable.html', {'usuario': usuario, 'ciclos': ciclos})
 
 def index(request):
     books = Llibre.objects.all()
