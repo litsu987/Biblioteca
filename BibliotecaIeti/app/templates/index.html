@@ -317,16 +317,6 @@
         <input type="password" name="password" id="password" />
         <a href="{% url 'reset' %}">Recuperar Contrasenya</a>
         <input type="submit" id="loginSubmit" value="ENTRA" />
-        {% include 'popUp.html' %}
-        {% if messages %}
-        {% for message in messages %}
-        
-            <script>
-                  
-              showSuccessPopup( "{{ message|escapejs }}" )
-            </script>
-          {% endfor %}
-      {% endif %}
       </form>
       {% endif %}
 
@@ -364,5 +354,12 @@
         }
       }
     </script>
+    <div id="popup-messages" style="display: none;">
+      {% if messages %}
+          {% for message in messages %}
+              <span class="popup-message">{{ message|escape }}</span>
+          {% endfor %}
+      {% endif %}
+  </div>
   </body>
 </html>
