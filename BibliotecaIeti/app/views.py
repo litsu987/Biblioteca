@@ -25,10 +25,13 @@ from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.db.models import F
 from django.db.models import Count
+from django.http import JsonResponse
 
 
 def perfil(request):
     users = Usuari.objects.all()
+    if request.user.is_authenticated and not request.user.autentificacio:
+        return redirect('change')
     if request.method == "POST":
         user_id = request.POST.get('id')
 
@@ -56,6 +59,8 @@ def perfil(request):
     return render(request, 'perfil.html', {'users': users})
 
 def perfil_editable(request):
+    if request.user.is_authenticated and not request.user.autentificacio:
+        return redirect('change')
     if request.method == "POST":
         user_id = request.POST.get('id')
 
@@ -89,6 +94,8 @@ def index(request):
     dispositius = Dispositiu.objects.all()
 
     all_items = list(books) + list(cds) + list(dvds) + list(brs) + list(dispositius)
+    if request.user.is_authenticated and not request.user.autentificacio:
+        return redirect('change')
     if request.method == "POST":
         email = request.POST.get("email")
         password = request.POST.get("password")
@@ -117,42 +124,35 @@ def index(request):
     return render(request, 'index.html', {"books":all_items})
 
 
-
-
 def search_results(request):
     generarLog(request, 'INFO', f"BUSQUEDA REALIZADA")
     subir_logs_a_bd(request)
-    if request.method == "GET":
-        query = request.GET.get("searcher")
-        books = Llibre.objects.filter(
-            Q(nom__icontains=query)
-        )
-        # Filtrar CDs
-        cds = CD.objects.filter(
-            Q(nom__icontains=query)
-        )
-        
-        # Filtrar DVDs
-        dvds = DVD.objects.filter(
-            Q(nom__icontains=query)
-        )
-        
-        # Filtrar Blu-rays
-        brs = BR.objects.filter(
-            Q(nom__icontains=query)
-        )
-        
-        # Filtrar dispositivos
-        dispositivos = Dispositiu.objects.filter(
-            Q(nom__icontains=query)
-        )
-        return render(request, 'search_results.html', {
-            'books': books,
-            'cds': cds,
-            'dvds': dvds,
-            'brs': brs,
-            'dispositivos': dispositivos,
-        })
+    
+    query = request.GET.get("searcher")
+
+    has_stock = request.GET.get("has_stock", "off") == "on"
+    
+    books = Llibre.objects.filter(Q(nom__icontains=query))
+    
+    cds = CD.objects.filter(Q(nom__icontains=query))
+    
+    dvds = DVD.objects.filter(Q(nom__icontains=query))
+    
+    brs = BR.objects.filter(Q(nom__icontains=query))
+    
+    dispositivos = Dispositiu.objects.filter(Q(nom__icontains=query))
+    
+    
+    return render(request, 'search_results.html', {
+        'books': books,
+        'cds': cds,
+        'dvds': dvds,
+        'brs': brs,
+        'dispositivos': dispositivos,
+        'query': query,
+        'has_stock': has_stock,
+    })
+
 
 def logout_user(request):
     logout(request)
@@ -162,10 +162,12 @@ def logout_user(request):
     return redirect('index')
 
 def importar_Users(request):
+    
     error_message = None  # Inicializar el mensaje de error
     usuarios_no_introducidos = []  # Inicializar la lista de usuarios no introducidos
     usuarios_agregados = 0  # Inicializar el contador de usuarios agregados exitosamente
-    
+    if request.user.is_authenticated and not request.user.autentificacio:
+        return redirect('change')
     if request.method == 'POST' and request.FILES.get('archivo_csv'):
         archivo_csv = request.FILES['archivo_csv']
         nombre_centro_seleccionado = request.POST.get('nombre_centro_seleccionado')  # Obtener el nombre del centro seleccionado
@@ -234,6 +236,8 @@ def importar_Users(request):
     return render(request, 'importar_Users.html', {'centros': centros, 'error_message': error_message, 'usuarios_no_introducidos': usuarios_no_introducidos, 'usuarios_agregados': usuarios_agregados})
 
 def Prestecs(request):
+    if request.user.is_authenticated and not request.user.autentificacio:
+        return redirect('change')
     # Obtener los usuarios que tienen un préstamo
     usuarios_con_prestamo = Usuari.objects.filter(prestec__isnull=False).distinct()
 
@@ -243,6 +247,8 @@ def Prestecs(request):
 
 
 def llistarprestecs(request):
+    if request.user.is_authenticated and not request.user.autentificacio:
+        return redirect('change')
     if request.method == 'POST':
         # Procesar los datos del formulario de préstamo
         usuario_id = request.POST.get('usuari')
@@ -302,15 +308,21 @@ def llistarprestecs(request):
 
 
 def listUsers(request):
+    if request.user.is_authenticated and not request.user.autentificacio:
+        return redirect('change')
     users = Usuari.objects.all()  # Obtiene todos los usuarios
     return render(request, 'listUsers.html', {'usuarios': users})
 
 def dashboard(request):
+    if request.user.is_authenticated and not request.user.autentificacio:
+        return redirect('change')
     return render(request, 'dashboard.html')
 
 @login_required
 @check_user_able_to_see_page("Bibliotecari", "Admin")
 def register(request):
+    if request.user.is_authenticated and not request.user.autentificacio:
+        return redirect('change')
     centredata = Centre.objects.all()
     roles_data = Usuari.ROLES_CHOICES
     cicledata = Cicle.objects.all()
@@ -340,7 +352,12 @@ def register(request):
 
 class ChangePass(PasswordChangeView):
     template_name = "registration/change_pass.html"
-    success_url = reverse_lazy("change_done")
+    success_url = reverse_lazy("logout")
+    def form_valid(self, form):
+        if not self.request.user.autentificacio:
+            self.request.user.autentificacio = True
+            self.request.user.save()
+        return super().form_valid(form)
 
 class ChangePassDone(PasswordChangeDoneView):
     template_name = "registration/change_pass_done.html"
@@ -359,3 +376,37 @@ class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
 
 def ResetPassDone(request):
     return render (request, "registration/reset_pass_done.html")
+
+
+
+def buscar_autocompletado(request):
+    if request.method == 'GET':
+        query = request.GET.get('query', '')
+        has_stock = request.GET.get('has_stock', '')
+
+        items = []
+
+        if query:
+            # Realizar la búsqueda en la base de datos
+            libros = Llibre.objects.filter(nom__icontains=query)
+            cds = CD.objects.filter(nom__icontains=query)
+            dvds = DVD.objects.filter(nom__icontains=query)
+            brs = BR.objects.filter(nom__icontains=query)
+            dispositius = Dispositiu.objects.filter(nom__icontains=query)
+
+            # Combinar todos los resultados en una lista
+            items = list(libros) + list(cds) + list(dvds) + list(brs) + list(dispositius)
+
+            # Aplicar filtro de stock si es necesario
+            if has_stock == 'true':
+                items = [item for item in items if item.cantidad > 0]
+
+            items = items[:5]  # Limitar los resultados a los primeros 5
+
+        # Convertir los resultados en un formato JSON
+        data = [{'nombre': obj.nom, 'tipo_material': type(obj).__name__} for obj in items]
+
+        # Devolver los resultados como respuesta JSON
+        return JsonResponse(data, safe=False)
+
+    return JsonResponse([], safe=False)

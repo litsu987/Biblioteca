@@ -21,8 +21,25 @@
   </head>
   <body>
     <h1>Canvi de Contrasenya</h1>
-    <form action="{% url 'change' %}" method="post">
-      {% csrf_token %}
+    <form
+      action="{% url 'change' %}"
+      method="post"
+      onsubmit="return validateForm()"
+    >
+      {% csrf_token %} {% if user.autentificacio == False %}
+      <input
+        type="hidden"
+        name="old_password"
+        id="oldpass"
+        value="Vitenka"
+        readonly
+      />
+      <label for="">Contrasenya Nova</label>
+      <input type="password" name="new_password1" id="newpass1" />
+      <label for="">Confirmar Contrasenya nova</label>
+      <input type="password" name="new_password2" id="newpass2" />
+      <input type="submit" />
+      {%else%}
       <label for="">Contrasenya Actual</label>
       <input type="password" name="old_password" id="oldpass" />
       <label for="">Contrasenya Nova</label>
@@ -30,6 +47,33 @@
       <label for="">Confirmar Contrasenya nova</label>
       <input type="password" name="new_password2" id="newpass2" />
       <input type="submit" />
+      {%endif %}
     </form>
+
+    <script>
+      function validateForm() {
+        var newPassword1 = document.getElementById("newpass1").value;
+        var newPassword2 = document.getElementById("newpass2").value;
+
+        if (newPassword1 !== newPassword2) {
+          alert("Las contraseñas no coinciden.");
+          return false;
+        }
+
+        if (
+          newPassword1.length < 8 ||
+          !/[A-Z]/.test(newPassword1) ||
+          !/[a-z]/.test(newPassword1) ||
+          !/\d/.test(newPassword1)
+        ) {
+          alert(
+            "La contraseña debe tener al menos 8 caracteres, incluyendo mayúsculas, minúsculas y números."
+          );
+          return false;
+        }
+
+        return true;
+      }
+    </script>
   </body>
 </html>

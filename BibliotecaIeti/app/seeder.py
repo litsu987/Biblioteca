@@ -135,7 +135,7 @@ def crear_usuarios(num_usuarios):
 
         username = fake.user_name()
         email = fake.email()
-        password = "pa"
+        password = "Vitenka"
         data_naixement = fake.date_of_birth(minimum_age=18, maximum_age=90)
         imatge = fake.image_url()
         centre = Centre.objects.order_by('?').first()

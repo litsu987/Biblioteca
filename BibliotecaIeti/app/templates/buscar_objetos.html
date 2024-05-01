@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Búsqueda de Catálogo</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  </head>
+  <body>
+    <h1>Búsqueda de Catálogo</h1>
+
+    <input type="text" id="searcher" placeholder="Buscar..." />
+
+    <ul id="resultados"></ul>
+
+    <script>
+      $(function () {
+        $("#searcher").on("input", function () {
+          var query = $(this).val().trim();
+          if (query.length >= 3) {
+            $.ajax({
+              url: "{% url 'buscar_objetos' %}",
+              method: "GET",
+              data: {
+                query: query,
+              },
+              success: function (data) {
+                $("#resultados").empty();
+                $.each(data, function (index, obj) {
+                  $("#resultados").append(
+                    "<li>" +
+                      obj.nombre +
+                      " - Tipo: " +
+                      obj.tipo_material +
+                      "</li>"
+                  );
+                });
+              },
+              error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+              },
+            });
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

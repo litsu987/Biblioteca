@@ -17,4 +17,5 @@ urlpatterns = [
     path('importar/', views.importar_Users, name='importar_Users.html'),
     path('Prestecs/', views.Prestecs, name='Prestecs.html'),
     path('llistarprestecs/', views.llistarprestecs, name='llistarPrestecs.html'),
+    path('buscar/', views.buscar_autocompletado, name='buscar_autocompletado'),
 ]
