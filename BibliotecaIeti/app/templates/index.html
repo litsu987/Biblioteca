@@ -312,16 +312,24 @@
         {% csrf_token %}
         <h2 class="titleH2">Iniciar Sessió</h2>
         <label for="username">Adreça electrònica</label>
-        <input type="text" name="email" id="email" />
+        <input type="email" name="email" id="email" />
         <label for="password">Contrasenya</label>
         <input type="password" name="password" id="password" />
         <input type="submit" id="loginSubmit" value="ENTRA" />
-
-        {% if messages %} {% for message in messages %}
-        <p class="message">{{ message }}</p>
-        {% endfor %} {% endif %}
+        
+        {% include 'popUp.html' %}
+        {% if messages %}
+        {% for message in messages %}
+        
+            <script>
+                  
+              showSuccessPopup( "{{ message|escapejs }}" )
+            </script>
+          {% endfor %}
+      {% endif %}
       </form>
-      {% endif%}
+      {% endif %}
+
     </div>
     <script>
       function buscarAutocompletado() {

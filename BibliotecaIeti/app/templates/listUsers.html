@@ -18,11 +18,10 @@
 
         .tableUsers {
             display: flex;
-            justify-content: center;
             flex-direction: column;
             font-family: Arial, sans-serif;
             margin: 0;
-            margin-top: 100px;
+            margin-top: 50px;
             padding: 0;
             overflow-y: auto;
             max-height: 600px;           
@@ -53,10 +52,10 @@
         tr:hover {
             background-color: #ddd;
         }
-        .tableUsers.titleH2{
+        #listUser .titleListUsers{
             
             margin: 0 auto;
-            margin-top: 20px;
+            margin-top: 30px;
             margin-bottom: 15px;
             color: #142c83;
             font-family: Montserrat;
@@ -119,7 +118,7 @@
 <body>
     {% include 'header.html' %}
     <main id="listUser">
-        <h2 class="titleH2">Llista d'usuaris</h2>
+        <h2 class="titleListUsers">Llista d'usuaris</h2>
         <div class="tableUsers">
             
             <table>
@@ -151,7 +150,7 @@
         </div>
         <div id="botones">
             <div id="divEditar">
-                <a href="{% url 'perfil_editable' %}" id="editar" class="editar" disabled>Editar Perfil</a>
+                <a href="#" id="editar" class="editar" disabled>Editar Perfil</a>
             </div>
             {% include 'btnRedirect.html' %}
             <script>
@@ -163,21 +162,33 @@
         </div>
     </main>
     <script>
-        // JavaScript para limitar la selección a un solo checkbox
-        const checkboxes = document.querySelectorAll('.checkbox');
-        const editarButton = document.getElementById('editar');
+        $(document).ready(function() {
+            // JavaScript para limitar la selección a un solo checkbox
+            const checkboxes = document.querySelectorAll('.checkbox');
+            const editarButton = document.getElementById('editar');
 
-        checkboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', () => {
-                checkboxes.forEach(otherCheckbox => {
-                    if (otherCheckbox !== checkbox) {
-                        otherCheckbox.checked = false;
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', () => {
+                    checkboxes.forEach(otherCheckbox => {
+                        if (otherCheckbox !== checkbox) {
+                            otherCheckbox.checked = false;
+                        }
+                    });
+                    const alMenosUnoSeleccionado = [...checkboxes].some(checkbox => checkbox.checked);
+                    editarButton.disabled = !alMenosUnoSeleccionado;
+
+                    // Obtener el usuario_id del checkbox seleccionado
+                    const userId = checkbox.getAttribute('data-id');
+                    if (alMenosUnoSeleccionado) {
+                        // Habilitar el botón de editar y establecer la URL con el usuario_id
+                        $('#editar').attr('href', '/perfilEditable/' + userId ).removeAttr('disabled');
+                    } else {
+                        // Deshabilitar el botón de editar si no hay ningún checkbox seleccionado
+                        $('#editar').attr('href', '#').attr('disabled', 'disabled');
                     }
                 });
-                const alMenosUnoSeleccionado = [...checkboxes].some(checkbox => checkbox.checked);
-                editarButton.disabled = !alMenosUnoSeleccionado;
             });
-        });
-    </script>
+        })
+    </script> 
 </body>
 </html>

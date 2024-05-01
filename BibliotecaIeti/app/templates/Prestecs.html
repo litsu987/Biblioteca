@@ -4,32 +4,100 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Listado de Préstamos</title>
+    <style>
+        body,
+        main {
+            margin: 0;
+            padding: 0;
+        }
+        #listPrest{
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .tablePrest {
+            display: flex;
+            flex-direction: column;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            margin-top: 50px;
+            padding: 0;
+            overflow-y: auto;
+            max-height: 600px;           
+            
+        }
+        
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+        }
+        th {
+            background-color: #142c83;
+            color: #fff;
+            position: sticky; /* Encabezado fijo */
+            top: 0; /* Asegura que el encabezado se pegue al inicio de la tabla */
+            z-index: 1; 
+        }
+        tr:nth-child(even) {
+            background-color: #e3ecee;
+        }
+        tr:hover {
+            background-color: #ddd;
+        }
+        #listPrest .titleListPrest{
+            
+            margin: 0 auto;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            color: #142c83;
+            font-family: Montserrat;
+            font-weight: bolder;
+            text-align: center;
+        }
+
+        
+    </style>
 </head>
 <body>
-    <h1>Listado de Préstamos</h1>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>Ciclo</th>
-                <th>Material Prestado</th>
-                <th>Fecha de Inicio</th>
-                <th>Fecha Final</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for usuario in usuarios_con_prestamo %}
-                {% for prestec in usuario.prestec_set.all %}
+    {% include 'header.html' %}
+    <main id="listPrest">
+        <h1 class="titleListPrest">Listado de Préstamos</h1>
+        <div class="tablePrest">
+            <table>
+                <thead>
                     <tr>
-                        <td>{{ usuario.first_name }} {{ usuario.last_name }}</td>
-                        <td>{{ usuario.cicle.nom }}</td>
-                        <td>{{ prestec.catalog }}</td>
-                        <td>{{ prestec.data_prestec }}</td>
-                        <td>{{ prestec.data_retorn }}</td>
+                        <th>Nombre</th>
+                        <th>Ciclo</th>
+                        <th>Material Prestado</th>
+                        <th>Fecha de Inicio</th>
+                        <th>Fecha Final</th>
                     </tr>
-                {% endfor %}
-            {% endfor %}
-        </tbody>
-    </table>
+                </thead>
+                <tbody>
+                    {% for usuario in usuarios_con_prestamo %}
+                        {% for prestec in usuario.prestec_set.all %}
+                            <tr>
+                                <td>{{ usuario.first_name }} {{ usuario.last_name }}</td>
+                                <td>{{ usuario.cicle.nom }}</td>
+                                <td>{{ prestec.catalog }}</td>
+                                <td>{{ prestec.data_prestec }}</td>
+                                <td>{{ prestec.data_retorn }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+    </main>
+    
 </body>
 </html>

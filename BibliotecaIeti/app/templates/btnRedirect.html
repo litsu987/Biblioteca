@@ -6,7 +6,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js"></script>
     <title>Document</title>
     <style>
-        #enlaceBtn a {
+        #enlaceBtn {
             text-decoration: none;
             color: #FFFFFF;
         }
@@ -53,13 +53,13 @@
     </style>
 </head>
 <body>
-    <div id="enlaceBtn">
-        <a id="enlace" href="#">titul</a>
-    </div>
+    
+        <a id="enlaceBtn" href="#">titul</a>
+    
     <script>
         function enlaceBtn(nuevaURL, nuevoTexto) {
             // Cambiar el href y el texto del enlace con el id proporcionado
-            $('#enlace').attr('href', nuevaURL).text(nuevoTexto);
+            $('#enlaceBtn').attr('href', nuevaURL).text(nuevoTexto);
         }
     </script>
 </body>
