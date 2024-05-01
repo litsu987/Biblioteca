@@ -16,6 +16,6 @@ urlpatterns = [
     path('perfilEditable/<int:usuario_id>', views.perfil_editable, name='perfil_editable'),
     path('importar/', views.importar_Users, name='importar_Users'),
     path('Prestecs/', views.Prestecs, name='Prestecs'),
-    path('llistarprestecs/', views.llistarprestecs, name='llistarPrestecs.html'),
+    path('llistarprestecs/', views.llistarprestecs, name='llistarPrestecs'),
     path('buscar/', views.buscar_autocompletado, name='buscar_autocompletado'),
 ]

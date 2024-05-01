@@ -315,8 +315,8 @@
         <input type="email" name="email" id="email" />
         <label for="password">Contrasenya</label>
         <input type="password" name="password" id="password" />
+        <a href="{% url 'reset' %}">Recuperar Contrasenya</a>
         <input type="submit" id="loginSubmit" value="ENTRA" />
-        
         {% include 'popUp.html' %}
         {% if messages %}
         {% for message in messages %}

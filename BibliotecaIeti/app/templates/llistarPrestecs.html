@@ -1,101 +1,106 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Formulario de Préstamo</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            margin: 0;
-            padding: 0;
-        }
-        form {
-            max-width: 400px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        label {
-            display: block;
-            margin-bottom: 10px;
-        }
-        select, input[type="date"] {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 20px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        button[type="submit"] {
-            width: 100%;
-            padding: 10px;
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        button[type="submit"]:hover {
-            background-color: #0056b3;
-        }
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        margin: 0;
+        padding: 0;
+      }
+      form {
+        max-width: 400px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      label {
+        display: block;
+        margin-bottom: 10px;
+      }
+      select,
+      input[type="date"] {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+      }
+      button[type="submit"] {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      button[type="submit"]:hover {
+        background-color: #0056b3;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
+    {% include 'header.html' %}
     <form method="post" enctype="multipart/form-data" id="prestamo-form">
-        {% csrf_token %}
-        <label for="usuari">Usuario:</label>
-        <select name="usuari" id="usuari">
-          {% for usuario in usuarios_con_prestamo %}
-          <option value="{{ usuario.id }}">{{ usuario.email }}</option>
-          {% endfor %}
-        </select>
-      
-        <label for="catalog">Catálogo:</label>
-        <select name="catalog" id="catalog">
-          {% for item in catalog_items %}
-          <option value="{{ item.id }}">{{ item.nom }}</option>
-          {% endfor %}
-        </select>
-      
-        <!-- Eliminamos el campo de fecha de préstamo -->
-        
-        <label for="data_retorn">Fecha de retorno:</label>
-        <input type="date" name="data_retorn" id="data_retorn" disabled>
-      
-        <button type="submit">Realizar Préstamo</button>
-      </form>
-      
-      <script>
-        // Calcula la fecha de retorno un mes después de la fecha actual
-        document.getElementById('prestamo-form').addEventListener('submit', function(event) {
+      {% csrf_token %}
+      <label for="usuari">Usuario:</label>
+      <select name="usuari" id="usuari">
+        {% for usuario in usuarios_con_prestamo %}
+        <option value="{{ usuario.id }}">{{ usuario.email }}</option>
+        {% endfor %}
+      </select>
+
+      <label for="catalog">Catálogo:</label>
+      <select name="catalog" id="catalog">
+        {% for item in catalog_items %}
+        <option value="{{ item.id }}">{{ item.nom }}</option>
+        {% endfor %}
+      </select>
+
+      <!-- Eliminamos el campo de fecha de préstamo -->
+
+      <label for="data_retorn">Fecha de retorno:</label>
+      <input type="date" name="data_retorn" id="data_retorn" disabled />
+
+      <button type="submit">Realizar Préstamo</button>
+    </form>
+
+    <script>
+      // Calcula la fecha de retorno un mes después de la fecha actual
+      document
+        .getElementById("prestamo-form")
+        .addEventListener("submit", function (event) {
           event.preventDefault(); // Evita enviar el formulario antes de realizar los cálculos
-      
+
           // Genera la fecha actual en el formato yyyy-mm-dd
           var today = new Date();
-          var dd = String(today.getDate()).padStart(2, '0');
-          var mm = String(today.getMonth() + 1).padStart(2, '0'); // Enero es 0
+          var dd = String(today.getDate()).padStart(2, "0");
+          var mm = String(today.getMonth() + 1).padStart(2, "0"); // Enero es 0
           var yyyy = today.getFullYear();
-          var fechaPrestamo = yyyy + '-' + mm + '-' + dd;
-      
+          var fechaPrestamo = yyyy + "-" + mm + "-" + dd;
+
           // Suma un mes a la fecha de hoy para calcular la fecha de retorno
           var fechaRetorno = new Date();
           fechaRetorno.setMonth(fechaRetorno.getMonth() + 1);
-          var dd_retorno = String(fechaRetorno.getDate()).padStart(2, '0');
-          var mm_retorno = String(fechaRetorno.getMonth() + 1).padStart(2, '0'); // Enero es 0
+          var dd_retorno = String(fechaRetorno.getDate()).padStart(2, "0");
+          var mm_retorno = String(fechaRetorno.getMonth() + 1).padStart(2, "0"); // Enero es 0
           var yyyy_retorno = fechaRetorno.getFullYear();
-          var fechaRetornoString = yyyy_retorno + '-' + mm_retorno + '-' + dd_retorno;
-      
+          var fechaRetornoString =
+            yyyy_retorno + "-" + mm_retorno + "-" + dd_retorno;
+
           // Establece el valor de fecha de retorno en el campo correspondiente
-          document.getElementById('data_retorn').value = fechaRetornoString;
-      
+          document.getElementById("data_retorn").value = fechaRetornoString;
+
           // Envía el formulario después de calcular la fecha de retorno
           this.submit();
         });
-      </script>
-</body>
+    </script>
+  </body>
 </html>

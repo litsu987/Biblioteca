@@ -174,6 +174,7 @@
         </div>
           <label>Centre</label>
           <input type="text" name="centre" value="{{user.centre.nom}}" readonly disabled/>
+          <a href="{% url 'change' %}">Canviar contrasenya</a>
           <div id="perfilBtn">
             <input type="submit" value="Guardar Canvis" />
             {% include 'btnRedirect.html' %}
@@ -191,7 +192,6 @@
 
             <script>
                 $(document).ready(function(){
-                    // Llamar a la función enlaceBtn con la URL y el texto deseados
                     enlaceBtn("{% url 'dashboard' %}", 'Enrere');
                 });
             </script>
