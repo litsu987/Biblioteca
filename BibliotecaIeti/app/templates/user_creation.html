@@ -28,6 +28,14 @@
 
   <input type="hidden" name="password1" value="Vitenka">
   <input type="hidden" name="password2" value="Vitenka">
+  
   <button type="submit">Sign up</button>
+  {% include 'btnRedirect.html' %}
+  <script>
+      $(document).ready(function(){
+          // Llamar a la función enlaceBtn con la URL y el texto deseados
+          enlaceBtn("{% url 'dashboard' %}", 'Enrere');
+      });
+  </script>
 </form>
 {% endblock %}

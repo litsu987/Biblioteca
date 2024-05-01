@@ -13,8 +13,8 @@ urlpatterns = [
     path("reset/done/", views.ResetPassDone, name="reset_done"),  
     path("change/done/", ChangePassDone.as_view(), name="change_done"),  
     path('perfil/', views.perfil, name='perfil'),
-    path('perfilEditable/', views.perfil_editable, name='perfil_editable'),
-    path('importar/', views.importar_Users, name='importar_Users.html'),
-    path('Prestecs/', views.Prestecs, name='Prestecs.html'),
+    path('perfilEditable/<int:usuario_id>', views.perfil_editable, name='perfil_editable'),
+    path('importar/', views.importar_Users, name='importar_Users'),
+    path('Prestecs/', views.Prestecs, name='Prestecs'),
     path('llistarprestecs/', views.llistarprestecs, name='llistarPrestecs.html'),
 ]

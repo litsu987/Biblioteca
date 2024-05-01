@@ -12,14 +12,22 @@
             background-color: #f4f4f4;
         }
 
-        h1 {
+        .titleCVS{
+            
+            margin: 0 auto;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            color: #142c83;
+            font-family: Montserrat;
+            font-weight: bolder;
             text-align: center;
-            color: #333;
         }
+        
 
         form {
             max-width: 600px;
             margin: 20px auto;
+            margin-top: 50px;
             background: #fff;
             padding: 20px;
             border-radius: 5px;
@@ -98,7 +106,8 @@
     </style>
 </head>
 <body>
-    <h1>Importar Usuarios desde CSV</h1>
+    {% include 'header.html' %}
+    <h1 class="titleCVS">Importar Usuarios desde CSV</h1>
     <form id="myForm" action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <input type="file" name="archivo_csv" id="archivo_csv" accept=".csv" required>

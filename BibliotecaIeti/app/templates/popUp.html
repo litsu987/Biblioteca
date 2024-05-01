@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
+            padding: 20px;
+            z-index: 999;
+        }
+
+        .popup-content {
+            background-color: #f1f1f1;
+            border: 1px solid #ccc;
+            padding: 20px;
+            position: relative;
+        }
+
+        .close {
+            color: #aaa;
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .success-icon {
+            color: green; /* Color verde para el icono de éxito */
+            font-size: 24px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="success-popup" class="popup">
+        <div class="popup-content">
+            <span class="close" onclick="closePopup('success-popup')">&times;</span>
+            <p id="popup-message"><span class="success-icon">&#10003;</span></p>
+        </div>
+    </div>
+
+    <script>
+        // Función para mostrar el popup solo cuando hay un mensaje de éxito
+        function showSuccessPopup(message) {
+            var popup = document.getElementById('success-popup');
+            var popupMessage = document.getElementById('popup-message');
+            popupMessage.innerHTML = '<span class="success-icon">&#10003;</span>' + message;
+            popup.style.display = "block";
+        }
+
+        function closePopup(id) {
+            var popup = document.getElementById(id);
+            popup.style.display = "none";
+        }
+    </script>
+</body>
+</html>

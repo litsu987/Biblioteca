@@ -139,12 +139,12 @@ print("BASE_DIR:", BASE_DIR)
 STATIC_URL = '/static/'
 
 # Rutas de directorios donde se encuentran los archivos estáticos de la aplicación
-#STATICFILES_DIRS = [
-#    os.path.join(BASE_DIR, 'static'),
-#]
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'app', 'static'),
+]
 
 # Add this line to specify the location where Django should collect static files
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+#STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

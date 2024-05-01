@@ -1,9 +1,10 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Perfil</title>
     <style>
         body,
         main {
@@ -15,8 +16,8 @@
         #divisor {
             display: flex;
             justify-content: space-around;
-            height: 700px;  
-            margin-top: 50px;
+            height: 750px;  
+            margin-top: 40px;
         }
 
         #divisor form input[type="submit"] {
@@ -57,20 +58,12 @@
         #divisor form input[type="submit"]:active {
             opacity: .5;
         }   
-
-        #divisor form {
-            display: flex;
-            padding: 0;
-            flex-direction: column;
-            gap: 10px;
-            box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-        }
-
+    
         #divisor input {
             width: 90%;
             height: 30px;
-            font-size: 1.3em;
-            padding: 10px;
+            font-size: 1em;
+            padding: 5px;
             margin: 0 auto;
             border-radius: 8px;
             border: 1px solid #5978e8;
@@ -87,23 +80,41 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
+            font-size: 1.3em;
             padding: 0 50px;
             width: 40vw;
             max-width: 500px;
-            height: 700px;
+            height: 750px;
             border-radius: 15px;
+            gap: 10px;
+            box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
         }
 
         #sepa {
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
             justify-content: space-between;
         }
 
         #nosepa {
             display: flex;
             flex-direction: column;
+            width: 90%;
+            padding: 10px;
 
+        }
+
+        #nosepa select {
+            height: 40px;
+            font-size: 1em;
+            padding: 5px;
+            margin: 0;
+            border-radius: 8px;
+            border: 1px solid #5978e8;
+        }
+
+        #perfilBtn {
+            display: flex;
         }
     </style>
 </head>
@@ -112,44 +123,83 @@
     
     <div id="divisor">
       <img src="{{user.imatge}}" alt="" srcset="" />
-      <form action="" method="post" >
+      <form action="" method="post" onsubmit="return validarFormulario();">
         {% csrf_token %}
-        {% if messages %} {% for message in messages %} {{ message }} {% endfor %}
-        {% endif %}
+        
         <input type="hidden" name="id" value="{{ user.id }}" readonly>
-        <label for="nom">Nom </label>
-        <input type="text" name="username" value="{{user.nom}}"  />
-        <label for="nom">Cognom</label>
-        <input type="text" name="username" value="{{user.cognom}}"  />
+        <label for="first_name">Nom </label>
+        <input type="text" name="first_name" value="{{user.first_name}}"  />
+        <div id="error_first_name"></div>
+        <label for="last_name">Cognom</label>
+        <input type="text" name="last_name" value="{{user.last_name}}"  />
+        <div id="error_last_name"></div>
         <label for="email">Email</label>
         {% if user.rol == 'Bibliotecari' or user.rol == 'Admin'%}
-        <input type="email" value="{{user.email}}"/>
+            <input type="email" name="email" value="{{user.email}}"/>
         {% else %}
-        <input type="email" value="{{user.email}}"disabled readonly />
+            <input type="email" name="email" value="{{user.email}}"disabled readonly />
         {% endif %}
-        <label for="nom">Telèfon</label>
-        <input type="number" name="username" value="{{user.telefon}}"  />
+        <label for="telefon">Telèfon</label>
+        <input type="tel" name="telefon" value="{{user.telefon}}"  />
+        <div id="error_telefon"></div>
         <div id="sepa">
             <div id="nosepa">
                 <label for="date">Data de naixament</label>
-                <input type="date" value="{{user.data_naixement}}"/>
+                <input type="date" name="data_naixement" value="{{user.data_naixement|date:'Y-m-d'}}"/>
             </div>
             {% if user.rol == 'Bibliotecari' or user.rol == 'Admin'%}
             <div id="nosepa">
                 <label for=""> Cargo </label>
-                <input type="text" value="{{user.rol.nom}}" />
+                <select name="rol">
+                    {% for rol in user.ROLES_CHOICES %}
+                        {% if rol.0 == user.rol %}
+                            <option value="{{ rol.0 }}" selected>{{ rol.1 }}</option>
+                        {% else %}
+                            <option value="{{ rol.0 }}">{{ rol.1 }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
             </div>
           {% else %}
           <div id="nosepa">
               <label for=""> Cicle </label>
-              <input type="text" value="{{user.cicle.nom}}"readonly disabled />
+              <select name="cicle" id="cicle">
+                <option value="">Selecciona un ciclo</option>
+                {% for ciclo in ciclos %}
+                    <option value="{{ ciclo.id }}" {% if user.cicle == ciclo %} selected {% endif %}>{{ ciclo.nom }}</option>
+                {% endfor %}
+                </select>
             </div>
           {% endif %}
         </div>
           <label>Centre</label>
-          <input type="text" value="{{user.centre.nom}}" readonly disabled/>
-          <input type="submit" value="Guardar Canvis" />
+          <input type="text" name="centre" value="{{user.centre.nom}}" readonly disabled/>
+          <div id="perfilBtn">
+            <input type="submit" value="Guardar Canvis" />
+            {% include 'btnRedirect.html' %}
+            {% include 'popUp.html' %}
+            {% if messages %}
+            {% for message in messages %}
+            
+                <script>
+                // Muestra el popup de éxito cuando hay un mensaje de éxito en el contexto
+                
+                showSuccessPopup( "{{ message|escapejs }}" )
+                </script>
+            {% endfor %}
+        {% endif %}
+
+            <script>
+                $(document).ready(function(){
+                    // Llamar a la función enlaceBtn con la URL y el texto deseados
+                    enlaceBtn("{% url 'dashboard' %}", 'Enrere');
+                });
+            </script>
+          </div>
         </form>
     </div>
+    <script src="{% static 'js/validaciones.js' %}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js"></script>
+    
 </body>
 </html>
