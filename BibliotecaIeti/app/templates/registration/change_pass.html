@@ -83,6 +83,7 @@
       <input type="password" name="new_password1" id="newpass1" />
       <label for="">Confirmar Contrasenya nova</label>
       <input type="password" name="new_password2" id="newpass2" />
+      <div id="error-message" class="error-message" style="display: none;"></div>
       <input type="submit" />
       {%endif %}
     </form>
@@ -91,9 +92,11 @@
       function validateForm() {
         var newPassword1 = document.getElementById("newpass1").value;
         var newPassword2 = document.getElementById("newpass2").value;
+        var errorMessage = document.getElementById("error-message");
 
         if (newPassword1 !== newPassword2) {
-          alert("Las contraseñas no coinciden.");
+          errorMessage.innerText = "Las contraseñas no coinciden.";
+          errorMessage.style.display = "block";
           return false;
         }
 
@@ -103,12 +106,12 @@
           !/[a-z]/.test(newPassword1) ||
           !/\d/.test(newPassword1)
         ) {
-          alert(
-            "La contraseña debe tener al menos 8 caracteres, incluyendo mayúsculas, minúsculas y números."
-          );
+          errorMessage.innerText =
+          "La contraseña debe tener al menos 8 caracteres, incluyendo mayúsculas, minúsculas y números.";
+          errorMessage.style.display = "block";
           return false;
         }
-
+        errorMessage.style.display = "none";
         return true;
       }
     </script>

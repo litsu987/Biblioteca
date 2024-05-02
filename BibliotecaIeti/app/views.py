@@ -262,7 +262,7 @@ def Prestecs(request):
     if request.user.is_authenticated and not request.user.autentificacio:
         return redirect('change')
     # Obtener los usuarios que tienen un préstamo
-    usuarios_con_prestamo = Usuari.objects.filter(prestec__isnull=False).distinct()
+    usuarios_con_prestamo = Usuari.objects.filter(prestec__isnull=False).distinct().order_by('-id')
 
     # Pasar los usuarios a la plantilla
     return render(request, 'Prestecs.html', {'usuarios_con_prestamo': usuarios_con_prestamo})
@@ -310,7 +310,7 @@ def llistarprestecs(request):
                 catalogo.dispositiu.save()
             
             # Redirigir a alguna página de éxito o a donde desees
-            return redirect('llistarPrestecs.html')
+            return redirect('Prestecs')
         else:
             # Manejar el caso en el que no haya suficientes elementos en el catálogo
             # Puedes mostrar un mensaje de error o redirigir a alguna página de error

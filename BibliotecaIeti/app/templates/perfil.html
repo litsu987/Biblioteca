@@ -73,6 +73,7 @@
             width: 500px;
             height: auto;
             max-height: 500px;
+            border-radius: 50%;
         }
 
         #divisor form {
@@ -178,17 +179,19 @@
           <div id="perfilBtn">
             <input type="submit" value="Guardar Canvis" />
             {% include 'btnRedirect.html' %}
-            {% include 'popUp.html' %}
-            {% if messages %}
-            {% for message in messages %}
-            
-                <script>
-                // Muestra el popup de éxito cuando hay un mensaje de éxito en el contexto
-                
-                showSuccessPopup( "{{ message|escapejs }}" )
-                </script>
-            {% endfor %}
-        {% endif %}
+
+{% include 'popUp.html' %}
+{% if messages %}
+    {% for message in messages %}
+        <script>
+            // Verifica el tipo de mensaje y llama a la función correspondiente
+            if ("{{ message.tags|escapejs }}" == 'success')
+                showSuccessPopup("{{ message|escapejs }}");
+            elif ("{{ message.tags|escapejs }}" == 'error')
+                showErrorPopup("{{ message|escapejs }}");
+        </script>
+    {% endfor %}
+{% endif %}
 
             <script>
                 $(document).ready(function(){

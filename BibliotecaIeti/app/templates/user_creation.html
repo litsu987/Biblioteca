@@ -1,36 +1,148 @@
+<head>
+  <title>Register</title>
+  <style>
+    body,
+        main {
+            padding: 0;
+            margin: 0;
+            font-family: Nunito;
+        }
+
+        #divisor {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 900px;  
+            margin-top: 40px;
+        }
+
+        #divisor form input[type="submit"] {
+            width: fit-content;
+            background: #142C83;
+            border: 1px solid #142C83;
+            border-radius: 6px;
+            box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
+            box-sizing: border-box;
+            color: #FFFFFF;
+            cursor: pointer;
+            display: inline-block;
+            font-family: nunito,roboto,proxima-nova,"proxima nova",sans-serif;
+            font-size: 16px;
+            font-weight: 800;
+            line-height: 16px;
+            min-height: 40px;
+            outline: 0;
+            margin: 0 auto;
+            margin-top: 15px;
+            padding: 12px 14px;
+            text-align: center;
+            text-rendering: geometricprecision;
+            text-transform: none;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            vertical-align: middle;
+        }
+
+        #divisor form input[type="submit"]:hover, 
+        #divisor form input[type="submit"]:active {
+            background-color: initial;
+            background-position: 0 0;
+            color: #142C83;
+        }
+
+        #divisor form input[type="submit"]:active {
+            opacity: .5;
+        }   
+    
+        #divisor input {
+            width: 90%;
+            height: 30px;
+            font-size: 1em;
+            padding: 5px;
+            margin: 0 auto;
+            border-radius: 8px;
+            border: 1px solid #5978e8;
+        }
+
+        #divisor img {
+            width: 500px;
+            height: auto;
+            max-height: 500px;
+        }
+
+        #divisor form {
+            background-color: #e3ecee;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            font-size: 1.3em;
+            padding: 0 50px;
+            width: 40vw;
+            max-width: 500px;
+            height: 750px;
+            border-radius: 15px;
+            gap: 10px;
+            box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+        }
+        #divisor select {
+          height: 40px;
+          font-size: 1em;
+          padding: 5px;
+          margin: 0;
+          border-radius: 8px;
+          border: 1px solid #5978e8;
+        }
+
+        #registerBtn {
+          display: flex;
+        }
+  </style>
+</head>
 {% block content %}
-<h2>Sign up</h2>
+{% include 'header.html' %}
+<div id="divisor">
+  <h2>Sign up</h2>
 <form method="post">
   {% csrf_token %} 
-
-  <input type="text" name="first_name" placeholder="First name">
-  <input type="text" name="last_name" placeholder="Last name">
-  <input type="email" name="email" placeholder="Email">
-  <select name="id_centre">
-    {% for centre in centredata %}
-        <option value="{{ centre.id }}">{{ centre.nom }}</option>
-    {% endfor %}
-  </select>
-  <select name="id_cicle">
-    {% for cicle in cicledata %}
-        <option value="{{ cicle.id }}">{{ cicle.nom }}</option>
-    {% endfor %}
-  </select>
-  <label for="number">Telefono</label>
-  <input type="number" name="telefon">
+  <label for="first_name">Nom </label>
+  <input type="text" name="first_name">
+  <label for="last_name">Cognom</label>
+  <input type="text" name="last_name">
+  <label for="email">Email</label>
+  <input type="email" name="email">
+  <label for="number">Tèlefon</label>
+  <input type="tel" name="telefon">
   <label for="birthdate">Data de Naixament</label>
   <input type="date" name="birthdate" >
+  <label for="roles"> Cargo </label>
   <select name="roles" id="id_rol">
     {% for rol_value, rol_label in roles_data %}
       <option value="{{ rol_value }}">{{ rol_label }}</option>
     {% endfor %}
   </select>
-
+  <label for="id_centre">Centre</label>
+  <select name="id_centre">
+    {% for centre in centredata %}
+        <option value="{{ centre.id }}">{{ centre.nom }}</option>
+    {% endfor %}
+  </select>
+  <label for="id_cicle"> Cicle </label>
+  <select name="id_cicle">
+    {% for cicle in cicledata %}
+        <option value="{{ cicle.id }}">{{ cicle.nom }}</option>
+    {% endfor %}
+  </select>
+  
+  
   <input type="hidden" name="password1" value="Vitenka">
   <input type="hidden" name="password2" value="Vitenka">
+  <div id="registerBtn">
+    <input type="submit" value="Desar">
+    {% include 'btnRedirect.html' %}
+  </div>
   
-  <button type="submit">Sign up</button>
-  {% include 'btnRedirect.html' %}
   <script>
       $(document).ready(function(){
           // Llamar a la función enlaceBtn con la URL y el texto deseados
@@ -38,4 +150,5 @@
       });
   </script>
 </form>
+</div>
 {% endblock %}

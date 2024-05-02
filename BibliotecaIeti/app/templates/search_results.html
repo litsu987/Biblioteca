@@ -22,274 +22,126 @@
       rel="stylesheet"
     />
     <style>
-      *,
-      body,
-      main {
-        padding: 0;
-        margin: 0;
-      }
+       body {
+    background-color: #ffffff; /* Fondo blanco */
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  #enlaceBtn {
+    margin-right: 10px !important;
+  }
 
-      #header {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        background-color: #e3ecee;
-      }
+  #top {
+    display:flex;
+    justify-content: space-between; 
+    align-items: center;
+    height: 70px;
+    background-color: #fff;
+    padding: 20px;
+    
+    }
 
-      #common {
-        display: flex;
-        flex-direction: row;
-      }
+  p {
+    padding-bottom: 10px;
+  }
 
-      #header img {
-        width: auto;
-        height: 80px;
-        margin: 20px 0 auto 20px;
-      }
+  .container {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr)); /* Grid de tres columnas */
+    gap: 30px 60px; /* Espacio entre elementos */
+  }
 
-      h1 {
-        padding: 5vh 0;
-        color: #142c83;
-        font-family: Montserrat;
-        font-weight: bolder;
-        text-align: left;
-      }
+  article {
+    background-color: #e3ecee; /* Color de fondo de los elementos */
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #142C83;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  }
 
-      h2 {
-        font-size: 2rem;
-        margin-bottom: 20px;
-      }
-
-      #main {
-        font-family: Nunito;
-        display: flex;
-        margin: auto;
-        padding: 2%;
-        justify-content: center;
-        text-align: center;
-        width: 80vw;
-        height: 50vh;
-        gap: 20%;
-        margin-top: 5vh;
-      }
-
-      #main div,
-      form {
-        background-color: #e3ecee;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        padding: 0 50px;
-        width: 40vw;
-        max-width: 500px;
-        border-radius: 15px;
-      }
-
-      #login label {
-        text-align: left;
-      }
-
-      #booksearcher > form {
-        display: flex;
-        padding: 0;
-        flex-direction: column;
-        gap: 5%;
-      }
-
-      #booksearcher input[type="submit"] {
-        width: fit-content;
-        padding: 5px 20px;
-        margin: 0 auto;
-        font-family: Nunito;
-        font-weight: bold;
-      }
-
-      input[type="search"] {
-        width: 90%;
-        height: 40px;
-        font-size: 1.3rem;
-        margin: 0 auto;
-        border-radius: 8px;
-      }
-
-      #user,
-      #pass {
-        width: 100%;
-        height: 25px;
-        margin: 0 auto;
-        border-radius: 8px;
-      }
-
-      #login a {
-        font-size: 0.7rem;
-        text-align: left;
-        text-decoration: none;
-      }
-
-      #login {
-        gap: 10px;
-      }
-
-      #login input[type="button"] {
-        width: fit-content;
-        padding: 0 15px;
-        margin-left: auto;
-        font-family: Nunito;
-        font-weight: bold;
-        background-color: #d9d9d9;
-      }
-
-      #infouser {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-      }
-
-      #data {
-        align-self: center;
-        text-align: right;
-      }
-
-      #infouser img {
-        width: 50px;
-        height: 80px;
-        padding: 0 10px;
-        margin: auto 0;
-      }
-
-      h3 {
-        padding: 10px 20px;
-        background-color: #142c83;
-        width: fit-content;
-        font-size: 1rem;
-        color: white;
-        font-family: Rubik Mono One;
-      }
-
-      #divisor {
-        display: flex;
-        justify-content: space-around;
-      }
-
-      #divisor img {
-        width: 500px;
-        height: auto;
-      }
-
-      #divisor form {
-        display: flex;
-        flex-direction: column;
-        background-color: #e3ecee;
-        justify-content: center;
-        height: 50vh;
-        padding: 0 50px;
-        gap: 15px;
-        width: 40vw;
-        max-width: 500px;
-        border-radius: 15px;
-      }
-
-      #divisor form input[type="text"] {
-        width: 100%;
-        height: 30px;
-        font-size: 1rem;
-        margin: 0 auto;
-        border-radius: 8px;
-      }
-
-      #sepa {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-      }
-
-      #divisor form input[type="submit"] {
-        width: fit-content;
-        padding: 0 15px;
-        margin: 0 auto;
-        font-family: Nunito;
-        font-weight: bold;
-        background-color: #d9d9d9;
-      }
-
-      #nosepa {
-        display: flex;
-        flex-direction: column;
-      }
+  h2 {
+    color: #142C83; /* Color del título */
+  }
     </style>
-  </head>
-  <body>
-    <div id="header">
-      <div id="common">
-        <a href="{% url 'index'%}">
-          <img
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNz9mZq9dbJ77kWv65_SQ-v0Nn3pIx9QpigGCKNJSRWMsS9ixpPPdoILzUNIQqkPaBxco&usqp=CAU"
-            alt=""
-          />
-        </a>
-        <h1>BIBLIOTECA MARICARMEN</h1>
-      </div>
-      <div id="infouser">
-        {% if user.is_authenticated %}
-        <div id="data">
-          <p>{{ user.first_name }}</p>
-          {% if user.is_staff %}
-          <p>Admin</p>
-          {% else %}
-          <p>Usuari</p>
-          {% endif %}
-          <a href="{% url 'logout' %}">Tancar Sessió</a>
-        </div>
-        <img src="{{ user.imatge }}" alt="" srcset="" />
+    </head>
+    <body>
+    {% include 'header.html' %}
+    <div id="top">
+      <h1>Información</h1>
+      {% include 'btnRedirect.html' %}
+    </div>
+    
+    <div class="container">
+      {% for libro in books %}
+        {% if has_stock and libro.cantidad == 0 %}
+          <p>No hay libros en stock para esta búsqueda.</p>
+        {% else %}
+          <article>
+            <h2>{{ libro.nom }}</h2>
+            <p><strong>Autor:</strong> {{ libro.autor }}</p>
+            <p><strong>Editorial:</strong> {{ libro.editorial }}</p>
+            <p><strong>Nombre de páginas:</strong> {{ libro.pagines }}</p>
+            <p><strong>Colección:</strong> {{ libro.collecio }}</p>
+            <p><strong>ISBN:</strong> {{ libro.ISBN }}</p>
+            <p><strong>CDU:</strong> {{ libro.CDU }}</p>
+            <p><strong>Ejemplares disponibles:</strong> {{ libro.cantidad }}</p>
+          </article>
         {% endif %}
-      </div>
+      {% endfor %}
+    
+      {% for cd in cds %}
+        {% if has_stock and cd.cantidad == 0 %}
+          <p>No hay CDs en stock para esta búsqueda.</p>
+        {% else %}
+          <article>
+            <h2>{{cd.nom}}</h2>
+            <p><strong>Discográfica:</strong> {{cd.discografica}}</p>
+            <p><strong>Estilo:</strong> {{cd.estil}}</p>
+            <p><strong>Duración:</strong> {{cd.duracio}}</p>
+          </article>
+        {% endif %}
+      {% endfor %}
+    
+      {% for br in brs %}
+        {% if has_stock and br.cantidad == 0 %}
+          <p>No hay Blu-Rays en stock para esta búsqueda.</p>
+        {% else %}
+          <article>
+            <h2>{{br.nom}}</h2>
+            <p><strong>Productora:</strong> {{br.productora}}</p>
+            <p><strong>Duración:</strong> {{br.duracio}}</p>
+          </article>
+        {% endif %}
+      {% endfor %}
+    
+      {% for dvd in dvds %}
+        {% if has_stock and dvd.cantidad == 0 %}
+          <p>No hay DVDs en stock para esta búsqueda.</p>
+        {% else %}
+          <article>
+            <h2>{{dvd.nom}}</h2>
+            <p><strong>Productora:</strong> {{dvd.productora}}</p>
+            <p><strong>Duración:</strong> {{dvd.duracio}}</p>
+          </article>
+        {% endif %}
+      {% endfor %}
+    
+      {% for dis in dispositivos %}
+        {% if has_stock and dis.cantidad == 0 %}
+          <p>No hay dispositivos en stock para esta búsqueda.</p>
+        {% else %}
+          <article>
+            <h2>{{dis.nom}}</h2>
+            <p><strong>Serie:</strong> {{dis.serie}}</p>
+            <p><strong>Modelo:</strong> {{dis.modelo}}</p>
+          </article>
+        {% endif %}
+      {% endfor %}
     </div>
-    <h1>Informació</h1>
-    {% for libro in books %} {% if has_stock and libro.cantidad == 0 %}
-    <p>No hay libros en stock para esta búsqueda.</p>
-    {% else %}
-    <div id="infolibro">
-      <h2>{{ libro.nom }}</h2>
-      <p><strong>Autor:</strong> {{ libro.autor }}</p>
-      <p><strong>Editorial:</strong> {{ libro.editorial }}</p>
-      <p><strong>Nombre de páginas:</strong> {{ libro.pagines }}</p>
-      <p><strong>Colección:</strong> {{ libro.collecio }}</p>
-      <p><strong>ISBN:</strong> {{ libro.ISBN }}</p>
-      <p><strong>CDU:</strong> {{ libro.CDU }}</p>
-    </div>
-    {% endif %}{% endfor %} {% for cd in cds %} {% if has_stock and cd.cantidad == 0 %}
-    <p>No hay CDs en stock para esta búsqueda.</p>
-    {% else %}
-    <div id="infoCd">
-      <h2>{{cd.nom}}</h2>
-      <p><strong>Discográfica:</strong> {{cd.discografica}}</p>
-      <p><strong>Estilo:</strong> {{cd.estil}}</p>
-      <p><strong>Duración:</strong> {{cd.duracio}}</p>
-    </div>
-    {% endif %}{% endfor %} {% for br in brs %} {% if has_stock and br.cantidad == 0 %}
-    <p>No hay Blu-Rays en stock para esta búsqueda.</p>
-    {% else %}
-    <div id="infoBr">
-      <h2>{{br.nom}}</h2>
-      <p><strong>Productora:</strong> {{br.productora}}</p>
-      <p><strong>Duración:</strong> {{br.duracio}}</p>
-    </div>
-    {% endif %}{% endfor %} {% for dvd in dvds %} {% if has_stock and dvd.cantidad == 0 %}
-    <p>No hay dvd en stock para esta búsqueda.</p>
-    {% else %}
-    <div id="infoDvd">
-      <h2>{{dvd.nom}}</h2>
-      <p><strong>Productora:</strong> {{dvd.productora}}</p>
-      <p><strong>Duración:</strong> {{dvd.duracio}}</p>
-    </div>
-    {% endif %}{% endfor %} {% for dis in dispositivos %} {% if has_stock and dis.cantidad == 0 %}
-    <p>No hay dispositivos en stock para esta búsqueda.</p>
-    {% else %}
-    <div id="infoDis">
-      <h2>{{dis.nom}}</h2>
-      <p><strong>Serie:</strong> {{dis.serie}}</p>
-      <p><strong>Modelo:</strong> {{dis.modelo}}</p>
-    </div>
-    {% endif %}{% endfor %}
-  </body>
-</html>
+    <script>
+      $(document).ready(function(){
+          enlaceBtn("{% url 'index' %}", 'Enrere');
+      });
+  </script>
+    </body>
+    </html>

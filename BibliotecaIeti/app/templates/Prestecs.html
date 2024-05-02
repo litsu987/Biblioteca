@@ -63,13 +63,25 @@
             text-align: center;
         }
 
+        #botonPres{
+            display: flex;
+            justify-content: space-between;
+
+        }
+
         
     </style>
 </head>
 <body>
-    {% include 'header.html' %}
+    
     <main id="listPrest">
+        {% include 'header.html' %}
         <h1 class="titleListPrest">Listado de Préstamos</h1>
+        
+    <div id="botonPres"></div>
+            {% include 'btnRedirect.html' %}
+            
+        </div>
         <div class="tablePrest">
             <table>
                 <thead>
@@ -95,9 +107,14 @@
                     {% endfor %}
                 </tbody>
             </table>
-        </div>
+            
         
     </main>
-    
+    <script>
+        $(document).ready(function(){
+            // Llamar a la función enlaceBtn con la URL y el texto deseados
+            enlaceBtn("{% url 'dashboard' %}", 'Enrere');
+        });
+    </script>
 </body>
 </html>

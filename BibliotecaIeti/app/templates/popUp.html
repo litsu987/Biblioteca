@@ -13,14 +13,14 @@
             left: 47.5%;
             transform: translate(-50%, -50%);
             background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
-            padding: 20px;
+            padding: 10px;
             z-index: 999;
         }
 
         .popup-content {
             background-color: #f1f1f1;
             border: 1px solid #ccc;
-            padding: 20px;
+            padding: 10px;
             position: relative;
         }
 
@@ -57,11 +57,21 @@
 
     <script>
         // Función para mostrar el popup solo cuando hay un mensaje de éxito
+        function showErrorPopup(message) {
+            var popup = document.getElementById('success-popup');
+            var popupMessage = document.getElementById('popup-message');
+            popupMessage.innerHTML = '<span class="error-icon">&#10060;</span>' + message;
+            popup.style.display = "block";
+            popup.style.backgroundColor = "rgba(255, 0, 0, 0.5)";
+        }
+
+         // Función para mostrar el popup solo cuando hay un mensaje de éxito
         function showSuccessPopup(message) {
             var popup = document.getElementById('success-popup');
             var popupMessage = document.getElementById('popup-message');
-            popupMessage.innerHTML =  message;
+            popupMessage.innerHTML = '<span class="success-icon">&#10003;</span>' + message;
             popup.style.display = "block";
+            popup.style.backgroundColor = "rgba(0, 255, 0, 0.5)";
         }
 
         function closePopup(id) {
