@@ -81,7 +81,7 @@ def limpiar_bd():
    
     TipusMaterial.objects.all().delete()
     Llibre.objects.all().delete()
-    Usuari.objects.all().delete()
+    #Usuari.objects.all().delete()
     Centre.objects.all().delete()
     Cicle.objects.all().delete()
     Catalog.objects.all().delete()
@@ -259,34 +259,38 @@ def crear_catalogo(num_catalogos):
 
 def crear_reservas_prestamos_peticiones(num_elementos):
     usuarios = Usuari.objects.all()
-    element_catalogs = ElementCatalog.objects.all()  # Obtener todos los ElementCatalog
+    catalogs = Catalog.objects.all()  # Obtener todas las instancias de Catalog
     for _ in range(num_elementos):
         usuario = random.choice(usuarios)
-        element_catalog = random.choice(element_catalogs)
-        exemplar = Exemplar.objects.create(
-            element_catalog=element_catalog,  # Asignar directamente el ElementCatalog
-            estat=random.choice(['Disponible', 'Prestado', 'Reservado'])
-        )
-        if exemplar.estat == 'Reservado':
-            Reserva.objects.create(
-                usuari=usuario,
-                exemplar=exemplar,
-                data_reserva=fake.date_time_this_year()
+        catalog = random.choice(catalogs)  # Elegir una instancia de Catalog al azar
+        # Crear un ejemplar solo si la cantidad es mayor que 1
+        if catalog.cantidad > 1:
+            exemplar = Exemplar.objects.create(
+                catalogo=catalog,  # Asociar el ejemplar con un Catalog
+                estat=random.choice(['Disponible', 'Prestat', 'Reservat', 'No disponible (només a la biblioteca)'])
             )
-        elif exemplar.estat == 'Prestado':
-            Prestec.objects.create(
-                usuari=usuario,
-                catalog=element_catalog.catalog,  # Usar el catalog asociado al ElementCatalog
-                data_prestec=fake.date_time_this_year(),
-                data_retorn=fake.date_time_this_year() + timezone.timedelta(days=random.randint(7, 30))
-            )
+            if exemplar.estat == 'Reservat':
+                Reserva.objects.create(
+                    usuari=usuario,
+                    exemplar=exemplar,
+                    data_reserva=fake.date_time_this_year()
+                )
+            elif exemplar.estat == 'Prestat':
+                Prestec.objects.create(
+                    usuari=usuario,
+                    catalog=catalog,  # Usar el catálogo asociado con el ejemplar
+                    data_prestec=fake.date_time_this_year(),
+                    data_retorn=fake.date_time_this_year() + timezone.timedelta(days=random.randint(7, 30))
+                )
     for _ in range(num_elementos):
+        # Crear peticiones para usuarios al azar
         Peticio.objects.create(
             usuari=random.choice(usuarios),
             titol_peticio=fake.catch_phrase(),
             descripcio=fake.paragraph(),
             data_peticio=fake.date_time_this_year()
         )
+
 
 def crear_autores_y_libros(num_autores=100):
     for _ in range(num_autores):
@@ -308,7 +312,7 @@ def crear_autores_y_libros(num_autores=100):
     
 
 def seed_database(num_usuarios=10, num_centros=5, num_catalogos=20, num_elementos=50):
-   # limpiar_bd()
+    limpiar_bd()
     crear_tipos_material()
     crear_centros(num_centros)
     crear_ciclos()

@@ -41,7 +41,7 @@ class ElementCatalogAdmin(admin.ModelAdmin):
 
 @admin.register(Exemplar)
 class ExemplarAdmin(admin.ModelAdmin):
-    list_display = ('element_catalog', 'estat')
+    list_display = ('catalogo','estat','cantidad')
 
 @admin.register(Reserva)
 class ReservaAdmin(admin.ModelAdmin):
@@ -49,7 +49,7 @@ class ReservaAdmin(admin.ModelAdmin):
 
    
     def get_element_titulo(self, obj):
-        return obj.exemplar.element_catalog.catalog.nom
+        return obj.exemplar.catalogo.nom
     get_element_titulo.short_description = 'Element Títol'
 
 

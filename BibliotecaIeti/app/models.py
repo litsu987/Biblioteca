@@ -4,6 +4,7 @@ from django.utils.timezone import now
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import AbstractUser
 from .managers import UserManager
+from django.core.exceptions import ValidationError
 
 TIPOS_MATERIAL_CHOICES = [
     ('llibre', 'Llibre'),
@@ -117,10 +118,25 @@ class Dispositiu(Catalog):
    
 
 class Exemplar(models.Model):
-    element_catalog = models.ForeignKey(ElementCatalog, on_delete=models.CASCADE)
-    estat = models.CharField(max_length=50)
+    ESTADOS_CHOICES = [
+        ('Disponible', 'Disponible'),
+        ('Prestat', 'Prestat'),
+        ('Reservat', 'Reservat'),
+        ('No disponible (només a la biblioteca)', 'No disponible (només a la biblioteca)'),
+    ]
+
+    estat = models.CharField(max_length=50, choices=ESTADOS_CHOICES)
+    catalogo = models.ForeignKey(Catalog, on_delete=models.CASCADE, null=True)
+    cantidad = models.IntegerField(default=1)
+
     def __str__(self):
-        return f"{self.element_catalog} {self.estat}"  # Devuelve el nombre completo del usuario
+        return f"{self.catalogo} {self.estat}"
+
+    def save(self, *args, **kwargs):
+        if self.cantidad > self.catalogo.cantidad:
+            raise ValidationError("La cantidad de ejemplares no puede ser mayor que la cantidad disponible en el catálogo.")
+        super().save(*args, **kwargs)
+
 
 class Reserva(models.Model):
     usuari = models.ForeignKey(Usuari, on_delete=models.CASCADE)
