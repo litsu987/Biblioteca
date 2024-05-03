@@ -282,6 +282,10 @@
         font-style: italic; /* Aplica cursiva al texto */
         /* Otros estilos que desees aplicar */
       }
+      #searchButton::first-letter {
+        color: black !important;
+      }
+      
     </style>
   </head>
   <body>
@@ -304,7 +308,7 @@
             name="has_stock"
           />
           Mostrar solo objetos con stock
-          <input type="submit" value="CERCA" />
+          <input type="submit" id="searchButton"class="subrayado" value="CERCA" />
         </form>
       </div>
       {% if not user.is_authenticated %}
@@ -353,6 +357,26 @@
           $("#searcher").autocomplete("destroy");
         }
       }
+      document.addEventListener("DOMContentLoaded", function() {
+    // Agregar un evento keydown al documento
+      document.addEventListener("keydown", function(event) {
+          // Verificar si la tecla presionada es la letra "c" (código 67) con Shift presionado
+          if (event.shiftKey && event.key === "C") {
+              // Evitar el comportamiento predeterminado del formulario
+              event.preventDefault();
+              // Simular un clic en el botón de búsqueda
+              document.getElementById("searchButton").click();
+          }
+          // Verificar si la tecla presionada es la letra "e" (código 69) con Shift presionado
+          else if (event.shiftKey && event.key === "E") {
+              // Evitar el comportamiento predeterminado del formulario
+              event.preventDefault();
+              // Redirigir a la página de inicio
+              window.location.href = "{% url 'index' %}";
+          }
+      });
+  });
+
     </script>
     
     <div id="popup-messages" style="display: none;">

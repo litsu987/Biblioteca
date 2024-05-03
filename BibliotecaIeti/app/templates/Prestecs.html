@@ -68,7 +68,36 @@
             justify-content: space-between;
 
         }
+        #pagination {
+            margin-top: 20px;
+            text-align: center;
+            margin:20px;
+        }
 
+        #pagination a {
+            display: inline-block;
+            padding: 8px 16px;
+            margin: 0 4px;
+            color: #000;
+            background-color: #f2f2f2;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-decoration: none;
+        }
+
+        #pagination a:hover {
+            background-color: #ddd;
+        }
+
+        #pagination .current {
+            background-color: #4CAF50;
+            color: white;
+            border-color: #4CAF50;
+        }
+        #enlaceBtn:first-letter,.siguiente:first-letter,.ultima:first-letter,.anterior:first-letter,.primera::first-letter {
+            text-transform: uppercase !important;
+            text-decoration: underline !important;
+        }
         
     </style>
 </head>
@@ -107,14 +136,83 @@
                     {% endfor %}
                 </tbody>
             </table>
-            
+           
         
     </main>
+    <div id="pagination">
+        <span class="step-links">
+            {% if usuarios_con_prestamo.has_previous %}
+                <a class="primera" href="?page=1">&laquo;Primer</a>
+                <a class="anterior" href="?page={{ usuarios_con_prestamo.previous_page_number }}">Anterior</a>
+            {% endif %}
+    
+            <span class="current">
+                Página {{ usuarios_con_prestamo.number }} de {{ usuarios_con_prestamo.paginator.num_pages }}.
+            </span>
+    
+            {% if usuarios_con_prestamo.has_next %}
+                <a class="siguiente "href="?page={{ usuarios_con_prestamo.next_page_number }}">Seguent</a>
+                <a class="ultima" href="?page={{ usuarios_con_prestamo.paginator.num_pages }}">Última &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+    
     <script>
         $(document).ready(function(){
             // Llamar a la función enlaceBtn con la URL y el texto deseados
             enlaceBtn("{% url 'dashboard' %}", 'Enrere');
         });
+        $(document).ready(function(){
+                // Event listener para la combinación Shift + E
+                $(document).keydown(function(event){
+                    if((event.shiftKey && event.which == 69) || (event.shiftKey && event.keyCode == 69)){
+                        window.location.href = "{% url 'dashboard' %}";
+                    }
+                });
+            });
+
+        $(document).ready(function(){
+            // Event listener para la tecla "p"
+            $(document).keydown(function(event){
+                
+                if((event.shiftKey && event.which == 80) || (event.shiftKey && event.keyCode == 80)){
+                    // Simular clic en el enlace
+                    $(".primera")[0].click();
+                }
+            });
+        });
+        $(document).ready(function(){
+            // Event listener para la tecla "s"
+            $(document).keydown(function(event){
+                if((event.shiftKey && event.which == 83) || (event.shiftKey && event.keyCode == 83)){
+                    // Simular clic en el enlace
+                    $(".siguiente")[0].click();
+                }
+            });
+        });
+
+        $(document).ready(function(){
+            // Event listener para la tecla "u"
+            $(document).keydown(function(event){
+                if((event.shiftKey && event.which == 85) || (event.shiftKey && event.keyCode == 85)){
+                    // Simular clic en el enlace
+                    $(".ultima")[0].click();
+                }
+            });
+        });
+
+        $(document).ready(function(){
+            // Event listener para la tecla "a"
+            $(document).keydown(function(event){
+                if((event.shiftKey && event.which == 65) || (event.shiftKey && event.keyCode == 65)){
+                    // Simular clic en el enlace
+                    $(".anterior")[0].click();
+                }
+            });
+        });
+
+
+
     </script>
 </body>
 </html>

@@ -18,4 +18,5 @@ urlpatterns = [
     path('Prestecs/', views.Prestecs, name='Prestecs'),
     path('llistarprestecs/', views.llistarprestecs, name='llistarPrestecs'),
     path('buscar/', views.buscar_autocompletado, name='buscar_autocompletado'),
+    
 ]

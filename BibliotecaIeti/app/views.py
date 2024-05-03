@@ -8,6 +8,8 @@ from .models import Llibre, Usuari, CD, BR, DVD, Dispositiu, Centre, Cicle, Pres
 from django.views.generic import ListView
 from django.db.models import Q
 from .utils import generarLog,subir_logs_a_bd  # Importa la función generarLog desde utils.py
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 
 from django.contrib.auth.views import PasswordChangeView, PasswordChangeDoneView
 from django.urls import reverse_lazy
@@ -152,19 +154,27 @@ def search_results(request):
     subir_logs_a_bd(request)
     
     query = request.GET.get("searcher")
-
     has_stock = request.GET.get("has_stock", "off") == "on"
     
     books = Llibre.objects.filter(Q(nom__icontains=query))
     
+    # Paginar los resultados
+    paginator = Paginator(books, 50)  # Muestra 10 libros por página
+    
+    page_number = request.GET.get('page_books')
+    try:
+        books = paginator.page(page_number)
+    except PageNotAnInteger:
+        # Si la página no es un número entero, muestra la primera página
+        books = paginator.page(1)
+    except EmptyPage:
+        # Si la página está fuera del rango, muestra la última página de resultados
+        books = paginator.page(paginator.num_pages)
+    
     cds = CD.objects.filter(Q(nom__icontains=query))
-    
     dvds = DVD.objects.filter(Q(nom__icontains=query))
-    
     brs = BR.objects.filter(Q(nom__icontains=query))
-    
     dispositivos = Dispositiu.objects.filter(Q(nom__icontains=query))
-    
     
     return render(request, 'search_results.html', {
         'books': books,
@@ -261,11 +271,23 @@ def importar_Users(request):
 def Prestecs(request):
     if request.user.is_authenticated and not request.user.autentificacio:
         return redirect('change')
-    # Obtener los usuarios que tienen un préstamo
+    
+    # Obtener todos los usuarios que tienen préstamos
     usuarios_con_prestamo = Usuari.objects.filter(prestec__isnull=False).distinct().order_by('-id')
 
-    # Pasar los usuarios a la plantilla
-    return render(request, 'Prestecs.html', {'usuarios_con_prestamo': usuarios_con_prestamo})
+    # Paginar la lista de usuarios
+    paginator = Paginator(usuarios_con_prestamo, 10)  # Show 10 usuarios per page
+    page = request.GET.get('page')
+    try:
+        usuarios = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        usuarios = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        usuarios = paginator.page(paginator.num_pages)
+
+    return render(request, 'Prestecs.html', {'usuarios_con_prestamo': usuarios})
 
 
 
@@ -333,8 +355,23 @@ def llistarprestecs(request):
 def listUsers(request):
     if request.user.is_authenticated and not request.user.autentificacio:
         return redirect('change')
+    
     users = Usuari.objects.all()  # Obtiene todos los usuarios
-    return render(request, 'listUsers.html', {'usuarios': users})
+    
+    paginator = Paginator(users, 10)  # Crea un paginador con 10 usuarios por página
+    page_number = request.GET.get('page')  # Obtiene el número de página de la solicitud GET
+    
+    try:
+        page_obj = paginator.page(page_number)
+    except PageNotAnInteger:
+        # Si el número de página no es un entero, muestra la primera página
+        page_obj = paginator.page(1)
+    except EmptyPage:
+        # Si la página está fuera de rango (por ejemplo, 9999), muestra la última página
+        page_obj = paginator.page(paginator.num_pages)
+
+    return render(request, 'listUsers.html', {'usuarios': page_obj})
+
 
 def dashboard(request):
     if request.user.is_authenticated and not request.user.autentificacio:

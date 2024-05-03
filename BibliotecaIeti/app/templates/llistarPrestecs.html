@@ -7,7 +7,7 @@
     <style>
       body {
         font-family: Arial, sans-serif;
-        background-color: #f0f0f0;
+       
         margin: 0;
         padding: 0;
       }
@@ -44,10 +44,25 @@
       button[type="submit"]:hover {
         background-color: #0056b3;
       }
+      .titleCVS{
+            
+            margin: 0 auto;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            color: #142c83;
+            font-family: Montserrat;
+            font-weight: bolder;
+            text-align: center;
+        }
+        #enlaceBtn:first-letter,.siguiente:first-letter,.ultima:first-letter,.anterior:first-letter,.primera::first-letter {
+            text-transform: uppercase !important;
+            text-decoration: underline !important;
+        }
     </style>
   </head>
   <body>
     {% include 'header.html' %}
+    <h1 class="titleCVS">Fer un préstec</h1>
     <form method="post" enctype="multipart/form-data" id="prestamo-form">
       {% csrf_token %}
       <label for="usuari">Usuario:</label>
@@ -56,6 +71,7 @@
         <option value="{{ usuario.id }}">{{ usuario.email }}</option>
         {% endfor %}
       </select>
+      
 
       <label for="catalog">Catálogo:</label>
       <select name="catalog" id="catalog">
@@ -70,8 +86,11 @@
       <input type="date" name="data_retorn" id="data_retorn" disabled />
 
       <button type="submit">Realizar Préstamo</button>
+      
     </form>
-
+    <div style="text-align: center;">
+      {% include 'btnRedirect.html' %}
+  </div>
     <script>
       // Calcula la fecha de retorno un mes después de la fecha actual
       document
@@ -101,6 +120,18 @@
           // Envía el formulario después de calcular la fecha de retorno
           this.submit();
         });
+        $(document).ready(function(){
+            // Llamar a la función enlaceBtn con la URL y el texto deseados
+            enlaceBtn("{% url 'dashboard' %}", 'Enrere');
+        });
+        $(document).ready(function(){
+                // Event listener para la tecla "e"
+                $(document).keydown(function(event){
+                  if((event.shiftKey && event.which == 69) || (event.shiftKey && event.keyCode == 69)){
+                        window.location.href = "{% url 'dashboard' %}";
+                    }
+                });
+            });
     </script>
   </body>
 </html>

@@ -117,6 +117,11 @@
         #perfilBtn {
             display: flex;
         }
+
+        #enlaceBtn:first-letter,.siguiente:first-letter,.ultima:first-letter,.anterior:first-letter,.primera::first-letter {
+            text-transform: uppercase !important;
+            text-decoration: underline !important;
+        }
     </style>
 </head>
 <body>
@@ -197,6 +202,18 @@
                 $(document).ready(function(){
                     enlaceBtn("{% url 'dashboard' %}", 'Enrere');
                 });
+                $(document).ready(function(){
+            // Llamar a la función enlaceBtn con la URL y el texto deseados
+            enlaceBtn("{% url 'dashboard' %}", 'Enrere');
+        });
+        $(document).ready(function(){
+                // Event listener para la tecla "e"
+                $(document).keydown(function(event){
+                  if((event.shiftKey && event.which == 69) || (event.shiftKey && event.keyCode == 69)){
+                        window.location.href = "{% url 'dashboard' %}";
+                    }
+                });
+            });
             </script>
           </div>
         </form>

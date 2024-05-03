@@ -9,7 +9,7 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
+           
         }
 
         .titleCVS{
@@ -103,11 +103,15 @@
         .resultado-container .success {
             color: green; /* Cambia el color de los usuarios agregados correctamente */
         }
+        #enlaceBtn:first-letter,.siguiente:first-letter,.ultima:first-letter,.anterior:first-letter,.primera::first-letter {
+            text-transform: uppercase !important;
+            text-decoration: underline !important;
+        }
     </style>
 </head>
 <body>
     {% include 'header.html' %}
-    <h1 class="titleCVS">Importar Usuarios desde CSV</h1>
+    <h1 class="titleCVS">Importar Usuaris des de CSV</h1>
     <form id="myForm" action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <input type="file" name="archivo_csv" id="archivo_csv" accept=".csv" required>
@@ -122,6 +126,10 @@
         <input type="hidden" name="nombre_centro_seleccionado" id="nombre_centro_seleccionado" value="">
         <button id="submitButton" type="submit" disabled>Subir CSV</button>
     </form>
+    <div style="text-align: center;">
+        {% include 'btnRedirect.html' %}
+    </div>
+    
     <script>
         // JavaScript para actualizar el valor del campo input oculto cuando se selecciona un centro
         document.querySelector('select[name="centro"]').addEventListener('change', function() {
@@ -148,6 +156,18 @@
                 submitButton.disabled = true;
             }
         }
+        $(document).ready(function(){
+            // Llamar a la función enlaceBtn con la URL y el texto deseados
+            enlaceBtn("{% url 'dashboard' %}", 'Enrere');
+        });
+        $(document).ready(function(){
+                // Event listener para la combinación Shift + E
+                $(document).keydown(function(event){
+                    if((event.shiftKey && event.which == 69) || (event.shiftKey && event.keyCode == 69)){
+                        window.location.href = "{% url 'dashboard' %}";
+                    }
+                });
+            });
     </script>
 
 <div class="resultado-container">

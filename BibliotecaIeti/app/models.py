@@ -5,6 +5,7 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import AbstractUser
 from .managers import UserManager
 from django.core.exceptions import ValidationError
+from django import forms
 
 TIPOS_MATERIAL_CHOICES = [
     ('llibre', 'Llibre'),
@@ -133,8 +134,9 @@ class Exemplar(models.Model):
         return f"{self.catalogo} {self.estat}"
 
     def save(self, *args, **kwargs):
-        if self.cantidad > self.catalogo.cantidad:
-            raise ValidationError("La cantidad de ejemplares no puede ser mayor que la cantidad disponible en el catálogo.")
+        total_ejemplares = Exemplar.objects.filter(catalogo=self.catalogo).exclude(id=self.id).aggregate(total=models.Sum('cantidad'))['total'] or 0
+        if self.cantidad + total_ejemplares > self.catalogo.cantidad:
+            raise ValidationError("La cantidad total de ejemplares no puede ser mayor que la cantidad total disponible en el catálogo.")
         super().save(*args, **kwargs)
 
 
