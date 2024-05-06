@@ -88,35 +88,50 @@ class ElementCatalog(models.Model):
     def __str__(self):
         return self.catalog.nom
 
-class Llibre(Catalog):
+class Llibre(Catalog):  
     CDU = models.CharField(max_length=100)
     ISBN = models.CharField(max_length=13)
     editorial = models.CharField(max_length=100)
     collecio = models.CharField(max_length=100)
     autor = models.CharField(max_length=200, default="")
     pagines = models.IntegerField()
-    
+
+    @property
+    def model_type(self):
+        return 'llibre'
    
 class CD(Catalog):
     discografica = models.CharField(max_length=100)
     estil = models.CharField(max_length=100)
     duracio = models.IntegerField()
+
+    @property
+    def model_type(self):
+        return 'cd'
     
 
 class DVD(Catalog):
     productora = models.CharField(max_length=100)
     duracio = models.IntegerField()
+
+    @property
+    def model_type(self):
+        return 'dvd'
     
 
 class BR(Catalog):
     productora = models.CharField(max_length=100)
     duracio = models.IntegerField()
-    
+
+    @property
+    def model_type(self):
+        return 'br'
 
 class Dispositiu(Catalog):
     modelo = models.CharField(max_length=100, default="")
     serie = models.CharField(max_length=100, default="")
-   
+    def model_type(self):
+        return 'dispositiu'
 
 class Exemplar(models.Model):
     ESTADOS_CHOICES = [
