@@ -68,9 +68,9 @@
           text-align: right;
         }
 
-        #data p {
-          margin-top: 0;
-          margin-bottom: 0;
+        #data .headerP {
+          margin-top: 0 !important;
+          margin-bottom: 0 !important;
         }
 
         #infouser img {
@@ -115,11 +115,16 @@
 
           #data {
             width: 100px;
+            height: 72px;
             margin-right: 10px;
             text-align: right;
           }
 
           .titleH2 {
+            font-size: 1em;
+          }
+
+          .headerP {
             font-size: 1em;
           }
         }
@@ -145,13 +150,13 @@
         
         </script>
         <div id="data">
-          <p>{{ user.first_name }}</p>
+          <p class="headerP">{{ user.first_name }}</p>
           {% if user.rol == "Bibliotecari" %}
-          <p>Bibliotecari</p>
+          <p class="headerP">Bibliotecari</p>
           {% elif user.rol == "Alumne" %}
-          <p>Alumne</p>
+          <p class="headerP">Alumne</p>
           {% elif user.rol == "Admin" %}
-          <p>Admin</p>
+          <p class="headerP">Admin</p>
           {% endif %}
           <a href="{% url 'dashboard' %}">Panell</a>
           <a href="{% url 'logout' %}">Tancar Sessió</a>

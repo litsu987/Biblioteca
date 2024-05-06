@@ -122,11 +122,62 @@
             text-transform: uppercase !important;
             text-decoration: underline !important;
         }
+
+        .perfilH1 {
+                text-align: center;
+                color: #142C83;
+                
+            }
+
+        @media screen and (max-width: 365px) and (max-height: 667px) {
+            #divisor {
+                
+                width: 80%;
+                align-items: center;
+                margin-left: 10%;
+                margin-right: 10%;
+            }
+            
+            #divisor img {
+                display: none;
+            }
+
+            #sepa {
+                width: 100%;
+                flex-direction: column;
+                justify-content: center;
+            }
+
+            #divisor form {
+                font-size: 1em;
+                width: 100%;
+                padding-left: 15px;
+                padding-right: 25px;
+            }
+
+            .perfilH1 {
+                text-align: center;
+                color: #142C83;
+            }
+
+            #divisor input {
+                width: 100%;
+                
+            }
+
+            #nosepa {
+                width: 100%;
+                padding: 0;
+                padding-bottom: 10px;
+            }
+
+            
+        }
     </style>
 </head>
 <body>
     {% include 'header.html' %}
-    
+    <h1 class="perfilH1">Perfil</h1>
     <div id="divisor">
       <img src="{{user.imatge}}" alt="" srcset="" />
       <form action="" method="post" onsubmit="return validarFormulario();">

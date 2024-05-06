@@ -14,7 +14,7 @@
         rel="stylesheet"
         type="text/css"
     />
-    <link rel="stylesheet" href="{% static 'style.css' %}" />
+    
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -24,7 +24,7 @@
     <style>
         body {
             background-color: #ffffff; /* Fondo blanco */
-            padding: 20px;
+            margin: 0;
             font-family: Arial, sans-serif;
         }
         #enlaceBtn {
@@ -40,7 +40,7 @@
             padding: 20px;
         }
 
-        p {
+        .searchP {
             padding-bottom: 10px;
         }
 
@@ -96,10 +96,49 @@
             color: white;
             border-color: #4CAF50;
         }
+
+        
+
+        @media screen and (max-width: 365px) and (max-height: 667px) {
+            body {
+                padding: 0;
+            }
+
+            #top {
+                flex-direction: column-reverse;
+                justify-content: center; 
+                align-items: center;
+                height: 70px;
+                background-color: #fff;
+                margin-top: 20px;
+            }
+
+            .pagination {
+                
+                text-align: center;
+                margin-top: 40px;
+                margin-left: 0;
+                margin-right: 0;
+            }
+
+            .pagination .primera, 
+            .pagination .ultima {
+                display: none;
+            }
+
+            .container {
+            display: grid;
+            grid-template-columns: repeat(1, minmax(0, 1fr)); /* Grid de tres columnas */
+            gap: 10px; /* Espacio entre elementos */
+            margin-left: 5px;
+            margin-right: 5px;
+        }
+        }
     </style>
 </head>
 <body>
 {% include 'header.html' %}
+
 <div id="top">
     <h1>Información</h1>
     {% include 'btnRedirect.html' %}
@@ -121,16 +160,16 @@
 <div class="container">
   {% for libro in books %}
       {% if has_stock and libro.cantidad == 0 %}
-          <p>No hay libros en stock para esta búsqueda.</p>
+          <p class="searchP">No hay libros en stock para esta búsqueda.</p>
       {% else %}
           <article>
               <h2>{{ libro.nom }}</h2>
-              <p><strong>Autor:</strong> {{ libro.autor }}</p>
-              <p><strong>Editorial:</strong> {{ libro.editorial }}</p>
-              <p><strong>Nombre de páginas:</strong> {{ libro.pagines }}</p>
-              <p><strong>Colección:</strong> {{ libro.collecio }}</p>
-              <p><strong>ISBN:</strong> {{ libro.ISBN }}</p>
-              <p><strong>CDU:</strong> {{ libro.CDU }}</p>
+              <p class="searchP"><strong>Autor:</strong> {{ libro.autor }}</p>
+              <p class="searchP"><strong>Editorial:</strong> {{ libro.editorial }}</p>
+              <p class="searchP"><strong>Nombre de páginas:</strong> {{ libro.pagines }}</p>
+              <p class="searchP"><strong>Colección:</strong> {{ libro.collecio }}</p>
+              <p class="searchP"><strong>ISBN:</strong> {{ libro.ISBN }}</p>
+              <p class="searchP"><strong>CDU:</strong> {{ libro.CDU }}</p>
              
               <ul>
                   {% for exemplar in libro.exemplar_set.all %}
