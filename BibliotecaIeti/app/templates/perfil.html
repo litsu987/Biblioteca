@@ -122,16 +122,24 @@
             text-transform: uppercase !important;
             text-decoration: underline !important;
         }
+        h1 {
+            color: #142c83;
+            font-family: Montserrat;
+            font-weight: bolder;
+            text-align: ;
+            
+        }
     </style>
 </head>
 <body>
     {% include 'header.html' %}
-    
+   
     <div id="divisor">
+       
       <img src="{{user.imatge}}" alt="" srcset="" />
       <form action="" method="post" onsubmit="return validarFormulario();">
         {% csrf_token %}
-        
+        <h1>Perfil</h1>
         <input type="hidden" name="id" value="{{ user.id }}" readonly>
         <label for="first_name">Nom </label>
         <input type="text" name="first_name" value="{{user.first_name}}"  />

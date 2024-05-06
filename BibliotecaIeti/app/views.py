@@ -28,6 +28,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import F
 from django.db.models import Count
 from django.http import JsonResponse
+from itertools import chain
 
 
 def perfil(request):
@@ -153,35 +154,33 @@ def search_results(request):
     generarLog(request, 'INFO', f"BUSQUEDA REALIZADA")
     subir_logs_a_bd(request)
     
-    query = request.GET.get("searcher")
+    query = request.GET.get('searcher')
     has_stock = request.GET.get("has_stock", "off") == "on"
     
     books = Llibre.objects.filter(Q(nom__icontains=query))
-    
-    # Paginar los resultados
-    paginator = Paginator(books, 50)  # Muestra 10 libros por página
-    
-    page_number = request.GET.get('page_books')
-    try:
-        books = paginator.page(page_number)
-    except PageNotAnInteger:
-        # Si la página no es un número entero, muestra la primera página
-        books = paginator.page(1)
-    except EmptyPage:
-        # Si la página está fuera del rango, muestra la última página de resultados
-        books = paginator.page(paginator.num_pages)
-    
     cds = CD.objects.filter(Q(nom__icontains=query))
     dvds = DVD.objects.filter(Q(nom__icontains=query))
     brs = BR.objects.filter(Q(nom__icontains=query))
     dispositivos = Dispositiu.objects.filter(Q(nom__icontains=query))
     
+    # Fusionar todas las consultas en una sola lista
+    all_items = list(chain(books, cds, dvds, brs, dispositivos))
+    
+    # Paginar la lista combinada
+    paginator = Paginator(all_items, 25)  # Muestra 50 elementos por página
+    
+    page_number = request.GET.get('page')
+    try:
+        items = paginator.page(page_number)
+    except PageNotAnInteger:
+        # Si la página no es un número entero, muestra la primera página
+        items = paginator.page(1)
+    except EmptyPage:
+        # Si la página está fuera del rango, muestra la última página de resultados
+        items = paginator.page(paginator.num_pages)
+    
     return render(request, 'search_results.html', {
-        'books': books,
-        'cds': cds,
-        'dvds': dvds,
-        'brs': brs,
-        'dispositivos': dispositivos,
+        'items': items,
         'query': query,
         'has_stock': has_stock,
     })
@@ -359,8 +358,8 @@ def listUsers(request):
     users = Usuari.objects.all()  # Obtiene todos los usuarios
     
     paginator = Paginator(users, 10)  # Crea un paginador con 10 usuarios por página
-    page_number = request.GET.get('page')  # Obtiene el número de página de la solicitud GET
-    
+    page_number = request.GET.get('page')
+   
     try:
         page_obj = paginator.page(page_number)
     except PageNotAnInteger:

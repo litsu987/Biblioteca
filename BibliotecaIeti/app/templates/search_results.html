@@ -99,61 +99,75 @@
     </style>
 </head>
 <body>
-{% include 'header.html' %}
-<div id="top">
-    <h1>Información</h1>
-    {% include 'btnRedirect.html' %}
-</div>
-{% if books.has_other_pages %}
+    {% include 'header.html' %}
+    <div id="top">
+        <h1>Información</h1>
+        {% include 'btnRedirect.html' %}
+    </div>
+    <div class="container">
+        {% for item in items %}
+            {% if item.model_type == 'llibre' %}
+                <!-- Display book-specific information -->
+                <article>
+                    <h2>{{ item.nom }}</h2>
+                    <p><strong>Autor:</strong> {{ item.autor }}</p>
+                    <p><strong>Editorial:</strong> {{ item.editorial }}</p>
+                    <p><strong>Nombre de páginas:</strong> {{ item.pagines }}</p>
+                    <p><strong>Colección:</strong> {{ item.collecio }}</p>
+                    <p><strong>ISBN:</strong> {{ item.ISBN }}</p>
+                    <p><strong>CDU:</strong> {{ item.CDU }}</p>
+                    <ul>
+                        {% for exemplar in item.exemplar_set.all %}
+                            <p><strong>{{ exemplar.estat }}:</strong> {{ exemplar.cantidad }}</p>
+                        {% endfor %}
+                    </ul>
+                </article>
+            {% elif item.model_type == 'cd' %}
+                <!-- Display CD-specific information -->
+                <article>
+                    <h2>{{ item.nom }}</h2>
+                    <p><strong>Discográfica:</strong> {{ item.discografica }}</p>
+                    <p><strong>Estilo:</strong> {{ item.estil }}</p>
+                    <p><strong>Duración:</strong> {{ item.duracio }}</p>
+                </article>
+            {% elif item.model_type == 'dvd' %}
+                <!-- Display DVD-specific information -->
+                <article>
+                    <h2>{{ item.nom }}</h2>
+                    <p><strong>Productora:</strong> {{ item.productora }}</p>
+                    <p><strong>Duración:</strong> {{ item.duracio }}</p>
+                </article>
+            {% elif item.model_type == 'br' %}
+                <!-- Display Blu-ray-specific information -->
+                <article>
+                    <h2>{{ item.nom }}</h2>
+                    <p><strong>Productora:</strong> {{ item.productora }}</p>
+                    <p><strong>Duración:</strong> {{ item.duracio }}</p>
+                </article>
+            {% elif item.model_type == 'dispositiu' %}
+                <!-- Display device-specific information -->
+                <article>
+                    <h2>{{ item.nom }}</h2>
+                    <p><strong>Serie:</strong> {{ item.serie }}</p>
+                    <p><strong>Modelo:</strong> {{ item.modelo }}</p>
+                </article>
+            {% endif %}
+        {% endfor %}
+    </div>
     <div class="pagination">
-        {% if books.has_previous %}
-            <a class="primera" href="?page_books=1&page_cds={{ page_number_cds }}&page_dvds={{ page_number_dvds }}&page_brs={{ page_number_brs }}&page_dispositivos={{ page_number_dispositivos }}&searcher={{ query }}{% if has_stock %}&has_stock=on{% endif %}">Primer</a>
-            <a class="anterior" href="?page_books={{ books.previous_page_number }}&page_cds={{ page_number_cds }}&page_dvds={{ page_number_dvds }}&page_brs={{ page_number_brs }}&page_dispositivos={{ page_number_dispositivos }}&searcher={{ query }}{% if has_stock %}&has_stock=on{% endif %}">Anterior</a>
+        {% if items.has_previous %}
+            <a href="?page={{ items.previous_page_number }}{% if query %}&searcher={{ query }}{% else %}&searcher={% endif %}{% if has_stock %}&has_stock=on{% endif %}">Anterior</a>
         {% endif %}
-        <span class="current">Página {{ books.number }} de {{ books.paginator.num_pages }}</span>
-        {% if books.has_next %}
-            <a class="siguiente" href="?page_books={{ books.next_page_number }}&page_cds={{ page_number_cds }}&page_dvds={{ page_number_dvds }}&page_brs={{ page_number_brs }}&page_dispositivos={{ page_number_dispositivos }}&searcher={{ query }}{% if has_stock %}&has_stock=on{% endif %}">Seguent</a>
-            <a class="ultima" href="?page_books={{ books.paginator.num_pages }}&page_cds={{ page_number_cds }}&page_dvds={{ page_number_dvds }}&page_brs={{ page_number_brs }}&page_dispositivos={{ page_number_dispositivos }}&searcher={{ query }}{% if has_stock %}&has_stock=on{% endif %}">Última</a>
+        <span class="current">Página {{ items.number }} de {{ items.paginator.num_pages }}</span>
+        {% if items.has_next %}
+            <a href="?page={{ items.next_page_number }}{% if query %}&searcher={{ query }}{% else %}&searcher={% endif %}{% if has_stock %}&has_stock=on{% endif %}">Siguiente</a>
         {% endif %}
     </div>
-{% endif %}
+    
 
-<div class="container">
-  {% for libro in books %}
-      {% if has_stock and libro.cantidad == 0 %}
-          <p>No hay libros en stock para esta búsqueda.</p>
-      {% else %}
-          <article>
-              <h2>{{ libro.nom }}</h2>
-              <p><strong>Autor:</strong> {{ libro.autor }}</p>
-              <p><strong>Editorial:</strong> {{ libro.editorial }}</p>
-              <p><strong>Nombre de páginas:</strong> {{ libro.pagines }}</p>
-              <p><strong>Colección:</strong> {{ libro.collecio }}</p>
-              <p><strong>ISBN:</strong> {{ libro.ISBN }}</p>
-              <p><strong>CDU:</strong> {{ libro.CDU }}</p>
-             
-              <ul>
-                  {% for exemplar in libro.exemplar_set.all %}
-                      <p><strong>{{ exemplar.estat }}:</strong> {{ exemplar.cantidad }}</p>
-                  {% endfor %}
-              </ul>
-          </article>
-      {% endif %}
-  {% endfor %}
-</div>
-{% if books.has_other_pages %}
-    <div class="pagination">
-        {% if books.has_previous %}
-            <a class="primera" href="?page_books=1&page_cds={{ page_number_cds }}&page_dvds={{ page_number_dvds }}&page_brs={{ page_number_brs }}&page_dispositivos={{ page_number_dispositivos }}&searcher={{ query }}{% if has_stock %}&has_stock=on{% endif %}">Primer</a>
-            <a class="anterior" href="?page_books={{ books.previous_page_number }}&page_cds={{ page_number_cds }}&page_dvds={{ page_number_dvds }}&page_brs={{ page_number_brs }}&page_dispositivos={{ page_number_dispositivos }}&searcher={{ query }}{% if has_stock %}&has_stock=on{% endif %}">Anterior</a>
-        {% endif %}
-        <span class="current">Página {{ books.number }} de {{ books.paginator.num_pages }}</span>
-        {% if books.has_next %}
-            <a class="siguiente" href="?page_books={{ books.next_page_number }}&page_cds={{ page_number_cds }}&page_dvds={{ page_number_dvds }}&page_brs={{ page_number_brs }}&page_dispositivos={{ page_number_dispositivos }}&searcher={{ query }}{% if has_stock %}&has_stock=on{% endif %}">Seguent</a>
-            <a class="ultima" href="?page_books={{ books.paginator.num_pages }}&page_cds={{ page_number_cds }}&page_dvds={{ page_number_dvds }}&page_brs={{ page_number_brs }}&page_dispositivos={{ page_number_dispositivos }}&searcher={{ query }}{% if has_stock %}&has_stock=on{% endif %}">Última</a>
-        {% endif %}
-    </div>
-{% endif %}
+
+
+
 
 
 

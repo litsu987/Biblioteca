@@ -102,12 +102,19 @@
             text-transform: uppercase !important;
             text-decoration: underline !important;
         }
+        h1 {
+        
+        color: #142c83;
+        font-family: Montserrat;
+        font-weight: bolder;
+        text-align: left;
+      }
   </style>
 </head>
 {% block content %}
 {% include 'header.html' %}
 <div id="divisor">
-  <h2>Sign up</h2>
+  <h1>Registra't</h1>
 <form method="post">
   {% csrf_token %} 
   <label for="first_name">Nom </label>
