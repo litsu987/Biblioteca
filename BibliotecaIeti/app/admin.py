@@ -45,27 +45,37 @@ class ExemplarAdmin(admin.ModelAdmin):
 
 @admin.register(Reserva)
 class ReservaAdmin(admin.ModelAdmin):
-    list_display = ('usuari', 'get_element_titulo', 'data_reserva')
+    list_display = ('get_usuari_name', 'get_element_titulo', 'data_reserva')
 
-   
+    def get_usuari_name(self, obj):
+        return obj.usuari.user.username
+    get_usuari_name.short_description = 'Usuari'
+
     def get_element_titulo(self, obj):
-        return obj.exemplar.catalogo.nom
+        return obj.exemplar.element_catalog.catalog.nom
     get_element_titulo.short_description = 'Element Títol'
 
 
 @admin.register(Prestec)
 class PrestecAdmin(admin.ModelAdmin):
-    list_display = ('usuari', 'get_element_titulo', 'data_prestec', 'data_retorn')
+    list_display = ('get_usuari_name', 'get_element_titulo', 'data_prestec', 'data_retorn')
+
+    def get_usuari_name(self, obj):
+        return obj.usuari.user.username
+    get_usuari_name.short_description = 'Usuari'
 
     def get_element_titulo(self, obj):
-        return obj.catalog.nom
+        return obj.exemplar.element_catalog.catalog.nom
     get_element_titulo.short_description = 'Element Títol'
 
 
 @admin.register(Peticio)
 class PeticioAdmin(admin.ModelAdmin):
-    list_display = ('usuari', 'titol_peticio', 'descripcio', 'data_peticio')
+    list_display = ('get_usuari_name', 'titol_peticio', 'descripcio', 'data_peticio')
 
+    def get_usuari_name(self, obj):
+        return obj.usuari.user.username
+    get_usuari_name.short_description = 'Usuario'
 
 
 @admin.register(Log)

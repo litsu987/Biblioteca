@@ -87,6 +87,7 @@ class ElementCatalog(models.Model):
 
     def __str__(self):
         return self.catalog.nom
+    
 
 class Llibre(Catalog):  
     CDU = models.CharField(max_length=100)
@@ -178,6 +179,7 @@ class Peticio(models.Model):
     descripcio = models.TextField()
     data_peticio = models.DateField(auto_now_add=True)
 
+
 class Log(models.Model):
     TIPO_LOG = (
         ('INFO', 'Información'),
@@ -193,6 +195,9 @@ class Log(models.Model):
 
     def __str__(self):
         return f"{self.accio} - {self.tipus}"
+
+
+
 
 class ImatgeCatalog(models.Model):
     catalog = models.ForeignKey(Catalog, on_delete=models.CASCADE)
