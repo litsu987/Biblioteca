@@ -9,7 +9,7 @@ from django.views.generic import ListView
 from django.db.models import Q
 from .utils import generarLog,subir_logs_a_bd  # Importa la función generarLog desde utils.py
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
+from django.contrib.auth.password_validation import validate_password
 
 from django.contrib.auth.views import PasswordChangeView, PasswordChangeDoneView
 from django.urls import reverse_lazy
@@ -29,7 +29,9 @@ from django.db.models import F
 from django.db.models import Count
 from django.http import JsonResponse
 from itertools import chain
-
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
+from django.contrib import messages
 
 def perfil(request):
     users = Usuari.objects.all()
@@ -126,15 +128,15 @@ def index(request):
         email = request.POST.get("email")
         password = request.POST.get("password")
 
-       # try:
+        try:
             # Validar la contraseña
-           # validate_password(password)
-      #  except ValidationError as error:
+            validate_password(password)
+        except ValidationError as error:
             # Si la contraseña no cumple con los requisitos, mostrar un mensaje de error
-          #  messages.error(request, "{}".format(", ".join(error.messages)))
-           # generarLog(request, 'ERROR', f"Contraseña inválida: {', '.join(error.messages)}")
-            #subir_logs_a_bd(request)
-            #return redirect('index')
+            messages.error(request, "{}".format(", ".join(error.messages)))
+            generarLog(request, 'ERROR', f"Contraseña inválida: {', '.join(error.messages)}")
+            subir_logs_a_bd(request)
+            return redirect('index')
 
         user = authenticate(request, username=email, password=password)
         if user is not None:
@@ -148,6 +150,7 @@ def index(request):
             subir_logs_a_bd(request)
             return redirect('index')  
     return render(request, 'index.html', {"books":all_items})
+
 
 
 def search_results(request):

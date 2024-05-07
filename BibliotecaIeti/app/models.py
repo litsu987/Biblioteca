@@ -148,11 +148,7 @@ class Exemplar(models.Model):
     def __str__(self):
         return f"{self.catalogo} {self.estat}"
 
-    def save(self, *args, **kwargs):
-        total_ejemplares = Exemplar.objects.filter(catalogo=self.catalogo).exclude(id=self.id).aggregate(total=models.Sum('cantidad'))['total'] or 0
-        if self.cantidad + total_ejemplares > self.catalogo.cantidad:
-            raise ValidationError("La cantidad total de ejemplares no puede ser mayor que la cantidad total disponible en el catálogo.")
-        super().save(*args, **kwargs)
+    
 
 
 class Reserva(models.Model):

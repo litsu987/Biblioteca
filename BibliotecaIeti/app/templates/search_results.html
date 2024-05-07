@@ -101,8 +101,17 @@
 <body>
     {% include 'header.html' %}
     <div id="top">
-        <h1>Información</h1>
+        <h1>Informació</h1>
         {% include 'btnRedirect.html' %}
+    </div>
+    <div class="pagination">
+        {% if items.has_previous %}
+            <a class="anterior" href="?page={{ items.previous_page_number }}{% if query %}&searcher={{ query }}{% else %}&searcher={% endif %}{% if has_stock %}&has_stock=on{% endif %}">Anterior</a>
+        {% endif %}
+        <span class="current">Página {{ items.number }} de {{ items.paginator.num_pages }}</span>
+        {% if items.has_next %}
+            <a  class="siguiente" href="?page={{ items.next_page_number }}{% if query %}&searcher={{ query }}{% else %}&searcher={% endif %}{% if has_stock %}&has_stock=on{% endif %}">Seguent</a>
+        {% endif %}
     </div>
     <div class="container">
         {% for item in items %}
@@ -116,6 +125,7 @@
                     <p><strong>Colección:</strong> {{ item.collecio }}</p>
                     <p><strong>ISBN:</strong> {{ item.ISBN }}</p>
                     <p><strong>CDU:</strong> {{ item.CDU }}</p>
+                    <p><strong>Disponible:</strong> {{ item.cantidad }}</p>
                     <ul>
                         {% for exemplar in item.exemplar_set.all %}
                             <p><strong>{{ exemplar.estat }}:</strong> {{ exemplar.cantidad }}</p>
@@ -129,6 +139,12 @@
                     <p><strong>Discográfica:</strong> {{ item.discografica }}</p>
                     <p><strong>Estilo:</strong> {{ item.estil }}</p>
                     <p><strong>Duración:</strong> {{ item.duracio }}</p>
+                    <p><strong>Disponible:</strong> {{ item.cantidad }}</p>
+                    <ul>
+                        {% for exemplar in item.exemplar_set.all %}
+                            <p><strong>{{ exemplar.estat }}:</strong> {{ exemplar.cantidad }}</p>
+                        {% endfor %}
+                    </ul>
                 </article>
             {% elif item.model_type == 'dvd' %}
                 <!-- Display DVD-specific information -->
@@ -136,6 +152,12 @@
                     <h2>{{ item.nom }}</h2>
                     <p><strong>Productora:</strong> {{ item.productora }}</p>
                     <p><strong>Duración:</strong> {{ item.duracio }}</p>
+                    <p><strong>Disponible:</strong> {{ item.cantidad }}</p>
+                    <ul>
+                        {% for exemplar in item.exemplar_set.all %}
+                            <p><strong>{{ exemplar.estat }}:</strong> {{ exemplar.cantidad }}</p>
+                        {% endfor %}
+                    </ul>
                 </article>
             {% elif item.model_type == 'br' %}
                 <!-- Display Blu-ray-specific information -->
@@ -143,6 +165,12 @@
                     <h2>{{ item.nom }}</h2>
                     <p><strong>Productora:</strong> {{ item.productora }}</p>
                     <p><strong>Duración:</strong> {{ item.duracio }}</p>
+                    <p><strong>Disponible:</strong> {{ item.cantidad }}</p>
+                    <ul>
+                        {% for exemplar in item.exemplar_set.all %}
+                            <p><strong>{{ exemplar.estat }}:</strong> {{ exemplar.cantidad }}</p>
+                        {% endfor %}
+                    </ul>
                 </article>
             {% elif item.model_type == 'dispositiu' %}
                 <!-- Display device-specific information -->
@@ -150,17 +178,23 @@
                     <h2>{{ item.nom }}</h2>
                     <p><strong>Serie:</strong> {{ item.serie }}</p>
                     <p><strong>Modelo:</strong> {{ item.modelo }}</p>
+                    <p><strong>Disponible:</strong> {{ item.cantidad }}</p>
+                    <ul>
+                        {% for exemplar in item.exemplar_set.all %}
+                            <p><strong>{{ exemplar.estat }}:</strong> {{ exemplar.cantidad }}</p>
+                        {% endfor %}
+                    </ul>
                 </article>
             {% endif %}
         {% endfor %}
     </div>
     <div class="pagination">
         {% if items.has_previous %}
-            <a href="?page={{ items.previous_page_number }}{% if query %}&searcher={{ query }}{% else %}&searcher={% endif %}{% if has_stock %}&has_stock=on{% endif %}">Anterior</a>
+            <a class="anterior" href="?page={{ items.previous_page_number }}{% if query %}&searcher={{ query }}{% else %}&searcher={% endif %}{% if has_stock %}&has_stock=on{% endif %}">Anterior</a>
         {% endif %}
         <span class="current">Página {{ items.number }} de {{ items.paginator.num_pages }}</span>
         {% if items.has_next %}
-            <a href="?page={{ items.next_page_number }}{% if query %}&searcher={{ query }}{% else %}&searcher={% endif %}{% if has_stock %}&has_stock=on{% endif %}">Siguiente</a>
+            <a  class="siguiente" href="?page={{ items.next_page_number }}{% if query %}&searcher={{ query }}{% else %}&searcher={% endif %}{% if has_stock %}&has_stock=on{% endif %}">Seguent</a>
         {% endif %}
     </div>
     
