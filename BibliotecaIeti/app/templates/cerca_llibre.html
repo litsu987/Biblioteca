@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Cercar Llibre</title>
+    <style>
+        #containerCerca {
+            display: flex;
+            justify-content: space-around;
+            height: auto;  
+            margin-top: 40px;
+        }
+
+        #containerCerca form input[type="submit"] {
+            width: fit-content;
+            background: #142C83;
+            border: 1px solid #142C83;
+            border-radius: 6px;
+            box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
+            box-sizing: border-box;
+            color: #FFFFFF;
+            cursor: pointer;
+            display: inline-block;
+            font-family: nunito,roboto,proxima-nova,"proxima nova",sans-serif;
+            font-size: 16px;
+            font-weight: 800;
+            line-height: 16px;
+            min-height: 40px;
+            outline: 0;
+            margin: 0 auto;
+            margin-top: 15px;
+            padding: 12px 14px;
+            text-align: center;
+            text-rendering: geometricprecision;
+            text-transform: none;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            vertical-align: middle;
+        }
+
+        #containerCerca form input[type="submit"]:hover, 
+        #containerCerca form input[type="submit"]:active {
+            background-color: initial;
+            background-position: 0 0;
+            color: #142C83;
+        }
+
+        #containerCerca form input[type="submit"]:active {
+            opacity: .5;
+        }   
+    
+        #containerCerca input {
+            width: 90%;
+            height: 30px;
+            font-size: 1em;
+            padding: 5px;
+            margin: 0 auto;
+            border-radius: 8px;
+            border: 1px solid #5978e8;
+        }
+
+
+        #containerCerca form {
+            background-color: #e3ecee;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            font-size: 1.3em;
+            padding: 0 50px;
+            width: 40vw;
+            max-width: 500px;
+            height: 200px;
+            border-radius: 15px;
+            gap: 10px;
+            box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+        }
+
+        .cercaH1 {
+            margin-top: 100px;
+            text-align: center;
+            color: #142C83;
+        }
+    </style>
+</head>
+<body>
+    {% include 'header.html' %}
+    <h1 class="cercaH1">Cercar llibre per ISBN</h1>
+    <div id="containerCerca">
+        <form method="post">
+            {% csrf_token %}
+            <label for="id_ISBN">Introdueix l'ISBN:</label>
+            <input type="text" id="id_ISBN" name="ISBN">
+            <input type="submit" value="Cercar">
+        </form>
+    </div>
+    
+</body>
+</html>
+

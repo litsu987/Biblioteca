@@ -28,7 +28,9 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import F
 from django.db.models import Count
 from django.http import JsonResponse
-
+import requests
+from django.shortcuts import render, redirect
+from .forms import LlibreForm
 
 def perfil(request):
     users = Usuari.objects.all()
@@ -470,3 +472,59 @@ def buscar_autocompletado(request):
         return JsonResponse(data, safe=False)
 
     return JsonResponse([], safe=False)
+
+from django.http import HttpResponseRedirect
+
+
+def nou_llibre(request):
+    if request.method == 'POST':
+        isbn = request.POST.get('ISBN')
+        if isbn:
+            response = requests.get(f'https://www.googleapis.com/books/v1/volumes?q=isbn:{isbn}')
+            if response.status_code == 200:
+                data = response.json()
+                if 'items' in data and data['items']:
+                    item = data['items'][0]
+                    volume_info = item.get('volumeInfo', {})
+                    descripcio = ''
+                    if 'description' in volume_info:
+                        descripcio = volume_info['description']
+                    elif 'searchInfo' in item:
+                        descripcio = item['searchInfo'].get('textSnippet', '')
+                    
+                    editorial = volume_info.get('publisher', '')
+                    colleccio = volume_info.get('categories', [])
+                    pagines = volume_info.get('pageCount', 0)
+                    cdu = "CDU no disponible"
+                    
+                    # Creamos un diccionario con los datos de la API
+                    initial_data = {
+                        'nom': volume_info.get('title', ''),
+                        'descripcio': descripcio,
+                        'editorial': editorial,
+                        'colleccio': ', '.join(colleccio),
+                        'autor': ', '.join(volume_info.get('authors', [])),
+                        'pagines': pagines,
+                        'ISBN': isbn,
+                        'CDU': cdu,
+                    }
+                    
+                    # Creamos una instancia del formulario con los datos iniciales
+                    form = LlibreForm(initial=initial_data)
+                    
+                    # Verificamos si el formulario se está guardando
+                    if 'save' in request.POST:
+                        form = LlibreForm(request.POST, initial=initial_data)  # Pasamos los datos POST junto con los datos iniciales
+                        if form.is_valid():
+                            print('El formulario es válido. Guardando...')
+                            form.save()  # Guardamos el formulario
+                            print('Formulario guardado correctamente.')
+                            return HttpResponseRedirect('../nou_llibre/')  # Redireccionamos a la página de confirmación
+                        else:
+                            print('El formulario no es válido.')
+                            
+                    return render(request, 'nou_llibre.html', {'form': form})
+    
+    # Si no se realizó una llamada POST o si no se encontró el ISBN, mostramos el formulario vacío
+    form = LlibreForm()
+    return render(request, 'cerca_llibre.html', {'form': form})
