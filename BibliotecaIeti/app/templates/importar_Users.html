@@ -116,7 +116,7 @@
         {% csrf_token %}
         <input type="file" name="archivo_csv" id="archivo_csv" accept=".csv" required>
         <select name="centro" id="centro" required>
-            <option value="" selected>Seleccionar centro</option>
+            <option value="" selected>Seleccionar centre</option>
             {% for centro in centros %}
                 <option value="{{ centro.nom }}">{{ centro.nom }}</option>
             {% endfor %}
@@ -124,7 +124,7 @@
         
         <!-- Campo input oculto para enviar el nombre del centro seleccionado -->
         <input type="hidden" name="nombre_centro_seleccionado" id="nombre_centro_seleccionado" value="">
-        <button id="submitButton" type="submit" disabled>Subir CSV</button>
+        <button id="submitButton" type="submit" disabled>Pujar CSV</button>
     </form>
     <div style="text-align: center;">
         {% include 'btnRedirect.html' %}

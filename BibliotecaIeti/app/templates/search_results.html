@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
@@ -8,301 +8,414 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js"></script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"
+    />
 
     <link
-        href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css"
-        rel="stylesheet"
-        type="text/css"
+      href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css"
+      rel="stylesheet"
+      type="text/css"
     />
-    
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
-        rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
+      rel="stylesheet"
     />
     <style>
+      body {
+        background-color: #ffffff; /* Fondo blanco */
+        margin: 0;
+        font-family: Arial, sans-serif;
+      }
+      #enlaceBtn {
+        margin-right: 10px !important;
+      }
+
+      #top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 70px;
+        background-color: #fff;
+        padding: 20px;
+      }
+
+      .searchP {
+        padding-bottom: 10px;
+      }
+
+      .container {
+        display: grid;
+        grid-template-columns: repeat(
+          3,
+          minmax(0, 1fr)
+        ); /* Grid de tres columnas */
+        gap: 30px 60px; /* Espacio entre elementos */
+      }
+
+      article {
+        background-color: #e3ecee; /* Color de fondo de los elementos */
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px solid #142c83;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+      }
+
+      h2 {
+        color: #142c83; /* Color del título */
+      }
+
+      .subrayado {
+        text-decoration: underline;
+      }
+
+      #enlaceBtn:first-letter,
+      .siguiente:first-letter,
+      .ultima:first-letter,
+      .anterior:first-letter,
+      .primera::first-letter {
+        text-transform: uppercase !important;
+        text-decoration: underline !important;
+      }
+      .pagination {
+        margin-top: 20px;
+        text-align: center;
+        margin: 20px;
+      }
+
+      .pagination a {
+        display: inline-block;
+        padding: 8px 16px;
+        margin: 0 4px;
+        color: #000;
+        background-color: #f2f2f2;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        text-decoration: none;
+      }
+
+      .pagination a:hover {
+        background-color: #ddd;
+      }
+
+      .pagination .current {
+        background-color: #4caf50;
+        color: white;
+        border-color: #4caf50;
+      }
+
+      @media screen and (max-width: 365px) and (max-height: 667px) {
         body {
-            background-color: #ffffff; /* Fondo blanco */
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
-        #enlaceBtn {
-            margin-right: 10px !important;    
+          padding: 0;
         }
 
         #top {
-            display:flex;
-            justify-content: space-between; 
-            align-items: center;
-            height: 70px;
-            background-color: #fff;
-            padding: 20px;
+          flex-direction: column-reverse;
+          justify-content: center;
+          align-items: center;
+          height: 70px;
+          background-color: #fff;
+          margin-top: 20px;
         }
 
-        .searchP {
-            padding-bottom: 10px;
+        .pagination {
+          text-align: center;
+          margin-top: 40px;
+          margin-left: 0;
+          margin-right: 0;
+        }
+
+        .pagination .primera,
+        .pagination .ultima {
+          display: none;
         }
 
         .container {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr)); /* Grid de tres columnas */
-            gap: 30px 60px; /* Espacio entre elementos */
+          display: grid;
+          grid-template-columns: repeat(
+            1,
+            minmax(0, 1fr)
+          ); /* Grid de tres columnas */
+          gap: 10px; /* Espacio entre elementos */
+          margin-left: 5px;
+          margin-right: 5px;
         }
-
-        article {
-            background-color: #e3ecee; /* Color de fondo de los elementos */
-            padding: 20px;
-            border-radius: 8px;
-            border: 1px solid #142C83;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
-        }
-
-        h2 {
-            color: #142C83; /* Color del título */
-        }
-        
-        .subrayado {
-            text-decoration: underline;
-        }
-
-        #enlaceBtn:first-letter,.siguiente:first-letter,.ultima:first-letter,.anterior:first-letter,.primera::first-letter {
-            text-transform: uppercase !important;
-            text-decoration: underline !important;
-        }
-        .pagination {
-            margin-top: 20px;
-            text-align: center;
-            margin:20px;
-        }
-
-        .pagination a {
-            display: inline-block;
-            padding: 8px 16px;
-            margin: 0 4px;
-            color: #000;
-            background-color: #f2f2f2;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            text-decoration: none;
-        }
-
-        .pagination a:hover {
-            background-color: #ddd;
-        }
-
-        .pagination .current {
-            background-color: #4CAF50;
-            color: white;
-            border-color: #4CAF50;
-        }
-
-        
-
-        @media screen and (max-width: 365px) and (max-height: 667px) {
-            body {
-                padding: 0;
-            }
-
-            #top {
-                flex-direction: column-reverse;
-                justify-content: center; 
-                align-items: center;
-                height: 70px;
-                background-color: #fff;
-                margin-top: 20px;
-            }
-
-            .pagination {
-                
-                text-align: center;
-                margin-top: 40px;
-                margin-left: 0;
-                margin-right: 0;
-            }
-
-            .pagination .primera, 
-            .pagination .ultima {
-                display: none;
-            }
-
-            .container {
-            display: grid;
-            grid-template-columns: repeat(1, minmax(0, 1fr)); /* Grid de tres columnas */
-            gap: 10px; /* Espacio entre elementos */
-            margin-left: 5px;
-            margin-right: 5px;
-        }
-        }
+      }
     </style>
-</head>
-<body>
-{% include 'header.html' %}
-
-<div id="top">
-    <h1>Información</h1>
-    {% include 'btnRedirect.html' %}
-</div>
-{% if books.has_other_pages %}
-    <div class="pagination">
-        {% if books.has_previous %}
-            <a class="primera" href="?page_books=1&page_cds={{ page_number_cds }}&page_dvds={{ page_number_dvds }}&page_brs={{ page_number_brs }}&page_dispositivos={{ page_number_dispositivos }}&searcher={{ query }}{% if has_stock %}&has_stock=on{% endif %}">Primer</a>
-            <a class="anterior" href="?page_books={{ books.previous_page_number }}&page_cds={{ page_number_cds }}&page_dvds={{ page_number_dvds }}&page_brs={{ page_number_brs }}&page_dispositivos={{ page_number_dispositivos }}&searcher={{ query }}{% if has_stock %}&has_stock=on{% endif %}">Anterior</a>
-        {% endif %}
-        <span class="current">Página {{ books.number }} de {{ books.paginator.num_pages }}</span>
-        {% if books.has_next %}
-            <a class="siguiente" href="?page_books={{ books.next_page_number }}&page_cds={{ page_number_cds }}&page_dvds={{ page_number_dvds }}&page_brs={{ page_number_brs }}&page_dispositivos={{ page_number_dispositivos }}&searcher={{ query }}{% if has_stock %}&has_stock=on{% endif %}">Seguent</a>
-            <a class="ultima" href="?page_books={{ books.paginator.num_pages }}&page_cds={{ page_number_cds }}&page_dvds={{ page_number_dvds }}&page_brs={{ page_number_brs }}&page_dispositivos={{ page_number_dispositivos }}&searcher={{ query }}{% if has_stock %}&has_stock=on{% endif %}">Última</a>
-        {% endif %}
+  </head>
+  <body>
+    {% include 'header.html' %}
+    <div id="top">
+      <h1>Información</h1>
+      {% include 'btnRedirect.html' %}
     </div>
-{% endif %}
-
-<div class="container">
-  {% for libro in books %}
-      {% if has_stock and libro.cantidad == 0 %}
-          <p class="searchP">No hay libros en stock para esta búsqueda.</p>
-      {% else %}
-          <article>
-              <h2>{{ libro.nom }}</h2>
-              <p class="searchP"><strong>Autor:</strong> {{ libro.autor }}</p>
-              <p class="searchP"><strong>Editorial:</strong> {{ libro.editorial }}</p>
-              <p class="searchP"><strong>Nombre de páginas:</strong> {{ libro.pagines }}</p>
-              <p class="searchP"><strong>Colección:</strong> {{ libro.collecio }}</p>
-              <p class="searchP"><strong>ISBN:</strong> {{ libro.ISBN }}</p>
-              <p class="searchP"><strong>CDU:</strong> {{ libro.CDU }}</p>
-             
-              <ul>
-                  {% for exemplar in libro.exemplar_set.all %}
-                      <p><strong>{{ exemplar.estat }}:</strong> {{ exemplar.cantidad }}</p>
-                  {% endfor %}
-              </ul>
-          </article>
+    {% if books.has_other_pages %}
+    <div class="pagination">
+      {% if items.has_previous %}
+      <a
+        class="anterior"
+        href="?page={{ items.previous_page_number }}{% if query %}&searcher={{ query }}{% else %}&searcher={% endif %}{% if has_stock %}&has_stock=on{% endif %}"
+        >Anterior</a
+      >
       {% endif %}
-  {% endfor %}
-</div>
-{% if books.has_other_pages %}
+      <span class="current"
+        >Página {{ items.number }} de {{ items.paginator.num_pages }}</span
+      >
+      {% if items.has_next %}
+      <a
+        class="siguiente"
+        href="?page={{ items.next_page_number }}{% if query %}&searcher={{ query }}{% else %}&searcher={% endif %}{% if has_stock %}&has_stock=on{% endif %}"
+        >Seguent</a
+      >
+      {% endif %} {% endif %}
+    </div>
+    <div id="filter-form">
+      <form method="GET" action="{% url 'search_results' %}">
+        <h2>Busqueda Avanzada</h2>
+        <div id="searchInput">
+          <input
+            type="search"
+            name="searcher"
+            id="searcher"
+            onkeyup="buscarAutocompletado()"
+            placeholder="Buscar..."
+          />
+          <button type="submit" class="search-button">
+            <i class="fas fa-search search-icon"></i>
+          </button>
+          <div id="autocomplete-results"></div>
+        </div>
+        <div id="check">
+          <input
+            type="checkbox"
+            id="has-stock-checkbox"
+            onchange="buscarAutocompletado()"
+            name="has_stock"
+          />
+          <label for="has-stock-checkbox">Mostrar sólo objetos con estoc</label>
+        </div>
+        <label for="product-type">Tipo de producto:</label>
+        <select name="product_type" id="product-type">
+          <option value="">Todos</option>
+          <option value="llibre">Libro</option>
+          <option value="cd">CD</option>
+          <option value="dvd">DVD</option>
+          <option value="br">Blu-ray</option>
+          <option value="dispositiu">Dispositivo</option>
+        </select>
+        <br />
+        <label for="year-range">Selecciona un rango de años:</label>
+        <div id="year-range-slider"></div>
+        <input type="hidden" id="start-year" name="start_year" />
+        <input type="hidden" id="end-year" name="end_year" />
+
+        <div id="year-range-slider"></div>
+        <div id="selected-years"></div>
+        <br />
+        <select name="estado" id="estado">
+          <option value="">Todos</option>
+          <option value="Disponible">Disponible</option>
+          <option value="Prestat">Prestado</option>
+          <option value="Reservat">Reservado</option>
+          <option value="No disponible (només a la biblioteca)">
+            No disponible (solo en biblioteca)
+          </option>
+        </select>
+
+        <button type="submit">Filtrar</button>
+      </form>
+    </div>
+
+    <div class="container">
+      {% for item in items %} {% if item.model_type == 'llibre' %}
+      <!-- Display book-specific information -->
+      <article>
+        <h2>{{ item.nom }}</h2>
+        <p><strong>Autor:</strong> {{ item.autor }}</p>
+        <p><strong>Editorial:</strong> {{ item.editorial }}</p>
+        <p><strong>Nombre de páginas:</strong> {{ item.pagines }}</p>
+        <p><strong>Colección:</strong> {{ item.collecio }}</p>
+        <p><strong>ISBN:</strong> {{ item.ISBN }}</p>
+        <p><strong>CDU:</strong> {{ item.CDU }}</p>
+        <p><strong>Disponible:</strong> {{ item.cantidad }}</p>
+        <ul>
+          {% for exemplar in item.exemplar_set.all %}
+          <p><strong>{{ exemplar.estat }}:</strong> {{ exemplar.cantidad }}</p>
+          {% endfor %}
+        </ul>
+      </article>
+      {% elif item.model_type == 'cd' %}
+      <!-- Display CD-specific information -->
+      <article>
+        <h2>{{ item.nom }}</h2>
+        <p><strong>Discográfica:</strong> {{ item.discografica }}</p>
+        <p><strong>Estilo:</strong> {{ item.estil }}</p>
+        <p><strong>Duración:</strong> {{ item.duracio }}</p>
+        <p><strong>Disponible:</strong> {{ item.cantidad }}</p>
+        <ul>
+          {% for exemplar in item.exemplar_set.all %}
+          <p><strong>{{ exemplar.estat }}:</strong> {{ exemplar.cantidad }}</p>
+          {% endfor %}
+        </ul>
+      </article>
+      {% elif item.model_type == 'dvd' %}
+      <!-- Display DVD-specific information -->
+      <article>
+        <h2>{{ item.nom }}</h2>
+        <p><strong>Productora:</strong> {{ item.productora }}</p>
+        <p><strong>Duración:</strong> {{ item.duracio }}</p>
+        <p><strong>Disponible:</strong> {{ item.cantidad }}</p>
+        <ul>
+          {% for exemplar in item.exemplar_set.all %}
+          <p><strong>{{ exemplar.estat }}:</strong> {{ exemplar.cantidad }}</p>
+          {% endfor %}
+        </ul>
+      </article>
+      {% elif item.model_type == 'br' %}
+      <!-- Display Blu-ray-specific information -->
+      <article>
+        <h2>{{ item.nom }}</h2>
+        <p><strong>Productora:</strong> {{ item.productora }}</p>
+        <p><strong>Duración:</strong> {{ item.duracio }}</p>
+        <p><strong>Disponible:</strong> {{ item.cantidad }}</p>
+        <ul>
+          {% for exemplar in item.exemplar_set.all %}
+          <p><strong>{{ exemplar.estat }}:</strong> {{ exemplar.cantidad }}</p>
+          {% endfor %}
+        </ul>
+      </article>
+      {% elif item.model_type == 'dispositiu' %}
+      <!-- Display device-specific information -->
+      <article>
+        <h2>{{ item.nom }}</h2>
+        <p><strong>Serie:</strong> {{ item.serie }}</p>
+        <p><strong>Modelo:</strong> {{ item.modelo }}</p>
+        <p><strong>Disponible:</strong> {{ item.cantidad }}</p>
+        <ul>
+          {% for exemplar in item.exemplar_set.all %}
+          <p><strong>{{ exemplar.estat }}:</strong> {{ exemplar.cantidad }}</p>
+          {% endfor %}
+        </ul>
+      </article>
+      {% endif %} {% endfor %}
+    </div>
     <div class="pagination">
-        {% if books.has_previous %}
-            <a class="primera" href="?page_books=1&page_cds={{ page_number_cds }}&page_dvds={{ page_number_dvds }}&page_brs={{ page_number_brs }}&page_dispositivos={{ page_number_dispositivos }}&searcher={{ query }}{% if has_stock %}&has_stock=on{% endif %}">Primer</a>
-            <a class="anterior" href="?page_books={{ books.previous_page_number }}&page_cds={{ page_number_cds }}&page_dvds={{ page_number_dvds }}&page_brs={{ page_number_brs }}&page_dispositivos={{ page_number_dispositivos }}&searcher={{ query }}{% if has_stock %}&has_stock=on{% endif %}">Anterior</a>
-        {% endif %}
-        <span class="current">Página {{ books.number }} de {{ books.paginator.num_pages }}</span>
-        {% if books.has_next %}
-            <a class="siguiente" href="?page_books={{ books.next_page_number }}&page_cds={{ page_number_cds }}&page_dvds={{ page_number_dvds }}&page_brs={{ page_number_brs }}&page_dispositivos={{ page_number_dispositivos }}&searcher={{ query }}{% if has_stock %}&has_stock=on{% endif %}">Seguent</a>
-            <a class="ultima" href="?page_books={{ books.paginator.num_pages }}&page_cds={{ page_number_cds }}&page_dvds={{ page_number_dvds }}&page_brs={{ page_number_brs }}&page_dispositivos={{ page_number_dispositivos }}&searcher={{ query }}{% if has_stock %}&has_stock=on{% endif %}">Última</a>
-        {% endif %}
+      {% if items.has_previous %}
+      <a
+        class="anterior"
+        href="?page={{ items.previous_page_number }}{% if query %}&searcher={{ query }}{% else %}&searcher={% endif %}{% if has_stock %}&has_stock=on{% endif %}"
+        >Anterior</a
+      >
+      {% endif %}
+      <span class="current"
+        >Página {{ items.number }} de {{ items.paginator.num_pages }}</span
+      >
+      {% if items.has_next %}
+      <a
+        class="siguiente"
+        href="?page={{ items.next_page_number }}{% if query %}&searcher={{ query }}{% else %}&searcher={% endif %}{% if has_stock %}&has_stock=on{% endif %}"
+        >Seguent</a
+      >
+      {% endif %}
     </div>
-{% endif %}
-
-
-
-
-  
-    <!-- 
-      {% for cd in cds %}
-        {% if has_stock and cd.cantidad == 0 %}
-          <p>No hay CDs en stock para esta búsqueda.</p>
-        {% else %}
-          <article>
-            <h2>{{cd.nom}}</h2>
-            <p><strong>Discográfica:</strong> {{cd.discografica}}</p>
-            <p><strong>Estilo:</strong> {{cd.estil}}</p>
-            <p><strong>Duración:</strong> {{cd.duracio}}</p>
-          </article>
-        {% endif %}
-      {% endfor %}
-    
-      {% for br in brs %}
-        {% if has_stock and br.cantidad == 0 %}
-          <p>No hay Blu-Rays en stock para esta búsqueda.</p>
-        {% else %}
-          <article>
-            <h2>{{br.nom}}</h2>
-            <p><strong>Productora:</strong> {{br.productora}}</p>
-            <p><strong>Duración:</strong> {{br.duracio}}</p>
-          </article>
-        {% endif %}
-      {% endfor %}
-    
-      {% for dvd in dvds %}
-        {% if has_stock and dvd.cantidad == 0 %}
-          <p>No hay DVDs en stock para esta búsqueda.</p>
-        {% else %}
-          <article>
-            <h2>{{dvd.nom}}</h2>
-            <p><strong>Productora:</strong> {{dvd.productora}}</p>
-            <p><strong>Duración:</strong> {{dvd.duracio}}</p>
-          </article>
-        {% endif %}
-      {% endfor %}
-    
-      {% for dis in dispositivos %}
-        {% if has_stock and dis.cantidad == 0 %}
-          <p>No hay dispositivos en stock para esta búsqueda.</p>
-        {% else %}
-          <article>
-            <h2>{{dis.nom}}</h2>
-            <p><strong>Serie:</strong> {{dis.serie}}</p>
-            <p><strong>Modelo:</strong> {{dis.modelo}}</p>
-          </article>
-        {% endif %}
-      {% endfor %}
-    </div>
-    -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <script>
-      $(document).ready(function(){
-          enlaceBtn("{% url 'index' %}", 'Enrere');
+        $(function() {
+            $("#year-range-slider").slider({
+                range: true,
+                min: {{ fecha_minima }},
+                max: {{ fecha_maxima }},
+                values: [{{ fecha_minima }}, {{ fecha_maxima }}],
+                slide: function(event, ui) {
+                    $("#start-year").val(ui.values[0]);
+                    $("#end-year").val(ui.values[1]);
+                    updateSelectedYears(ui.values[0], ui.values[1]);
+                }
+            });
+            $("#start-year").val($("#year-range-slider").slider("values", 0));
+            $("#end-year").val($("#year-range-slider").slider("values", 1));
+
+            function updateSelectedYears(startYear, endYear) {
+                $("#selected-years").text("Años seleccionados: " + startYear + " - " + endYear);
+            }
+
+            updateSelectedYears($("#year-range-slider").slider("values", 0), $("#year-range-slider").slider("values", 1));
+        });
+
+
+      $(document).ready(function () {
+        enlaceBtn("{% url 'index' %}", "Enrere");
       });
 
-      $(document).ready(function(){
-                // Event listener para la combinación Shift + E
-                $(document).keydown(function(event){
-                    if((event.shiftKey && event.which == 69) || (event.shiftKey && event.keyCode == 69)){
-                        window.location.href = "{% url 'index' %}";
-                    }
-                });
-            });
+      $(document).ready(function () {
+        // Event listener para la combinación Shift + E
+        $(document).keydown(function (event) {
+          if (
+            (event.shiftKey && event.which == 69) ||
+            (event.shiftKey && event.keyCode == 69)
+          ) {
+            window.location.href = "{% url 'index' %}";
+          }
+        });
+      });
 
-        $(document).ready(function(){
-            // Event listener para la tecla "p"
-            $(document).keydown(function(event){
-                
-                if((event.shiftKey && event.which == 80) || (event.shiftKey && event.keyCode == 80)){
-                    // Simular clic en el enlace
-                    $(".primera")[0].click();
-                }
-            });
+      $(document).ready(function () {
+        // Event listener para la tecla "p"
+        $(document).keydown(function (event) {
+          if (
+            (event.shiftKey && event.which == 80) ||
+            (event.shiftKey && event.keyCode == 80)
+          ) {
+            // Simular clic en el enlace
+            $(".primera")[0].click();
+          }
         });
-        $(document).ready(function(){
-            // Event listener para la tecla "s"
-            $(document).keydown(function(event){
-                if((event.shiftKey && event.which == 83) || (event.shiftKey && event.keyCode == 83)){
-                    // Simular clic en el enlace
-                    $(".siguiente")[0].click();
-                }
-            });
+      });
+      $(document).ready(function () {
+        // Event listener para la tecla "s"
+        $(document).keydown(function (event) {
+          if (
+            (event.shiftKey && event.which == 83) ||
+            (event.shiftKey && event.keyCode == 83)
+          ) {
+            // Simular clic en el enlace
+            $(".siguiente")[0].click();
+          }
         });
+      });
 
-        $(document).ready(function(){
-            // Event listener para la tecla "u"
-            $(document).keydown(function(event){
-                if((event.shiftKey && event.which == 85) || (event.shiftKey && event.keyCode == 85)){
-                    // Simular clic en el enlace
-                    $(".ultima")[0].click();
-                }
-            });
+      $(document).ready(function () {
+        // Event listener para la tecla "u"
+        $(document).keydown(function (event) {
+          if (
+            (event.shiftKey && event.which == 85) ||
+            (event.shiftKey && event.keyCode == 85)
+          ) {
+            // Simular clic en el enlace
+            $(".ultima")[0].click();
+          }
         });
+      });
 
-        $(document).ready(function(){
-            // Event listener para la tecla "a"
-            $(document).keydown(function(event){
-                if((event.shiftKey && event.which == 65) || (event.shiftKey && event.keyCode == 65)){
-                    // Simular clic en el enlace
-                    $(".anterior")[0].click();
-                }
-            });
+      $(document).ready(function () {
+        // Event listener para la tecla "a"
+        $(document).keydown(function (event) {
+          if (
+            (event.shiftKey && event.which == 65) ||
+            (event.shiftKey && event.keyCode == 65)
+          ) {
+            // Simular clic en el enlace
+            $(".anterior")[0].click();
+          }
         });
-      
-  </script>
-    </body>
-    </html>
+      });
+    </script>
+  </body>
+</html>

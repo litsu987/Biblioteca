@@ -39,3 +39,5 @@ function contieneSoloNumeros(valor) {
     var regex = /^[0-9]+$/;
     return regex.test(valor);
 }
+
+

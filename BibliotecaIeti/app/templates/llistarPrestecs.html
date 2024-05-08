@@ -65,7 +65,7 @@
     <h1 class="titleCVS">Fer un préstec</h1>
     <form method="post" enctype="multipart/form-data" id="prestamo-form">
       {% csrf_token %}
-      <label for="usuari">Usuario:</label>
+      <label for="usuari">Usuari:</label>
       <select name="usuari" id="usuari">
         {% for usuario in usuarios_con_prestamo %}
         <option value="{{ usuario.id }}">{{ usuario.email }}</option>
@@ -73,7 +73,7 @@
       </select>
       
 
-      <label for="catalog">Catálogo:</label>
+      <label for="catalog">Catàleg:</label>
       <select name="catalog" id="catalog">
         {% for item in catalog_items %}
         <option value="{{ item.id }}">{{ item.nom }}</option>
@@ -82,10 +82,10 @@
 
       <!-- Eliminamos el campo de fecha de préstamo -->
 
-      <label for="data_retorn">Fecha de retorno:</label>
+      <label for="data_retorn">Data de retorn:</label>
       <input type="date" name="data_retorn" id="data_retorn" disabled />
 
-      <button type="submit">Realizar Préstamo</button>
+      <button type="submit">Realitzar préstec</button>
       
     </form>
     <div style="text-align: center;">

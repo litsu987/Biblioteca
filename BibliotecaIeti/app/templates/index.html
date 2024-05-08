@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     {% load static %}
+    <meta name="google-site-verification" content="HtV9zCr6KZ867Ilxcn-QDZeJhIhaCAwMbZ8IHjBcOvA" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js"></script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js"></script>
@@ -266,6 +267,10 @@
         
 
       }
+      .popup-message {
+        color: #ff0000; /* Color rojo */
+        /* Otros estilos que desees aplicar */
+      }
       
     </style>
   </head>
@@ -301,43 +306,20 @@
         <label for="password">Contrasenya</label>
         <input type="password" name="password" id="password" />
         <a href="{% url 'reset' %}">Recuperar Contrasenya</a>
+        {% if messages %}
+        <p id="popup-messages" {% if messages %}class="show"{% endif %}>
+          {% for message in messages %}
+              <p class="popup-message">{{ message|escape }}</p>
+          {% endfor %}
+        </p>    
+        {% endif %}
         <input type="submit" id="loginSubmit" value="ENTRA" />
+       
       </form>
       {% endif %}
 
     </div>
     <script>
-      function buscarAutocompletado() {
-        var inputText = document.getElementById("searcher").value.trim();
-        var hasStockCheckbox =
-          document.getElementById("has-stock-checkbox").checked;
-
-        if (inputText.length >= 3) {
-          $.ajax({
-            url: "/buscar/",
-            type: "GET",
-            data: {
-              query: inputText,
-              has_stock: hasStockCheckbox,
-            },
-            success: function (data) {
-              $("#searcher").autocomplete({
-                source: data.map(function (result) {
-                  return result.nombre;
-                }),
-              });
-            },
-            error: function (xhr, status, error) {
-              console.error(
-                "Error al obtener los resultados del autocompletado:",
-                error
-              );
-            },
-          });
-        } else {
-          $("#searcher").autocomplete("destroy");
-        }
-      }
       document.addEventListener("DOMContentLoaded", function() {
     // Agregar un evento keydown al documento
       document.addEventListener("keydown", function(event) {
@@ -357,7 +339,6 @@
           }
       });
   });
-
     </script>
     
     <div id="popup-messages" style="display: none;">
@@ -367,5 +348,16 @@
           {% endfor %}
       {% endif %}
   </div>
-  </body>
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KVLP240B1R"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KVLP240B1R');
+</script>  
+ 
+
+ </body>
 </html>

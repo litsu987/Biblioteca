@@ -148,6 +148,9 @@
             text-transform: uppercase !important;
             text-decoration: underline !important;
         }
+        .tableUsers tbody tr {
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -171,22 +174,22 @@
                 <tbody>
                     {% for usuario in usuarios %}
                     <tr>
-                        <td><input type="checkbox" class="checkbox" data-id="{{ usuario.id }}"></td>     
+                        <td><input type="radio" class="radio" name="selectedUser"></td>    
                         <td>{{ usuario.first_name }}</td>
                         <td>{{ usuario.last_name }}</td>
                         <td>{{ usuario.email }}</td>
                         <td>{{ usuario.cicle }}</td>
                         <td>{{ usuario.rol }}</td>
+                        <td class="userId" data-id="{{ usuario.id }}" style="display: none;">{{ usuario.id }}</td>
                         <!-- Agrega más columnas según la información que quieras mostrar -->
                     </tr>
+                    
                     {% endfor %}
                 </tbody>
             </table>
         </div>
         <div id="botones">
-            <div id="divEditar">
-                <a href="#" id="editar" class="editar" disabled>Editar Perfil</a>
-            </div>
+            
             {% include 'btnRedirect.html' %}
             <script>
                 $(document).ready(function(){
@@ -211,33 +214,36 @@
         </div>
     </main>
     <script>
-        $(document).ready(function() {
-            // JavaScript para limitar la selección a un solo checkbox
-            const checkboxes = document.querySelectorAll('.checkbox');
-            const editarButton = document.getElementById('editar');
+$(document).ready(function() {
+    const radios = document.querySelectorAll('.radio');
+    const editarButton = document.getElementById('editar');
 
-            checkboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', () => {
-                    checkboxes.forEach(otherCheckbox => {
-                        if (otherCheckbox !== checkbox) {
-                            otherCheckbox.checked = false;
-                        }
-                    });
-                    const alMenosUnoSeleccionado = [...checkboxes].some(checkbox => checkbox.checked);
-                    editarButton.disabled = !alMenosUnoSeleccionado;
+    radios.forEach(radio => {
+        radio.addEventListener('change', () => {
+            const selectedRadio = document.querySelector('input[name="selectedUser"]:checked');
+            if (selectedRadio) {
+                const userId = selectedRadio.closest('tr').querySelector('.userId').dataset.id;
+                editarButton.setAttribute('href', '/perfilEditable/' + userId );
+                editarButton.removeAttribute('disabled');
+                editarButton.click(); // Simular clic en el botón de editar
+            } else {
+                editarButton.setAttribute('href', '#');
+                editarButton.setAttribute('disabled', 'disabled');
+            }
+        });
+    });
 
-                    // Obtener el usuario_id del checkbox seleccionado
-                    const userId = checkbox.getAttribute('data-id');
-                    if (alMenosUnoSeleccionado) {
-                        // Habilitar el botón de editar y establecer la URL con el usuario_id
-                        $('#editar').attr('href', '/perfilEditable/' + userId ).removeAttr('disabled');
-                    } else {
-                        // Deshabilitar el botón de editar si no hay ningún checkbox seleccionado
-                        $('#editar').attr('href', '#').attr('disabled', 'disabled');
-                    }
-                });
-            });
-        })
+    // Agregar evento de clic a toda la fila para seleccionar el botón de radio
+    const rows = document.querySelectorAll('.tableUsers tbody tr');
+    rows.forEach(row => {
+        row.addEventListener('click', () => {
+            row.querySelector('.radio').click();
+        });
+    });
+});
+
+
+
         $(document).ready(function(){
                 // Event listener para la combinación Shift + E
                 $(document).keydown(function(event){

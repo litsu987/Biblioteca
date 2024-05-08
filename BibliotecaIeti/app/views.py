@@ -4,13 +4,13 @@ from django.template import loader
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.backends import ModelBackend
-from .models import Llibre, Usuari, CD, BR, DVD, Dispositiu, Centre, Cicle, Prestec,Catalog, Reserva
+from .models import Llibre, Usuari, CD, BR, DVD, Dispositiu, Centre, Cicle, Prestec,Catalog, Reserva,ElementCatalog
 from django.views.generic import ListView
 from django.db.models import Q
 from .utils import generarLog,subir_logs_a_bd  # Importa la función generarLog desde utils.py
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
-
+from django.contrib.auth.password_validation import validate_password
+from datetime import datetime
 from django.contrib.auth.views import PasswordChangeView, PasswordChangeDoneView
 from django.urls import reverse_lazy
 from .decorators import check_user_able_to_see_page
@@ -20,7 +20,7 @@ from django.contrib.auth.views import PasswordResetView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.hashers import make_password
 import csv
-from .models import Usuari
+from .models import Usuari,Exemplar
 from django.contrib.auth.hashers import make_password
 from datetime import datetime, timedelta
 from django.utils import timezone
@@ -28,6 +28,13 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import F
 from django.db.models import Count
 from django.http import JsonResponse
+from itertools import chain
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
+from django.contrib import messages
+from django.db.models import Min, Max
+from django.db.models.functions import ExtractYear
+
 import requests
 from django.shortcuts import render, redirect
 from .forms import LlibreForm
@@ -127,15 +134,15 @@ def index(request):
         email = request.POST.get("email")
         password = request.POST.get("password")
 
-       # try:
+        try:
             # Validar la contraseña
-           # validate_password(password)
-      #  except ValidationError as error:
+            validate_password(password)
+        except ValidationError as error:
             # Si la contraseña no cumple con los requisitos, mostrar un mensaje de error
-          #  messages.error(request, "{}".format(", ".join(error.messages)))
-           # generarLog(request, 'ERROR', f"Contraseña inválida: {', '.join(error.messages)}")
-            #subir_logs_a_bd(request)
-            #return redirect('index')
+            messages.error(request, "{}".format(", ".join(error.messages)))
+            generarLog(request, 'ERROR', f"Contraseña inválida: {', '.join(error.messages)}")
+            subir_logs_a_bd(request)
+            return redirect('index')
 
         user = authenticate(request, username=email, password=password)
         if user is not None:
@@ -154,39 +161,101 @@ def index(request):
 def search_results(request):
     generarLog(request, 'INFO', f"BUSQUEDA REALIZADA")
     subir_logs_a_bd(request)
-    
-    query = request.GET.get("searcher")
+    min_year = Catalog.objects.aggregate(min_year=ExtractYear(Min('fecha_publicacion')))['min_year']
+    max_year = Catalog.objects.aggregate(max_year=ExtractYear(Max('fecha_publicacion')))['max_year']
+    query = request.GET.get('searcher')
     has_stock = request.GET.get("has_stock", "off") == "on"
     
-    books = Llibre.objects.filter(Q(nom__icontains=query))
+    product_type = request.GET.get('product_type')
+    start_year = request.GET.get('start_year')
+    end_year = request.GET.get('end_year')
+    estado = request.GET.get('estado')
+
+    if product_type:
+        if product_type == 'llibre':
+            items = Llibre.objects.all()
+        elif product_type == 'cd':
+            items = CD.objects.all()
+        elif product_type == 'dvd':
+            items = DVD.objects.all()
+        elif product_type == 'br':
+            items = BR.objects.all()
+        elif product_type == 'dispositiu':
+            items = Dispositiu.objects.all()
+    else:
+        items = list(chain(Llibre.objects.all(), CD.objects.all(), DVD.objects.all(), BR.objects.all(), Dispositiu.objects.all()))
+
+    if start_year and end_year:
+        start_date = datetime(int(start_year), 1, 1)
+        end_date = datetime(int(end_year), 12, 31)
+        items = [item for item in items if start_date <= datetime.combine(item.fecha_publicacion, datetime.min.time()) <= end_date]
     
-    # Paginar los resultados
-    paginator = Paginator(books, 50)  # Muestra 10 libros por página
-    
-    page_number = request.GET.get('page_books')
+    if query:
+        items = [item for item in items if query.lower() in item.nom.lower()]
+
+    # Filtrar por estado si se proporciona
+    if estado:
+        filtered_items = []
+        for item in items:
+            if Exemplar.objects.filter(catalogo=item, estat=estado).exists():
+                filtered_items.append(item)
+        items = filtered_items
+
+    paginator = Paginator(items, 25)
+    page_number = request.GET.get('page')
     try:
-        books = paginator.page(page_number)
+        items = paginator.page(page_number)
     except PageNotAnInteger:
-        # Si la página no es un número entero, muestra la primera página
-        books = paginator.page(1)
+        items = paginator.page(1)
     except EmptyPage:
-        # Si la página está fuera del rango, muestra la última página de resultados
-        books = paginator.page(paginator.num_pages)
-    
-    cds = CD.objects.filter(Q(nom__icontains=query))
-    dvds = DVD.objects.filter(Q(nom__icontains=query))
-    brs = BR.objects.filter(Q(nom__icontains=query))
-    dispositivos = Dispositiu.objects.filter(Q(nom__icontains=query))
+        items = paginator.page(paginator.num_pages)
     
     return render(request, 'search_results.html', {
-        'books': books,
-        'cds': cds,
-        'dvds': dvds,
-        'brs': brs,
-        'dispositivos': dispositivos,
+        'items': items,
         'query': query,
         'has_stock': has_stock,
+        'product_type': product_type,
+        'start_year': start_year,
+        'end_year': end_year,
+        'fecha_minima': min_year, 
+        'fecha_maxima': max_year
     })
+
+# def search_results(request):
+#     generarLog(request, 'INFO', f"BUSQUEDA REALIZADA")
+#     subir_logs_a_bd(request)
+    
+#     query = request.GET.get('searcher')
+#     has_stock = request.GET.get("has_stock", "off") == "on"
+    
+#     books = Llibre.objects.filter(Q(nom__icontains=query))
+#     cds = CD.objects.filter(Q(nom__icontains=query))
+#     dvds = DVD.objects.filter(Q(nom__icontains=query))
+#     brs = BR.objects.filter(Q(nom__icontains=query))
+#     dispositivos = Dispositiu.objects.filter(Q(nom__icontains=query))
+    
+#     # Fusionar todas las consultas en una sola lista
+#     all_items = list(chain(books, cds, dvds, brs, dispositivos))
+    
+#     # Paginar la lista combinada
+#     paginator = Paginator(all_items, 25)  # Muestra 50 elementos por página
+    
+#     page_number = request.GET.get('page')
+#     try:
+#         items = paginator.page(page_number)
+#     except PageNotAnInteger:
+#         # Si la página no es un número entero, muestra la primera página
+#         items = paginator.page(1)
+#     except EmptyPage:
+#         # Si la página está fuera del rango, muestra la última página de resultados
+#         items = paginator.page(paginator.num_pages)
+    
+#     return render(request, 'search_results.html', {
+#         'items': items,
+#         'query': query,
+#         'has_stock': has_stock,
+#     })
+
 
 
 def logout_user(request):
@@ -361,8 +430,8 @@ def listUsers(request):
     users = Usuari.objects.all()  # Obtiene todos los usuarios
     
     paginator = Paginator(users, 10)  # Crea un paginador con 10 usuarios por página
-    page_number = request.GET.get('page')  # Obtiene el número de página de la solicitud GET
-    
+    page_number = request.GET.get('page')
+   
     try:
         page_obj = paginator.page(page_number)
     except PageNotAnInteger:

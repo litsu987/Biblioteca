@@ -1,15 +1,36 @@
-<head>
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js"></script>
+    <link
+      href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    {% load static %}
+    <script src="{% static 'searcher.js' %}"></script>
+    <!-- <link rel="stylesheet" href="{% static 'styles.css' %}" /> -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
+      rel="stylesheet"
+    />
+    <title> Biblioteca MariCarmen</title > 
     <style>
-
-        #header {
-            height: 100px;
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            background-color: #e3ecee;
-            transition: background-color 0.3s ease;
-            box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
-        }
+      #header {
+        height: 100px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        background-color: #e3ecee;
+        transition: background-color 0.3s ease;
+        box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
+      }
 
         #header img:hover {
           transform: scale(1.1);
@@ -21,11 +42,11 @@
             align-items: center;
         }
 
-        #header  img {
-            width: auto;
-            height: 80px;
-            margin: 0px 0 auto 20px;
-        }
+      #header img {
+        width: auto;
+        height: 80px;
+        margin: 0px 0 auto 20px;
+      }
 
         .headerH2{
           padding: 0 0 0 25px;
@@ -36,37 +57,36 @@
           text-align: left;
         }
 
-        .titleH2{
-            
-            margin: 0 auto;
-            margin-bottom: 15px;
-            color: #142c83;
-            font-family: Montserrat;
-            font-weight: bolder;
-            text-align: left;
-        }
+      .titleH2 {
+        margin: 0 auto;
+        margin-bottom: 15px;
+        color: #142c83;
+        font-family: Montserrat;
+        font-weight: bolder;
+        text-align: left;
+      }
 
-        #header h1 {
-            padding: 0 0 0 20px;
-            margin: 0;
-            color: #142c83;
-            font-family: Georgia, 'Times New Roman', Times, serif Slab;
-            font-size: 3em;
-            font-weight: bolder;
-            text-align: left;
-        }
-        #infouser {
-          display: flex;
-          flex-direction: row;
-          justify-content: space-between;
-        }
+      #header h1 {
+        padding: 0 0 0 20px;
+        margin: 0;
+        color: #142c83;
+        font-family: Georgia, "Times New Roman", Times, serif Slab;
+        font-size: 3em;
+        font-weight: bolder;
+        text-align: left;
+      }
+      #infouser {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+      }
 
-        #data {
-          display: flex;
-          flex-direction: column;
-          align-self: center;
-          text-align: right;
-        }
+      #data {
+        display: flex;
+        flex-direction: column;
+        align-self: center;
+        text-align: right;
+      }
 
         #data .headerP {
           margin-top: 0 !important;
@@ -130,12 +150,13 @@
         }
 
     </style>
-</head>
-<header>
+  </head>
+  <header>
     <div id="header">
       <div id="common">
         <a href="{% url 'index'%}">
-          <img class="logo"
+          <img
+            class="logo"
             src="../static/images/aNqCiRN7_400x400-removebg-preview.png"
             alt=""
           />
@@ -145,10 +166,37 @@
           <h1>MARICARMEN BRITO</h1>
         </div>
       </div>
+      {% if not request.path == '/' and not request.path == '/search/' %}
+      <div id="searchHeader">
+        <form action="{% url 'search_results' %}" method="GET" id="formHead">
+          <div id="searchInput">
+            <input
+            type="search"
+            name="searcher"
+            id="searcher"
+            onkeyup="buscarAutocompletado()"
+            />
+            <button type="submit" class="search-button">
+              <i class="fas fa-search search-icon"></i>
+          </button>
+            <div id="autocomplete-results"></div>
+          </div>
+          <div id="check">
+            <input
+            type="checkbox"
+            id="has-stock-checkbox"
+            onchange="buscarAutocompletado()"
+            name="has_stock"
+            />
+            <p>Mostrar només objectes amb estoc</p>
+          </div>
+
+        </form>
+      </div>
+      {% endif %}
       <div id="infouser">
         {% if user.is_authenticated %}
-        
-        </script>
+
         <div id="data">
           <p class="headerP">{{ user.first_name }}</p>
           {% if user.rol == "Bibliotecari" %}
@@ -160,13 +208,9 @@
           {% endif %}
           <a href="{% url 'dashboard' %}">Panell</a>
           <a href="{% url 'logout' %}">Tancar Sessió</a>
-          
         </div>
         <img src="{{ user.imatge }}" alt="" srcset="" />
         {% endif %}
       </div>
     </div>
-</header>
-
-
-
+  </header>

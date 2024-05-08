@@ -195,7 +195,8 @@ def crear_catalogo(num_catalogos):
     for _ in range(num_catalogos):
         catalog = Catalog.objects.create(
             nom=fake.word(),
-            descripcio=fake.paragraph()
+            descripcio=fake.paragraph(),
+            fecha_publicacion=fake.date_this_decade()
         )
         ImatgeCatalog.objects.create(
             catalog=catalog,
@@ -210,78 +211,85 @@ def crear_catalogo(num_catalogos):
         if tipo_material[0] == 'llibre':
             nombre_libro = fake.catch_phrase()
             isbn13 = ''.join([str(random.randint(0, 9)) for _ in range(13)])
-            Llibre.objects.create(
+            libro = Llibre.objects.create(
                 nom=nombre_libro,
                 CDU=fake.isbn13(),
                 ISBN=isbn13,
                 editorial=fake.company(),
+                fecha_publicacion=fake.date_this_decade(),  
                 collecio=fake.catch_phrase(),
                 autor=fake.name(),
                 pagines=random.randint(100, 1000),
                 cantidad=30  # Establecer cantidad en 30 siempre
             )
+            Exemplar.objects.create(
+                catalogo=libro,
+                estat=random.choice(['Prestat', 'Reservat', 'No disponible (només a la biblioteca)']),
+                cantidad=25  # Establecer cantidad del ejemplar igual a la cantidad del libro
+            )
         elif tipo_material[0] == 'CD':
             nombre_cd = f"{random.choice(cd)}"
-            CD.objects.create(
+            cd_obj = CD.objects.create(
                 nom=nombre_cd,
+                fecha_publicacion=fake.date_this_decade(),  
                 discografica=fake.company(),
                 estil=fake.word(),
                 duracio=random.randint(30, 120),
                 cantidad=30  # Establecer cantidad en 30 siempre
             )
+            Exemplar.objects.create(
+                catalogo=cd_obj,
+                estat=random.choice(['Prestat', 'Reservat', 'No disponible (només a la biblioteca)']),
+                cantidad=25  # Establecer cantidad del ejemplar igual a la cantidad del CD
+            )
         elif tipo_material[0] == 'DVD':
             nombre_dvd = f"{random.choice(dvd)}"
-            DVD.objects.create(
+            dvd_obj = DVD.objects.create(
+                fecha_publicacion=fake.date_this_decade(),  
                 nom=nombre_dvd,
                 productora=fake.company(),
                 duracio=random.randint(60, 180),
                 cantidad=30  # Establecer cantidad en 30 siempre
             )
+            Exemplar.objects.create(
+                catalogo=dvd_obj,
+                estat=random.choice(['Prestat', 'Reservat', 'No disponible (només a la biblioteca)']),
+                cantidad=25  # Establecer cantidad del ejemplar igual a la cantidad del DVD
+            )
         elif tipo_material[0] == 'BR':
             nombre_br = f"{random.choice(br)}"
-            BR.objects.create(
+            br_obj = BR.objects.create(
+                fecha_publicacion=fake.date_this_decade(),  
                 nom=nombre_br,
                 productora=fake.company(),
                 duracio=random.randint(60, 180),
                 cantidad=30  # Establecer cantidad en 30 siempre
             )
+            Exemplar.objects.create(
+                catalogo=br_obj,
+                estat=random.choice(['Prestat', 'Reservat', 'No disponible (només a la biblioteca)']),
+                cantidad=25  # Establecer cantidad del ejemplar igual a la cantidad del BR
+            )
         elif tipo_material[0] == 'dispositiu':
             nombre_disp = f"{random.choice(disp)}"
-            Dispositiu.objects.create(
+            disp_obj = Dispositiu.objects.create(
+                fecha_publicacion=fake.date_this_decade(),  
                 nom= nombre_disp,
                 modelo=fake.word(),
                 serie=fake.uuid4(),
                 cantidad=30  # Establecer cantidad en 30 siempre
             )
-
+            Exemplar.objects.create(
+                catalogo=disp_obj,
+                estat=random.choice(['Prestat', 'Reservat', 'No disponible (només a la biblioteca)']),
+                cantidad=25 # Establecer cantidad del ejemplar igual a la cantidad del dispositivo
+            )
 
 
 
 def crear_reservas_prestamos_peticiones(num_elementos):
     usuarios = Usuari.objects.all()
-    catalogs = Catalog.objects.all()  # Obtener todas las instancias de Catalog
-    for _ in range(num_elementos):
-        usuario = random.choice(usuarios)
-        catalog = random.choice(catalogs)  # Elegir una instancia de Catalog al azar
-        # Crear un ejemplar solo si la cantidad es mayor que 1
-        if catalog.cantidad > 1:
-            exemplar = Exemplar.objects.create(
-                catalogo=catalog,  # Asociar el ejemplar con un Catalog
-                estat=random.choice(['Disponible', 'Prestat', 'Reservat', 'No disponible (només a la biblioteca)'])
-            )
-            if exemplar.estat == 'Reservat':
-                Reserva.objects.create(
-                    usuari=usuario,
-                    exemplar=exemplar,
-                    data_reserva=fake.date_time_this_year()
-                )
-            elif exemplar.estat == 'Prestat':
-                Prestec.objects.create(
-                    usuari=usuario,
-                    catalog=catalog,  # Usar el catálogo asociado con el ejemplar
-                    data_prestec=fake.date_time_this_year(),
-                    data_retorn=fake.date_time_this_year() + timezone.timedelta(days=random.randint(7, 30))
-                )
+        
     for _ in range(num_elementos):
         # Crear peticiones para usuarios al azar
         Peticio.objects.create(
@@ -299,16 +307,27 @@ def crear_autores_y_libros(num_autores=100):
         for _ in range(num_libros):
             nombre_libro = f"{random.choice(adjetivos)} {random.choice(sustantivos)} del {random.choice(tematicas)}"
             isbn13 = ''.join([str(random.randint(0, 9)) for _ in range(13)])
-            Llibre.objects.create(
+            cantidad_ejemplares = random.randint(1, 30)  # Cantidad aleatoria de ejemplares
+            libro = Llibre.objects.create(
                 nom=nombre_libro,
                 CDU=fake.isbn13(),
                 ISBN=isbn13,
+                fecha_publicacion=fake.date_this_decade(),  
                 editorial=fake.company(),
                 collecio=fake.catch_phrase(),
                 autor=autor_nombre,
                 pagines=random.randint(100, 1000),
-                cantidad=30
+                cantidad=cantidad_ejemplares  # Establecer cantidad igual a la cantidad de ejemplares
             )
+            cantidad_disponible = cantidad_ejemplares  # Inicialmente, toda la cantidad de libros está disponible
+            if cantidad_disponible > 0:  # Si hay cantidad disponible
+                cantidad_ejemplar = random.randint(1, cantidad_disponible)  # Cantidad aleatoria para el ejemplar
+                Exemplar.objects.create(
+                    catalogo=libro,
+                    estat=random.choice(['Prestat', 'Reservat', 'No disponible (només a la biblioteca)']),
+                    cantidad=cantidad_ejemplar  # Establecer cantidad del ejemplar
+                )
+
     
 
 def seed_database(num_usuarios=10, num_centros=5, num_catalogos=20, num_elementos=50):

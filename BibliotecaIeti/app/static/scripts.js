@@ -33,3 +33,4 @@ function GenerarLogs(tipo, mensaje) {
     };
   });
   
+  
