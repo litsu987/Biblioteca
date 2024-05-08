@@ -1,3 +1,299 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {% load static %}
+    <meta name="google-site-verification" content="HtV9zCr6KZ867Ilxcn-QDZeJhIhaCAwMbZ8IHjBcOvA" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js"></script>
+
+    <link
+      href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <!-- <link rel="stylesheet" href="{% static 'styles.css' %}" /> -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
+      rel="stylesheet"
+    />
+
+    <title>Biblioteca MariCarmen</title>
+    <style>
+      *,
+      body,
+      main {
+        padding: 0;
+        margin: 0;
+      }
+
+      h1 {
+        padding: 0 0 0 20px;
+        margin: 0;
+        color: #142c83;
+        font-family: Georgia, "Times New Roman", Times, serif Slab;
+        font-size: 3em;
+        font-weight: bolder;
+        text-align: left;
+      }
+
+      #main {
+        font-family: Nunito;
+        display: flex;
+        margin: auto;
+        padding: 2%;
+        justify-content: space-evenly;
+        text-align: center;
+        width: 80vw;
+        height: 50vh;
+        margin-top: 5vh;
+      }
+
+      #main div,
+      form {
+        background-color: #e3ecee;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 0 50px;
+        width: 40vw;
+        max-width: 350px;
+        border-radius: 15px;
+      }
+
+      #login label {
+        text-align: left;
+        font-size: 1.3em;
+        padding-left: 20px;
+      }
+      #booksearcher {
+        box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+      }
+
+      #booksearcher > form {
+        display: flex;
+        padding: 0;
+        flex-direction: column;
+        gap: 5%;
+      }
+
+      #booksearcher input[type="submit"] {
+        width: fit-content;
+        background: #142c83;
+        border: 1px solid #142c83;
+        border-radius: 6px;
+        box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
+        box-sizing: border-box;
+        color: #ffffff;
+        cursor: pointer;
+        display: inline-block;
+        font-family: nunito, roboto, proxima-nova, "proxima nova", sans-serif;
+        font-size: 16px;
+        font-weight: 800;
+        line-height: 16px;
+        min-height: 40px;
+        outline: 0;
+        margin: 0 auto;
+        margin-top: 15px;
+        padding: 12px 14px;
+        text-align: center;
+        text-rendering: geometricprecision;
+        text-transform: none;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+        vertical-align: middle;
+      }
+
+      #booksearcher input[type="submit"]:hover,
+      #booksearcher input[type="submit"]:active {
+        background-color: initial;
+        background-position: 0 0;
+        color: #142c83;
+      }
+
+      #booksearcher input[type="submit"]:active {
+        opacity: 0.5;
+      }
+
+      input#searcher,
+      input#email,
+      input#password {
+        width: 90%;
+        height: 30px;
+        font-size: 1.3em;
+        padding: 10px;
+        margin: 0 auto;
+        border-radius: 8px;
+        border: 1px solid #5978e8;
+      }
+
+      #loginSubmit {
+        width: fit-content;
+        background: #142c83;
+        border: 1px solid #142c83;
+        border-radius: 6px;
+        box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
+        box-sizing: border-box;
+        color: #ffffff;
+        cursor: pointer;
+        display: inline-block;
+        font-family: nunito, roboto, proxima-nova, "proxima nova", sans-serif;
+        font-size: 16px;
+        font-weight: 800;
+        line-height: 16px;
+        min-height: 40px;
+        outline: 0;
+        margin: 0 auto;
+        margin-top: 15px;
+        padding: 12px 14px;
+        text-align: center;
+        text-rendering: geometricprecision;
+        text-transform: none;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+        vertical-align: middle;
+      }
+
+      #loginSubmit:hover,
+      #loginSubmit:active {
+        background-color: initial;
+        background-position: 0 0;
+        color: #142c83;
+      }
+
+      #loginSubmit:active {
+        opacity: 0.5;
+      }
+
+      #user,
+      #pass {
+        width: 100%;
+        height: 25px;
+        margin: 0 auto;
+        border-radius: 8px;
+      }
+
+      #login a {
+        font-size: 0.7rem;
+        text-align: left;
+        text-decoration: none;
+      }
+
+      #login {
+        gap: 10px;
+        box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+      }
+
+      #login input[type="button"] {
+        width: fit-content;
+        padding: 0 15px;
+        margin-left: auto;
+        font-family: Nunito;
+        font-weight: bold;
+        background-color: #d9d9d9;
+      }
+
+      #infouser {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+      }
+
+      #data {
+        align-self: center;
+        text-align: right;
+      }
+
+      #infouser img {
+        width: 50px;
+        height: 80px;
+        padding: 0 10px;
+        margin: auto 0;
+      }
+
+      h3 {
+        padding: 10px 20px;
+        background-color: #142c83;
+        width: fit-content;
+        font-size: 1rem;
+        color: white;
+        font-family: Rubik Mono One;
+      }
+
+      #divisor {
+        display: flex;
+        justify-content: space-around;
+      }
+
+      #divisor img {
+        width: 500px;
+        height: auto;
+      }
+
+      #divisor form {
+        display: flex;
+        flex-direction: column;
+        background-color: #e3ecee;
+        justify-content: center;
+        height: 50vh;
+        padding: 0 50px;
+        gap: 15px;
+        width: 40vw;
+        max-width: 500px;
+        border-radius: 15px;
+      }
+
+      #divisor form input[type="text"] {
+        width: 100%;
+        height: 30px;
+        font-size: 1rem;
+        margin: 0 auto;
+        border-radius: 8px;
+      }
+
+      #sepa {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+      }
+
+      #divisor form input[type="submit"] {
+        width: fit-content;
+        padding: 0 15px;
+        margin: 0 auto;
+        font-family: Nunito;
+        font-weight: bold;
+        background-color: #d9d9d9;
+      }
+
+      #nosepa {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .message {
+        /* Estilos para el mensaje */
+        color: #ff0000; /* Cambia el color del texto a rojo */
+        font-style: italic; /* Aplica cursiva al texto */
+        /* Otros estilos que desees aplicar */
+      }
+      #searchButton::first-letter {
+        color: black !important;
+      }
+      .popup-message {
+        color: #ff0000; /* Color rojo */
+        /* Otros estilos que desees aplicar */
+      }
+      
+    </style>
+  </head>
+  <body>
     {% include 'header.html' %}
     <div id="main">
       <div id="booksearcher">
@@ -19,7 +315,15 @@
         <label for="password">Contrasenya</label>
         <input type="password" name="password" id="password" />
         <a href="{% url 'reset' %}">Recuperar Contrasenya</a>
+        {% if messages %}
+        <p id="popup-messages" {% if messages %}class="show"{% endif %}>
+          {% for message in messages %}
+              <p class="popup-message">{{ message|escape }}</p>
+          {% endfor %}
+        </p>    
+        {% endif %}
         <input type="submit" id="loginSubmit" value="ENTRA" />
+       
       </form>
       {% endif %}
 
@@ -53,5 +357,16 @@
           {% endfor %}
       {% endif %}
   </div>
-  </body>
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KVLP240B1R"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KVLP240B1R');
+</script>  
+ 
+
+ </body>
 </html>

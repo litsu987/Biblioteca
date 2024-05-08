@@ -9,6 +9,7 @@ from django.views.generic import ListView
 from django.db.models import Q
 from .utils import generarLog,subir_logs_a_bd  # Importa la función generarLog desde utils.py
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib.auth.password_validation import validate_password
 from datetime import datetime
 from django.contrib.auth.views import PasswordChangeView, PasswordChangeDoneView
 from django.urls import reverse_lazy
@@ -19,7 +20,7 @@ from django.contrib.auth.views import PasswordResetView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.hashers import make_password
 import csv
-from .models import Usuari
+from .models import Usuari,Exemplar
 from django.contrib.auth.hashers import make_password
 from datetime import datetime, timedelta
 from django.utils import timezone
@@ -28,6 +29,9 @@ from django.db.models import F
 from django.db.models import Count
 from django.http import JsonResponse
 from itertools import chain
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
+from django.contrib import messages
 from django.db.models import Min, Max
 from django.db.models.functions import ExtractYear
 
@@ -127,15 +131,15 @@ def index(request):
         email = request.POST.get("email")
         password = request.POST.get("password")
 
-       # try:
+        try:
             # Validar la contraseña
-           # validate_password(password)
-      #  except ValidationError as error:
+            validate_password(password)
+        except ValidationError as error:
             # Si la contraseña no cumple con los requisitos, mostrar un mensaje de error
-          #  messages.error(request, "{}".format(", ".join(error.messages)))
-           # generarLog(request, 'ERROR', f"Contraseña inválida: {', '.join(error.messages)}")
-            #subir_logs_a_bd(request)
-            #return redirect('index')
+            messages.error(request, "{}".format(", ".join(error.messages)))
+            generarLog(request, 'ERROR', f"Contraseña inválida: {', '.join(error.messages)}")
+            subir_logs_a_bd(request)
+            return redirect('index')
 
         user = authenticate(request, username=email, password=password)
         if user is not None:
@@ -151,8 +155,6 @@ def index(request):
     return render(request, 'index.html', {"books":all_items})
 
 
-
-
 def search_results(request):
     generarLog(request, 'INFO', f"BUSQUEDA REALIZADA")
     subir_logs_a_bd(request)
@@ -164,7 +166,8 @@ def search_results(request):
     product_type = request.GET.get('product_type')
     start_year = request.GET.get('start_year')
     end_year = request.GET.get('end_year')
-    
+    estado = request.GET.get('estado')
+
     if product_type:
         if product_type == 'llibre':
             items = Llibre.objects.all()
@@ -186,7 +189,15 @@ def search_results(request):
     
     if query:
         items = [item for item in items if query.lower() in item.nom.lower()]
-    
+
+    # Filtrar por estado si se proporciona
+    if estado:
+        filtered_items = []
+        for item in items:
+            if Exemplar.objects.filter(catalogo=item, estat=estado).exists():
+                filtered_items.append(item)
+        items = filtered_items
+
     paginator = Paginator(items, 25)
     page_number = request.GET.get('page')
     try:
@@ -206,6 +217,42 @@ def search_results(request):
         'fecha_minima': min_year, 
         'fecha_maxima': max_year
     })
+
+# def search_results(request):
+#     generarLog(request, 'INFO', f"BUSQUEDA REALIZADA")
+#     subir_logs_a_bd(request)
+    
+#     query = request.GET.get('searcher')
+#     has_stock = request.GET.get("has_stock", "off") == "on"
+    
+#     books = Llibre.objects.filter(Q(nom__icontains=query))
+#     cds = CD.objects.filter(Q(nom__icontains=query))
+#     dvds = DVD.objects.filter(Q(nom__icontains=query))
+#     brs = BR.objects.filter(Q(nom__icontains=query))
+#     dispositivos = Dispositiu.objects.filter(Q(nom__icontains=query))
+    
+#     # Fusionar todas las consultas en una sola lista
+#     all_items = list(chain(books, cds, dvds, brs, dispositivos))
+    
+#     # Paginar la lista combinada
+#     paginator = Paginator(all_items, 25)  # Muestra 50 elementos por página
+    
+#     page_number = request.GET.get('page')
+#     try:
+#         items = paginator.page(page_number)
+#     except PageNotAnInteger:
+#         # Si la página no es un número entero, muestra la primera página
+#         items = paginator.page(1)
+#     except EmptyPage:
+#         # Si la página está fuera del rango, muestra la última página de resultados
+#         items = paginator.page(paginator.num_pages)
+    
+#     return render(request, 'search_results.html', {
+#         'items': items,
+#         'query': query,
+#         'has_stock': has_stock,
+#     })
+
 
 
 def logout_user(request):
