@@ -4,13 +4,12 @@ from django.template import loader
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.backends import ModelBackend
-from .models import Llibre, Usuari, CD, BR, DVD, Dispositiu, Centre, Cicle, Prestec,Catalog, Reserva
+from .models import Llibre, Usuari, CD, BR, DVD, Dispositiu, Centre, Cicle, Prestec,Catalog, Reserva,ElementCatalog
 from django.views.generic import ListView
 from django.db.models import Q
 from .utils import generarLog,subir_logs_a_bd  # Importa la función generarLog desde utils.py
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
-
+from datetime import datetime
 from django.contrib.auth.views import PasswordChangeView, PasswordChangeDoneView
 from django.urls import reverse_lazy
 from .decorators import check_user_able_to_see_page
@@ -29,6 +28,8 @@ from django.db.models import F
 from django.db.models import Count
 from django.http import JsonResponse
 from itertools import chain
+from django.db.models import Min, Max
+from django.db.models.functions import ExtractYear
 
 
 def perfil(request):
@@ -150,39 +151,60 @@ def index(request):
     return render(request, 'index.html', {"books":all_items})
 
 
+
+
 def search_results(request):
     generarLog(request, 'INFO', f"BUSQUEDA REALIZADA")
     subir_logs_a_bd(request)
-    
+    min_year = Catalog.objects.aggregate(min_year=ExtractYear(Min('fecha_publicacion')))['min_year']
+    max_year = Catalog.objects.aggregate(max_year=ExtractYear(Max('fecha_publicacion')))['max_year']
     query = request.GET.get('searcher')
     has_stock = request.GET.get("has_stock", "off") == "on"
     
-    books = Llibre.objects.filter(Q(nom__icontains=query))
-    cds = CD.objects.filter(Q(nom__icontains=query))
-    dvds = DVD.objects.filter(Q(nom__icontains=query))
-    brs = BR.objects.filter(Q(nom__icontains=query))
-    dispositivos = Dispositiu.objects.filter(Q(nom__icontains=query))
+    product_type = request.GET.get('product_type')
+    start_year = request.GET.get('start_year')
+    end_year = request.GET.get('end_year')
     
-    # Fusionar todas las consultas en una sola lista
-    all_items = list(chain(books, cds, dvds, brs, dispositivos))
+    if product_type:
+        if product_type == 'llibre':
+            items = Llibre.objects.all()
+        elif product_type == 'cd':
+            items = CD.objects.all()
+        elif product_type == 'dvd':
+            items = DVD.objects.all()
+        elif product_type == 'br':
+            items = BR.objects.all()
+        elif product_type == 'dispositiu':
+            items = Dispositiu.objects.all()
+    else:
+        items = list(chain(Llibre.objects.all(), CD.objects.all(), DVD.objects.all(), BR.objects.all(), Dispositiu.objects.all()))
+
+    if start_year and end_year:
+        start_date = datetime(int(start_year), 1, 1)
+        end_date = datetime(int(end_year), 12, 31)
+        items = [item for item in items if start_date <= datetime.combine(item.fecha_publicacion, datetime.min.time()) <= end_date]
     
-    # Paginar la lista combinada
-    paginator = Paginator(all_items, 25)  # Muestra 50 elementos por página
+    if query:
+        items = [item for item in items if query.lower() in item.nom.lower()]
     
+    paginator = Paginator(items, 25)
     page_number = request.GET.get('page')
     try:
         items = paginator.page(page_number)
     except PageNotAnInteger:
-        # Si la página no es un número entero, muestra la primera página
         items = paginator.page(1)
     except EmptyPage:
-        # Si la página está fuera del rango, muestra la última página de resultados
         items = paginator.page(paginator.num_pages)
     
     return render(request, 'search_results.html', {
         'items': items,
         'query': query,
         'has_stock': has_stock,
+        'product_type': product_type,
+        'start_year': start_year,
+        'end_year': end_year,
+        'fecha_minima': min_year, 
+        'fecha_maxima': max_year
     })
 
 

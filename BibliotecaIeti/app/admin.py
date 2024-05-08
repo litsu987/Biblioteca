@@ -84,35 +84,35 @@ class ImatgeCatalogAdmin(admin.ModelAdmin):
 
 @admin.register(Llibre)
 class LibroAdmin(admin.ModelAdmin):
-    list_display = ('nom', 'autor', 'CDU', 'ISBN', 'editorial', 'collecio', 'pagines', 'cantidad')
+    list_display = ('nom', 'autor', 'CDU', 'ISBN', 'editorial', 'collecio', 'pagines', 'fecha_publicacion', 'cantidad')
 
     def cantidad(self, obj):
         return obj.cantidad
 
 @admin.register(CD)
 class CDAdmin(admin.ModelAdmin):
-    list_display = ('nom', 'discografica', 'estil', 'duracio', 'cantidad')
+    list_display = ('nom', 'discografica', 'estil', 'duracio', 'fecha_publicacion', 'cantidad')
 
     def cantidad(self, obj):
         return obj.cantidad
 
 @admin.register(DVD)
 class DVDAdmin(admin.ModelAdmin):
-    list_display = ('nom', 'productora', 'duracio', 'cantidad')
+    list_display = ('nom', 'productora', 'duracio', 'fecha_publicacion', 'cantidad')
 
     def cantidad(self, obj):
         return obj.cantidad
 
 @admin.register(BR)
 class BRAdmin(admin.ModelAdmin):
-    list_display = ('nom', 'productora', 'duracio', 'cantidad')
+    list_display = ('nom', 'productora', 'duracio', 'fecha_publicacion', 'cantidad')
 
     def cantidad(self, obj):
         return obj.cantidad
 
 @admin.register(Dispositiu)
 class DPAdmin(admin.ModelAdmin):
-    list_display = ('nom', 'modelo', 'serie', 'cantidad')
+    list_display = ('nom', 'modelo', 'serie', 'fecha_publicacion', 'cantidad')
 
     def cantidad(self, obj):
         return obj.cantidad

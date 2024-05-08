@@ -76,10 +76,10 @@ class Catalog(models.Model):
     nom = models.CharField(max_length=100)
     descripcio = models.TextField()
     imatge = models.ImageField(upload_to='static/', null=True, blank=True)
-    cantidad = models.IntegerField(default=0)  # Agregar campo de cantidad
+    cantidad = models.IntegerField(default=0)
+    fecha_publicacion = models.DateField()
     def __str__(self):
         return self.nom
-
 
 class ElementCatalog(models.Model):
     catalog = models.ForeignKey(Catalog, on_delete=models.CASCADE)
@@ -109,7 +109,6 @@ class CD(Catalog):
     def model_type(self):
         return 'cd'
     
-
 class DVD(Catalog):
     productora = models.CharField(max_length=100)
     duracio = models.IntegerField()

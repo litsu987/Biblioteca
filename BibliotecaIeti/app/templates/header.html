@@ -1,92 +1,417 @@
-<head>
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js"></script>
+    <link
+      href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    {% load static %}
+    <script src="{% static 'searcher.js' %}"></script>
+    <!-- <link rel="stylesheet" href="{% static 'styles.css' %}" /> -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
+      rel="stylesheet"
+    />
+    <title> Biblioteca MariCarmen</title > 
     <style>
+      #header {
+        height: 100px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        background-color: #e3ecee;
+        transition: background-color 0.3s ease;
+        box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
+      }
 
-        #header {
-            height: 100px;
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            background-color: #e3ecee;
-            transition: background-color 0.3s ease;
-            box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
-        }
+      #header img:hover {
+        transform: scale(1.1);
+      }
 
-            #header img:hover {
-            transform: scale(1.1);
-        }
+      #common {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+      }
 
-            #common {
-                display: flex;
-                flex-direction: row;
-                align-items: center;
-        }
+      #header img {
+        width: auto;
+        height: 80px;
+        margin: 0px 0 auto 20px;
+      }
 
-        #header  img {
-            width: auto;
-            height: 80px;
-            margin: 0px 0 auto 20px;
-        }
+      .headerH2 {
+        padding: 0 0 0 25px;
+        margin: 0;
+        color: #142c83;
+        font-family: Montserrat;
+        font-weight: bolder;
+        text-align: left;
+      }
 
-            .headerH2{
-            padding: 0 0 0 25px;
-            margin: 0;
-            color: #142c83;
-            font-family: Montserrat;
-            font-weight: bolder;
-            text-align: left;
-        }
+      .titleH2 {
+        margin: 0 auto;
+        margin-bottom: 15px;
+        color: #142c83;
+        font-family: Montserrat;
+        font-weight: bolder;
+        text-align: left;
+      }
 
-        .titleH2{
-            
-            margin: 0 auto;
-            margin-bottom: 15px;
-            color: #142c83;
-            font-family: Montserrat;
-            font-weight: bolder;
-            text-align: left;
-        }
+      #header h1 {
+        padding: 0 0 0 20px;
+        margin: 0;
+        color: #142c83;
+        font-family: Georgia, "Times New Roman", Times, serif Slab;
+        font-size: 3em;
+        font-weight: bolder;
+        text-align: left;
+      }
+      #infouser {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+      }
 
-        #header h1 {
-            padding: 0 0 0 20px;
-            margin: 0;
-            color: #142c83;
-            font-family: Georgia, 'Times New Roman', Times, serif Slab;
-            font-size: 3em;
-            font-weight: bolder;
-            text-align: left;
-        }
-        #infouser {
-          display: flex;
-          flex-direction: row;
-          justify-content: space-between;
-        }
+      #data {
+        display: flex;
+        flex-direction: column;
+        align-self: center;
+        text-align: right;
+      }
 
-        #data {
-          display: flex;
-          flex-direction: column;
-          align-self: center;
-          text-align: right;
-        }
+      #data p {
+        margin-top: 0;
+        margin-bottom: 0;
+      }
 
-        #data p {
-          margin-top: 0;
-          margin-bottom: 0;
-        }
+      #infouser img {
+        width: 50px;
+        height: 80px;
+        padding: 0 10px;
+        margin: auto 0;
+      }
+       *,
+      body,
+      main {
+        padding: 0;
+        margin: 0;
+      }
 
-        #infouser img {
-          width: 50px;
-          height: 80px;
-          padding: 0 10px;
-          margin: auto 0;
-        }
+      h1 {
+        padding: 0 0 0 20px;
+        margin: 0;
+        color: #142c83;
+        font-family: Georgia, "Times New Roman", Times, serif Slab;
+        font-size: 3em;
+        font-weight: bolder;
+        text-align: left;
+      }
 
+      #main {
+        font-family: Nunito;
+        display: flex;
+        margin: auto;
+        padding: 2%;
+        justify-content: space-evenly;
+        text-align: center;
+        width: 80vw;
+        height: 50vh;
+        margin-top: 5vh;
+      }
+
+      #main div,
+      form {
+        background-color: #e3ecee;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 0 50px;
+        width: 40vw;
+        max-width: 350px;
+        border-radius: 15px;
+      }
+
+      #login label {
+        text-align: left;
+        font-size: 1.3em;
+        padding-left: 20px;
+      }
+      #booksearcher {
+        box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+      }
+
+      #booksearcher > form {
+        display: flex;
+        padding: 0;
+        flex-direction: column;
+        gap: 5%;
+      }
+
+      #booksearcher input[type="submit"] {
+        width: fit-content;
+        background: #142c83;
+        border: 1px solid #142c83;
+        border-radius: 6px;
+        box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
+        box-sizing: border-box;
+        color: #ffffff;
+        cursor: pointer;
+        display: inline-block;
+        font-family: nunito, roboto, proxima-nova, "proxima nova", sans-serif;
+        font-size: 16px;
+        font-weight: 800;
+        line-height: 16px;
+        min-height: 40px;
+        outline: 0;
+        margin: 0 auto;
+        margin-top: 15px;
+        padding: 12px 14px;
+        text-align: center;
+        text-rendering: geometricprecision;
+        text-transform: none;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+        vertical-align: middle;
+      }
+
+      #booksearcher input[type="submit"]:hover,
+      #booksearcher input[type="submit"]:active {
+        background-color: initial;
+        background-position: 0 0;
+        color: #142c83;
+      }
+
+      #booksearcher input[type="submit"]:active {
+        opacity: 0.5;
+      }
+
+      input#searcher,
+      input#email,
+      input#password {
+        width: 90%;
+        height: 30px;
+        font-size: 1.3em;
+        padding: 10px;
+        margin: 0 auto;
+        border-radius: 8px;
+        border: 1px solid #5978e8;
+      }
+
+      #loginSubmit {
+        width: fit-content;
+        background: #142c83;
+        border: 1px solid #142c83;
+        border-radius: 6px;
+        box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
+        box-sizing: border-box;
+        color: #ffffff;
+        cursor: pointer;
+        display: inline-block;
+        font-family: nunito, roboto, proxima-nova, "proxima nova", sans-serif;
+        font-size: 16px;
+        font-weight: 800;
+        line-height: 16px;
+        min-height: 40px;
+        outline: 0;
+        margin: 0 auto;
+        margin-top: 15px;
+        padding: 12px 14px;
+        text-align: center;
+        text-rendering: geometricprecision;
+        text-transform: none;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+        vertical-align: middle;
+      }
+
+      #loginSubmit:hover,
+      #loginSubmit:active {
+        background-color: initial;
+        background-position: 0 0;
+        color: #142c83;
+      }
+
+      #loginSubmit:active {
+        opacity: 0.5;
+      }
+
+      #user,
+      #pass {
+        width: 100%;
+        height: 25px;
+        margin: 0 auto;
+        border-radius: 8px;
+      }
+
+      #login a {
+        font-size: 0.7rem;
+        text-align: left;
+        text-decoration: none;
+      }
+
+      #login {
+        gap: 10px;
+        box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+      }
+
+      #login input[type="button"] {
+        width: fit-content;
+        padding: 0 15px;
+        margin-left: auto;
+        font-family: Nunito;
+        font-weight: bold;
+        background-color: #d9d9d9;
+      }
+
+      #infouser {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+      }
+
+      #data {
+        align-self: center;
+        text-align: right;
+      }
+
+      #infouser img {
+        width: 50px;
+        height: 80px;
+        padding: 0 10px;
+        margin: auto 0;
+      }
+
+      h3 {
+        padding: 10px 20px;
+        background-color: #142c83;
+        width: fit-content;
+        font-size: 1rem;
+        color: white;
+        font-family: Rubik Mono One;
+      }
+
+      #divisor {
+        display: flex;
+        justify-content: space-around;
+      }
+
+      #divisor img {
+        width: 500px;
+        height: auto;
+      }
+
+      #divisor form {
+        display: flex;
+        flex-direction: column;
+        background-color: #e3ecee;
+        justify-content: center;
+        height: 50vh;
+        padding: 0 50px;
+        gap: 15px;
+        width: 40vw;
+        max-width: 500px;
+        border-radius: 15px;
+      }
+
+      #divisor form input[type="text"] {
+        width: 100%;
+        height: 30px;
+        font-size: 1rem;
+        margin: 0 auto;
+        border-radius: 8px;
+      }
+
+      #sepa {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+      }
+
+      #divisor form input[type="submit"] {
+        width: fit-content;
+        padding: 0 15px;
+        margin: 0 auto;
+        font-family: Nunito;
+        font-weight: bold;
+        background-color: #d9d9d9;
+      }
+
+      #nosepa {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .message {
+        /* Estilos para el mensaje */
+        color: #ff0000; /* Cambia el color del texto a rojo */
+        font-style: italic; /* Aplica cursiva al texto */
+        /* Otros estilos que desees aplicar */
+      }
+      #searchButton::first-letter {
+        color: black !important;
+      }
+
+
+      #check{
+        display: flex;
+        align-items: center;
+      }
+      #check p{
+        padding: 0;
+      }
+      #searchHeader{
+        display: flex;
+        gap: 5px;
+      }
+      #searchInput{
+        width: 100%;
+        font-size: 1.1em;
+        margin: 0 auto;
+        padding: 2px;
+        border-radius: 8px;
+        border: 1px solid #5978e8;
+        background-color: white;
+        display: flex;
+      }
+
+      #searchInput input, button{
+        border: none;
+        background-color:white;
+        outline: none;
+        padding: 5px;
+        margin: 0;
+  
+      }
+      #searchInput button{
+        margin: auto;
+      }
+      #searchInput button:hover{
+        cursor: pointer;
+      }
+      #formHead{
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
     </style>
-</head>
-<header>
+  </head>
+  <header>
     <div id="header">
       <div id="common">
         <a href="{% url 'index'%}">
-          <img class="logo"
+          <img
+            class="logo"
             src="../static/images/aNqCiRN7_400x400-removebg-preview.png"
             alt=""
           />
@@ -96,10 +421,37 @@
           <h1>MARICARMEN BRITO</h1>
         </div>
       </div>
+      {% if not request.path == '/' and not request.path == '/search/' %}
+      <div id="searchHeader">
+        <form action="{% url 'search_results' %}" method="GET" id="formHead">
+          <div id="searchInput">
+            <input
+            type="search"
+            name="searcher"
+            id="searcher"
+            onkeyup="buscarAutocompletado()"
+            />
+            <button type="submit" class="search-button">
+              <i class="fas fa-search search-icon"></i>
+          </button>
+            <div id="autocomplete-results"></div>
+          </div>
+          <div id="check">
+            <input
+            type="checkbox"
+            id="has-stock-checkbox"
+            onchange="buscarAutocompletado()"
+            name="has_stock"
+            />
+            <p>Mostrar només objectes amb estoc</p>
+          </div>
+
+        </form>
+      </div>
+      {% endif %}
       <div id="infouser">
         {% if user.is_authenticated %}
-        
-        </script>
+
         <div id="data">
           <p>{{ user.first_name }}</p>
           {% if user.rol == "Bibliotecari" %}
@@ -111,13 +463,9 @@
           {% endif %}
           <a href="{% url 'dashboard' %}">Panell</a>
           <a href="{% url 'logout' %}">Tancar Sessió</a>
-          
         </div>
         <img src="{{ user.imatge }}" alt="" srcset="" />
         {% endif %}
       </div>
     </div>
-</header>
-
-
-
+  </header>
