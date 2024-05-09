@@ -147,12 +147,18 @@
           margin-right: 5px;
         }
       }
+      #filter-form {
+        width: 20%;
+        border:#142c83 1px solid;
+        padding: 20px;
+        border-radius: 10px;
+      }
     </style>
   </head>
   <body>
     {% include 'header.html' %}
     <div id="top">
-      <h1>Información</h1>
+      <h1>Informació</h1>
       {% include 'btnRedirect.html' %}
     </div>
     {% if books.has_other_pages %}
@@ -177,7 +183,7 @@
     </div>
     <div id="filter-form">
       <form method="GET" action="{% url 'search_results' %}">
-        <h2>Busqueda Avanzada</h2>
+        <h2> Cerca Avançada</h2>
         <div id="searchInput">
           <input
             type="search"
@@ -191,18 +197,11 @@
           </button>
           <div id="autocomplete-results"></div>
         </div>
-        <div id="check">
-          <input
-            type="checkbox"
-            id="has-stock-checkbox"
-            onchange="buscarAutocompletado()"
-            name="has_stock"
-          />
-          <label for="has-stock-checkbox">Mostrar sólo objetos con estoc</label>
-        </div>
-        <label for="product-type">Tipo de producto:</label>
+
+        <label for="product-type">Tipus de producte:</label>
+        <br>
         <select name="product_type" id="product-type">
-          <option value="">Todos</option>
+          <option value="">Tots</option>
           <option value="llibre">Libro</option>
           <option value="cd">CD</option>
           <option value="dvd">DVD</option>
@@ -210,7 +209,7 @@
           <option value="dispositiu">Dispositivo</option>
         </select>
         <br />
-        <label for="year-range">Selecciona un rango de años:</label>
+        <label for="year-range">Selecciona un interval d'anys:</label>
         <div id="year-range-slider"></div>
         <input type="hidden" id="start-year" name="start_year" />
         <input type="hidden" id="end-year" name="end_year" />
@@ -218,13 +217,14 @@
         <div id="year-range-slider"></div>
         <div id="selected-years"></div>
         <br />
+        <label for="estado">Disponibilitat</label>
+        <br>
         <select name="estado" id="estado">
-          <option value="">Todos</option>
-          <option value="Disponible">Disponible</option>
-          <option value="Prestat">Prestado</option>
-          <option value="Reservat">Reservado</option>
+          <option value="">Tots</option>
+          <option value="Prestat">Prestat</option>
+          <option value="Reservat">Reservat</option>
           <option value="No disponible (només a la biblioteca)">
-            No disponible (solo en biblioteca)
+            No disponible (només a la biblioteca)
           </option>
         </select>
 
@@ -343,7 +343,7 @@
             $("#end-year").val($("#year-range-slider").slider("values", 1));
 
             function updateSelectedYears(startYear, endYear) {
-                $("#selected-years").text("Años seleccionados: " + startYear + " - " + endYear);
+                $("#selected-years").text( startYear + " - " + endYear);
             }
 
             updateSelectedYears($("#year-range-slider").slider("values", 0), $("#year-range-slider").slider("values", 1));
